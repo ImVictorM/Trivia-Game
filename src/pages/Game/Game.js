@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import Header from '../components/Header';
+import Header from '../../components/Header';
 import style from './game.module.css';
-import { setScore, setAssertions } from '../redux/actions';
+import { setScore, setAssertions } from '../../redux/actions';
 
 class Game extends Component {
   state = {
