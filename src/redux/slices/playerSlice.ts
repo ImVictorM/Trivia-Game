@@ -18,7 +18,7 @@ const playerSlice = createSlice({
   name: "player",
   initialState: initialPlayerState,
   reducers: {
-    login: (
+    setPlayer: (
       state,
       action: PayloadAction<{ name: string; gravatarEmail: string }>
     ) => {
@@ -34,6 +34,6 @@ const playerSlice = createSlice({
   },
 });
 
-export const { login, setAssertions, setScore } = playerSlice.actions;
+export const { setPlayer, setAssertions, setScore } = playerSlice.actions;
 
 export const playerReducer = playerSlice.reducer;
