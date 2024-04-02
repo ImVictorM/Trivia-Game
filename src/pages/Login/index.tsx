@@ -8,6 +8,7 @@ import { logo } from "@/assets/images";
 import { StyledLoginSection } from "./style";
 import { GreenButton, Input } from "@/components";
 import { settingsCog } from "@/assets/icons";
+import { useToken } from "@/hooks";
 
 export default function Login() {
   const [loginFormState, setLoginFormState] = useState({
@@ -17,9 +18,11 @@ export default function Login() {
   const [canPlay, setCanPlay] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [shouldNavigate, setShouldNavigate] = useState(false);
 
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
+  const { clearToken, setToken, token } = useToken();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -28,12 +31,6 @@ export default function Login() {
       [name]: value,
     }));
   };
-
-  useEffect(() => {
-    setCanPlay(
-      loginFormState.name.length > 0 && loginFormState.gravatarEmail.length > 0
-    );
-  }, [loginFormState]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -45,7 +42,7 @@ export default function Login() {
         await getTriviaToken();
 
       if (tokenResponseCode === 0) {
-        localStorage.setItem("token", token);
+        setToken(token);
 
         dispatch(
           setPlayer({
@@ -54,10 +51,10 @@ export default function Login() {
           })
         );
 
-        navigate("/game");
+        setShouldNavigate(true);
       } else {
-        localStorage.removeItem("token");
-        navigate("/");
+        clearToken();
+        setShouldNavigate(true);
       }
     } catch (error) {
       setErrorMessage("There was an unexpected error, please try again.");
@@ -65,6 +62,22 @@ export default function Login() {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    setCanPlay(
+      loginFormState.name.length > 0 && loginFormState.gravatarEmail.length > 0
+    );
+  }, [loginFormState]);
+
+  useEffect(() => {
+    if (shouldNavigate) {
+      if (token) {
+        navigate("/game");
+      } else {
+        navigate("/");
+      }
+    }
+  }, [token, shouldNavigate]);
 
   return (
     <StyledLoginSection>
