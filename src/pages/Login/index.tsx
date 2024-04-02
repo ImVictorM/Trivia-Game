@@ -4,6 +4,10 @@ import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { setPlayer } from "@/redux/slices/playerSlice";
 import { getTriviaToken } from "@/services/triviaApi";
+import { logo } from "@/assets/images";
+import { StyledLoginSection } from "./style";
+import { GreenButton, Input } from "@/components";
+import { settingsCog } from "@/assets/icons";
 
 export default function Login() {
   const [loginFormState, setLoginFormState] = useState({
@@ -31,7 +35,9 @@ export default function Login() {
     );
   }, [loginFormState]);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
     setIsLoading(true);
 
     try {
@@ -61,38 +67,49 @@ export default function Login() {
   };
 
   return (
-    <div className="App">
-      <form>
-        <input
-          type="name"
-          name="name"
-          data-testid="input-player-name"
-          placeholder="name"
-          onChange={handleChange}
-        />
-        <input
-          type="email"
-          name="gravatarEmail"
-          data-testid="input-gravatar-email"
-          placeholder="Email"
-          onChange={handleChange}
-        />
+    <StyledLoginSection>
+      <img className="logo" src={logo} alt="trivia" />
 
+      <form className="login-form" onSubmit={handleSubmit}>
+        <div className="inputs-wrapper">
+          <Input
+            value={loginFormState.name}
+            type="name"
+            name="name"
+            id="name"
+            required
+            data-testid="input-player-name"
+            label="Enter your name"
+            onChange={handleChange}
+          />
+
+          <Input
+            value={loginFormState.gravatarEmail}
+            type="email"
+            id="email"
+            required
+            name="gravatarEmail"
+            data-testid="input-gravatar-email"
+            label="Enter your email or gravatar email"
+            onChange={handleChange}
+          />
+        </div>
         {errorMessage && <span>{errorMessage}</span>}
 
-        <button
-          type="button"
+        <GreenButton
+          type="submit"
           data-testid="btn-play"
+          isLoading={isLoading}
+          loadingText="Getting ready..."
           disabled={!canPlay || isLoading}
-          onClick={handleSubmit}
         >
-          Play
-        </button>
+          Start game
+        </GreenButton>
 
-        <Link to="/settings" data-testid="btn-settings">
-          Settings
+        <Link className="settings" to="/settings" data-testid="btn-settings">
+          <img src={settingsCog} alt="settings cog" />
         </Link>
       </form>
-    </div>
+    </StyledLoginSection>
   );
 }
