@@ -187,10 +187,11 @@ export default function Game() {
                     : `wrong-answer-${index}`
                 }
                 className={
-                  currentQuestionState.answerWasSelected &&
-                  (currentQuestionState.question!.correct_answer === answer
-                    ? style.green
-                    : style.red)
+                  currentQuestionState.answerWasSelected
+                    ? currentQuestionState.question!.correct_answer === answer
+                      ? style.green
+                      : style.red
+                    : ""
                 }
                 disabled={countdown === 0}
                 onClick={answerQuestion}
