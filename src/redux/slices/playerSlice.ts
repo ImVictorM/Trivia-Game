@@ -25,15 +25,16 @@ const playerSlice = createSlice({
       state.name = action.payload.name;
       state.gravatarEmail = action.payload.gravatarEmail;
     },
-    setScore: (state, action) => {
-      state.score = action.payload;
-    },
-    setAssertions: (state, action: PayloadAction<number>) => {
-      state.assertions = action.payload;
+    setGameStats: (
+      state,
+      action: PayloadAction<{ score: number; assertions: number }>
+    ) => {
+      state.score = action.payload.score;
+      state.assertions = action.payload.assertions;
     },
   },
 });
 
-export const { setPlayer, setAssertions, setScore } = playerSlice.actions;
+export const { setPlayer, setGameStats } = playerSlice.actions;
 
 export const playerReducer = playerSlice.reducer;

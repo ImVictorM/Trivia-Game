@@ -15,5 +15,5 @@ export default function useToken() {
     setValue(null);
   }, [setValue]);
 
-  return { setToken, clearToken, token: value };
+  return { setToken, clearToken, token: String(value) };
 }
