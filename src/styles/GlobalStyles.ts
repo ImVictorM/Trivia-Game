@@ -6,6 +6,8 @@ export const GlobalStyles = createGlobalStyle`
   ${fonts}
   ${variables}
 
+ 
+
   /* Box sizing rules */
   *,
   *::before,
@@ -16,7 +18,7 @@ export const GlobalStyles = createGlobalStyle`
   margin: 0;
   padding: 0;
   overflow-x: hidden;
-  min-height: 100vh;
+  height: 100%;
   text-rendering: optimizeSpeed;
   font-family: ${({ theme }) => theme.fonts.epilogue}, sans-serif;
   font-size: calc(15px + 0.390625vw);
@@ -38,6 +40,7 @@ dd {
   padding: 0;
   margin: 0;
 }
+
 button {
   border: none;
   background-color: transparent;

@@ -12,6 +12,7 @@ declare module "styled-components" {
       grey: "#6B7588";
       lightGrey: "#DDDDDD";
       black: "#222222";
+      purple: "#3C1B7A";
     };
     fonts: {
       epilogue: "Epilogue";
