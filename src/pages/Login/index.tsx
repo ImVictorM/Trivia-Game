@@ -94,6 +94,7 @@ export default function Login() {
             data-testid="input-player-name"
             label="Enter your name"
             onChange={handleChange}
+            maxLength={20}
           />
 
           <Input
@@ -105,6 +106,7 @@ export default function Login() {
             data-testid="input-gravatar-email"
             label="Enter your email or gravatar email"
             onChange={handleChange}
+            maxLength={320}
           />
         </div>
         {errorMessage && <span>{errorMessage}</span>}

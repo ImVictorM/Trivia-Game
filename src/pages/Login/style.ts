@@ -25,12 +25,12 @@ export const StyledLoginSection = styled.div`
     margin-top: 0.3em;
     position: relative;
     background-color: ${({ theme }) => theme.colors.white};
-    padding: 1em 0.5em;
+    padding: 1em;
     border-radius: 10px;
 
     display: flex;
     flex-direction: column;
-    width: 95%;
+    width: 91%;
     max-width: 500px;
 
     @media ${({ theme }) => theme.bp.mobileL} {
