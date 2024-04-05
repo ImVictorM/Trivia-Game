@@ -1,4 +1,4 @@
-import { Header } from "./components";
+import Header from "./Header";
 import { PurpleBoxBackground, StyledContent, StyledLayout } from "./style";
 
 type HeaderContentLayoutProps = {
