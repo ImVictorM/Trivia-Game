@@ -1,5 +1,5 @@
 import { StyledGreenButton } from "./style";
-import { loadingIcon } from "@/assets/icons";
+import { spinnerLoadingIcon } from "@/assets/icons";
 
 type GreenButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   children: string;
@@ -17,7 +17,8 @@ export default function GreenButton({
     <StyledGreenButton {...defaultButtonProps}>
       {isLoading ? (
         <div className="loading">
-          <span>{loadingText}</span> <img src={loadingIcon} alt="loading" />
+          <span>{loadingText}</span>{" "}
+          <img src={spinnerLoadingIcon} alt="loading" />
         </div>
       ) : (
         children
