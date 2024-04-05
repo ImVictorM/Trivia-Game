@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from "axios";
+import axios, { AxiosResponse, GenericAbortSignal } from "axios";
 
 const GET_TOKEN_ENDPOINT = "https://opentdb.com/";
 
@@ -6,9 +6,9 @@ const triviaApi = axios.create({
   baseURL: GET_TOKEN_ENDPOINT,
 });
 
-type QuestionDifficulty = "medium" | "hard" | "easy";
+export type QuestionDifficulty = "medium" | "hard" | "easy";
 
-type QuestionType = "multiple" | "boolean";
+export type QuestionType = "multiple" | "boolean";
 
 export type Question = {
   category: string;
@@ -37,12 +37,22 @@ export async function getTriviaToken(): Promise<GetTriviaTokenResponse> {
   return tokenResponse.data;
 }
 
+type GetTriviaQuestionsParams = {
+  token: string;
+  amount?: number;
+  signal?: GenericAbortSignal;
+};
+
 export async function getTriviaQuestions(
-  token: string,
-  amount: number = 5
+  args: GetTriviaQuestionsParams
 ): Promise<GetTriviaQuestionsResponse> {
   const questionsResponse: AxiosResponse<GetTriviaQuestionsResponse> =
-    await triviaApi.get(`api.php?amount=${amount}&token=${token}`);
+    await triviaApi.get(
+      `api.php?amount=${args.amount || 5}&token=${args.token}`,
+      {
+        signal: args.signal,
+      }
+    );
 
   return questionsResponse.data;
 }

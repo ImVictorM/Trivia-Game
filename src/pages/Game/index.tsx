@@ -1,14 +1,18 @@
-// import Header from "../../components/Header";
-import { useEffect, useState } from "react";
-import style from "./game.module.css";
+import { useEffect, useRef, useState } from "react";
 import { Question, getTriviaQuestions } from "@/services/triviaApi";
 import { useCountdown, useToken } from "@/hooks";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { shuffleArray } from "@/utils";
+import { calculateScore, shuffleArray, sleep } from "@/utils";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
 import { setGameStats } from "@/redux/slices/playerSlice";
+import { HeaderContentLayout } from "@/layouts";
+import { StyledAnswersWrapper, StyledGameWrapper } from "./style";
+import { GreenButton } from "@/components";
+import QuestionCard from "./QuestionCard";
+import AnswerButton from "./AnswerButton";
+import Loading from "./Loading";
 
 type CurrentQuestionState = {
   questionIndex: number;
@@ -36,52 +40,13 @@ export default function Game() {
     useCountdown(30);
 
   const [errorMessage, setErrorMessage] = useState<string>();
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const { token, clearToken } = useToken();
+
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
-
-  useEffect(() => {
-    async function componentDidMount() {
-      setIsLoading(true);
-
-      try {
-        const { response_code: questionResponseCode, results } =
-          await getTriviaQuestions(token);
-
-        if (questionResponseCode === 0) {
-          setQuestions(results);
-
-          const firstQuestionIndex = 0;
-          const question = results[firstQuestionIndex];
-          const answers = shuffleAnswers(question);
-
-          setCurrentQuestionState({
-            questionIndex: firstQuestionIndex,
-            answers: answers,
-            question: question,
-            answerWasSelected: false,
-          });
-
-          startCountdown();
-        } else {
-          clearToken();
-          navigate("/");
-        }
-      } catch (error) {
-        if (axios.isAxiosError(error)) {
-          if (error.response?.status === 429) {
-            setErrorMessage("Wait a second brother, you're getting too fast!");
-          }
-        }
-      } finally {
-        setIsLoading(false);
-      }
-    }
-
-    componentDidMount();
-  }, []);
 
   const changeToNextQuestion = () => {
     if (!questions) return;
@@ -115,32 +80,16 @@ export default function Game() {
     return shuffleArray(answers);
   };
 
-  const answerQuestion = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const answerQuestion = (_e: any, answer: string) => {
     if (!currentQuestionState.question) return;
 
-    const buttonElement = e.target as HTMLButtonElement;
     const correctAnswer = currentQuestionState.question.correct_answer;
-    const chosenAnswer = buttonElement.innerText;
 
-    if (correctAnswer === chosenAnswer) {
-      const DEFAULT_POINTS_TO_SUM = 10;
-      const EASY_POINTS = 1;
-      const MEDIUM_POINTS = 2;
-      const HARD_POINTS = 3;
-      let difficultyPoints = null;
-      switch (currentQuestionState.question.difficulty) {
-        case "hard":
-          difficultyPoints = HARD_POINTS;
-          break;
-        case "medium":
-          difficultyPoints = MEDIUM_POINTS;
-          break;
-        default:
-          difficultyPoints = EASY_POINTS;
-          break;
-      }
-
-      const score = DEFAULT_POINTS_TO_SUM + countdown * difficultyPoints;
+    if (correctAnswer === answer) {
+      const score = calculateScore(
+        currentQuestionState.question.difficulty,
+        countdown
+      );
 
       setCurrentGameStats((prevStats) => ({
         currentScore: prevStats.currentScore + score,
@@ -157,6 +106,70 @@ export default function Game() {
   };
 
   useEffect(() => {
+    async function fetchTriviaQuestions() {
+      setIsLoading(true);
+
+      const MAX_TRIES_TO_FETCH = 5;
+      let stopLoop = false;
+      let currentTry = 1;
+
+      abortControllerRef.current?.abort();
+      abortControllerRef.current = new AbortController();
+
+      while (stopLoop === false && currentTry <= MAX_TRIES_TO_FETCH) {
+        try {
+          const { response_code: questionResponseCode, results } =
+            await getTriviaQuestions({
+              token: token,
+              signal: abortControllerRef.current.signal,
+            });
+
+          if (questionResponseCode === 0) {
+            setQuestions(results);
+
+            const firstQuestionIndex = 0;
+            const question = results[firstQuestionIndex];
+            const answers = shuffleAnswers(question);
+
+            setCurrentQuestionState({
+              questionIndex: firstQuestionIndex,
+              answers: answers,
+              question: question,
+              answerWasSelected: false,
+            });
+
+            stopLoop = true;
+            startCountdown();
+          } else {
+            // invalid token
+            stopLoop = true;
+            clearToken();
+            navigate("/");
+          }
+
+          setErrorMessage("");
+        } catch (error) {
+          if (error instanceof Error && error.name === "AbortError") {
+            stopLoop = true;
+            return;
+          }
+          if (axios.isAxiosError(error)) {
+            // request interval very short
+            if (error.response?.status === 429) {
+              await sleep(5000);
+              currentTry += 1;
+            }
+          }
+        }
+      }
+
+      setIsLoading(false);
+    }
+
+    fetchTriviaQuestions();
+  }, []);
+
+  useEffect(() => {
     dispatch(
       setGameStats({
         assertions: currentGameStats.assertions,
@@ -166,57 +179,46 @@ export default function Game() {
   }, [currentGameStats]);
 
   return (
-    <section>
-      {/* <Header /> */}
-      {!isLoading && (
-        <div>
-          <p data-testid="question-category">
-            {currentQuestionState.question?.category}
-          </p>
-          <p data-testid="question-text">
-            {currentQuestionState.question?.question}
-          </p>
-          <div data-testid="answer-options">
+    <HeaderContentLayout>
+      {isLoading && <Loading />}
+
+      {!isLoading && currentQuestionState.question && (
+        <StyledGameWrapper>
+          <QuestionCard
+            category={currentQuestionState.question.category}
+            countdown={countdown}
+            question={currentQuestionState.question.question}
+          />
+
+          <StyledAnswersWrapper data-testid="answer-options">
             {currentQuestionState.answers.map((answer, index) => (
-              <button
+              <AnswerButton
+                correctAnswer={currentQuestionState.question!.correct_answer}
+                disabled={
+                  countdown === 0 || currentQuestionState.answerWasSelected
+                }
+                answerWasSelected={currentQuestionState.answerWasSelected}
+                index={index}
+                answer={answer}
                 key={index}
-                type="button"
-                data-testid={
-                  answer === currentQuestionState.question?.correct_answer
-                    ? "correct-answer"
-                    : `wrong-answer-${index}`
-                }
-                className={
-                  currentQuestionState.answerWasSelected
-                    ? currentQuestionState.question!.correct_answer === answer
-                      ? style.green
-                      : style.red
-                    : ""
-                }
-                disabled={countdown === 0}
                 onClick={answerQuestion}
-              >
-                {answer}
-              </button>
+              />
             ))}
-          </div>
-          <div>
-            <span>Remaining time:</span>
-            <span>{countdown}</span>
-          </div>
-          {currentQuestionState.answerWasSelected && (
-            <button
+          </StyledAnswersWrapper>
+
+          {(currentQuestionState.answerWasSelected || countdown === 0) && (
+            <GreenButton
               type="button"
               data-testid="btn-next"
               onClick={changeToNextQuestion}
             >
               Next
-            </button>
+            </GreenButton>
           )}
-        </div>
+        </StyledGameWrapper>
       )}
 
       {errorMessage && <span>{errorMessage}</span>}
-    </section>
+    </HeaderContentLayout>
   );
 }
