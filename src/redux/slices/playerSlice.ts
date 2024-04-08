@@ -1,17 +1,18 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { MD5 } from "crypto-js";
 
 type PlayerState = {
   name: string;
   assertions: number;
   score: number;
-  gravatarEmail: string;
+  gravatarImgSrc: string;
 };
 
 const initialPlayerState: PlayerState = {
   name: "",
   assertions: 0,
   score: 0,
-  gravatarEmail: "",
+  gravatarImgSrc: "",
 };
 
 const playerSlice = createSlice({
@@ -23,7 +24,10 @@ const playerSlice = createSlice({
       action: PayloadAction<{ name: string; gravatarEmail: string }>
     ) => {
       state.name = action.payload.name;
-      state.gravatarEmail = action.payload.gravatarEmail;
+
+      const emailHash = MD5(action.payload.gravatarEmail).toString();
+
+      state.gravatarImgSrc = `https://www.gravatar.com/avatar/${emailHash}`;
     },
     setGameStats: (
       state,

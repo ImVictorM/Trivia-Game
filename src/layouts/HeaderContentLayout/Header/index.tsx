@@ -1,19 +1,17 @@
 import { useSelector } from "react-redux";
-import { MD5 } from "crypto-js";
 import { RootState } from "@/redux/store";
 import { StyledHeader } from "./style";
 import { star } from "@/assets/icons";
 
 export default function Header() {
   const player = useSelector((state: RootState) => state.player);
-  const emailHash = MD5(player.gravatarEmail).toString();
 
   return (
     <StyledHeader>
       <div className="player-wrapper">
         <img
           data-testid="header-profile-picture"
-          src={`https://www.gravatar.com/avatar/${emailHash}`}
+          src={player.gravatarImgSrc}
           alt={player.name}
         />
         <span data-testid="header-player-name">{player.name}</span>

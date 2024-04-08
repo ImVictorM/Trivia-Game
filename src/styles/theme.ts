@@ -1,6 +1,6 @@
-import { DefaultTheme } from "styled-components";
+import { mixins } from "./mixins";
 
-export const theme: DefaultTheme = {
+export const theme = {
   colors: {
     white: "#FFFFFF",
     red: "#EA5D5D",
@@ -28,4 +28,7 @@ export const theme: DefaultTheme = {
     desktopM: `(min-width: 1200px)`,
     desktopL: `(min-width: 1400px)`,
   },
+  mixins,
 };
+
+export type Theme = typeof theme;
