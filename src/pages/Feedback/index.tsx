@@ -8,10 +8,21 @@ import {
   StyledFeedbackContent,
 } from "./style";
 import { LinkButton } from "@/components";
+import { useEffect } from "react";
+import usePlayerRanking from "@/hooks/usePlayerRanking";
 
 export default function Feedback() {
   const player = useSelector((state: RootState) => state.player);
+  const { updateRanking } = usePlayerRanking();
   const isGoodScore = player.assertions > 2;
+
+  useEffect(() => {
+    updateRanking({
+      name: player.name,
+      gravatarImgSrc: player.gravatarImgSrc,
+      score: player.score,
+    });
+  }, [player, updateRanking]);
 
   return (
     <StyledFeedback>

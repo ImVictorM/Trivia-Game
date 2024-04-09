@@ -1,7 +1,8 @@
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { StyledQuestionCard, StyledScrollingText } from "./style";
 import useOverflow from "@/hooks/useOverflow";
 import { timer } from "@/assets/icons";
+import { sleep } from "@/utils";
 
 type QuestionCardProps = {
   countdown: number;
@@ -14,20 +15,36 @@ export default function QuestionCard({
   countdown,
   question,
 }: QuestionCardProps) {
+  const [stopAnimation, setStopAnimation] = useState(false);
   const questionThemeRef = useRef(null);
   const { isOverflow } = useOverflow(questionThemeRef);
   const categoryClass = category.split(" ")[0].toLowerCase().replace(":", "");
+
+  useEffect(() => {
+    async function changeAnimationStateImmediately() {
+      setStopAnimation(true);
+      await sleep(1000);
+      setStopAnimation(false);
+    }
+
+    changeAnimationStateImmediately();
+  }, [category]);
 
   return (
     <StyledQuestionCard>
       <div
         className={`question-theme ${categoryClass}`}
-        ref={questionThemeRef}
         data-testid="question-category"
       >
-        <StyledScrollingText $isOverflow={isOverflow}>
-          {category}
-        </StyledScrollingText>
+        <div className="scrolling-text-wrapper">
+          <StyledScrollingText
+            ref={questionThemeRef}
+            $stopAnimation={stopAnimation}
+            $isOverflow={isOverflow}
+          >
+            {category}
+          </StyledScrollingText>
+        </div>
       </div>
       <div className="question-content-wrapper">
         <p className="question-text" data-testid="question-text">

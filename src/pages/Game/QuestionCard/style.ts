@@ -14,12 +14,15 @@ export const StyledQuestionCard = styled.div`
     left: 1em;
     border-radius: 50px;
     height: 45px;
-    padding: 1em 0.5em;
+    padding: 1em 1em;
     position: absolute;
     background-color: ${({ theme }) => theme.colors.white};
     text-align: center;
     font-weight: 600;
-    overflow: hidden;
+
+    .scrolling-text-wrapper {
+      overflow: hidden;
+    }
 
     &.general {
       background-color: ${({ theme }) => theme.colors.lightGrey};
@@ -80,13 +83,27 @@ const scrollAnimation = keyframes`
   }
 `;
 
-export const StyledScrollingText = styled.span<{ $isOverflow: boolean }>`
+type StyledScrollingTextProps = {
+  $isOverflow: boolean;
+  $stopAnimation: boolean;
+};
+
+export const StyledScrollingText = styled.span<StyledScrollingTextProps>`
+  width: 100%;
   display: inline-block;
   white-space: nowrap;
 
-  ${({ $isOverflow }) =>
-    $isOverflow &&
-    css`
-      animation: ${scrollAnimation} 10s linear infinite;
-    `}
+  ${({ $isOverflow, $stopAnimation }) => {
+    if ($stopAnimation) {
+      return css`
+        animation: none;
+      `;
+    }
+
+    if ($isOverflow) {
+      return css`
+        animation: ${scrollAnimation} 10s linear infinite;
+      `;
+    }
+  }}
 `;
