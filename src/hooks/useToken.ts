@@ -12,7 +12,7 @@ export default function useToken() {
   );
 
   const clearToken = useCallback(() => {
-    setValue(null);
+    setValue("");
   }, [setValue]);
 
   return { setToken, clearToken, token: String(value) };

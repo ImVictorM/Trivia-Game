@@ -80,7 +80,10 @@ export default function Game() {
     return shuffleArray(answers);
   };
 
-  const answerQuestion = (_e: any, answer: string) => {
+  const answerQuestion = (
+    _e: React.MouseEvent<HTMLButtonElement>,
+    answer: string
+  ) => {
     if (!currentQuestionState.question) return;
 
     const correctAnswer = currentQuestionState.question.correct_answer;
@@ -116,7 +119,7 @@ export default function Game() {
       abortControllerRef.current?.abort();
       abortControllerRef.current = new AbortController();
 
-      while (stopLoop === false && currentTry <= MAX_TRIES_TO_FETCH) {
+      while (!stopLoop && currentTry <= MAX_TRIES_TO_FETCH) {
         try {
           const { response_code: questionResponseCode, results } =
             await getTriviaQuestions({
@@ -167,7 +170,7 @@ export default function Game() {
     }
 
     fetchTriviaQuestions();
-  }, []);
+  }, [token, clearToken, navigate, startCountdown]);
 
   useEffect(() => {
     dispatch(
@@ -176,7 +179,7 @@ export default function Game() {
         score: currentGameStats.currentScore,
       })
     );
-  }, [currentGameStats]);
+  }, [currentGameStats, dispatch]);
 
   return (
     <HeaderContentLayout>

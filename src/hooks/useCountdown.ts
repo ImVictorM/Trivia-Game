@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export default function useCountdown(
   initialTime: number,
@@ -7,11 +7,11 @@ export default function useCountdown(
   const [countdown, setCountdown] = useState(initialTime);
   const [shouldStartCountdown, setShouldStartCountdown] = useState(false);
 
-  let intervalId: NodeJS.Timeout | null = null;
+  const intervalId = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if (shouldStartCountdown) {
-      intervalId = setInterval(() => {
+      intervalId.current = setInterval(() => {
         if (countdown > 0) {
           setCountdown((prev) => prev - 1);
         }
@@ -19,28 +19,28 @@ export default function useCountdown(
     }
 
     return () => {
-      if (intervalId) {
-        clearInterval(intervalId);
+      if (intervalId.current) {
+        clearInterval(intervalId.current);
       }
     };
-  }, [countdown, shouldStartCountdown]);
+  }, [countdown, shouldStartCountdown, intervalId, interval]);
 
-  const startCountdown = () => {
+  const startCountdown = useCallback(() => {
     setCountdown(initialTime);
     setShouldStartCountdown(true);
-  };
+  }, [initialTime]);
 
-  const stopCountdown = () => {
-    if (intervalId) {
-      clearInterval(intervalId);
+  const stopCountdown = useCallback(() => {
+    if (intervalId.current) {
+      clearInterval(intervalId.current);
     }
     setShouldStartCountdown(false);
-  };
+  }, []);
 
-  const restartCountdown = () => {
+  const restartCountdown = useCallback(() => {
     stopCountdown();
     startCountdown();
-  };
+  }, [startCountdown, stopCountdown]);
 
   return { countdown, startCountdown, stopCountdown, restartCountdown };
 }

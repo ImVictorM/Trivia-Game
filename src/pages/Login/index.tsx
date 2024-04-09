@@ -77,7 +77,7 @@ export default function Login() {
         navigate("/");
       }
     }
-  }, [token, shouldNavigate]);
+  }, [token, shouldNavigate, navigate]);
 
   return (
     <StyledLoginSection>

@@ -24,11 +24,10 @@ export default function useOverflow(
     if (current) {
       if ("ResizeObserver" in window) {
         new ResizeObserver(trigger).observe(current);
-      } else {
-        trigger();
       }
+      trigger();
     }
-  }, [callback, ref.current]);
+  }, [callback, ref, ref.current?.textContent]);
 
   return { isOverflow };
 }
