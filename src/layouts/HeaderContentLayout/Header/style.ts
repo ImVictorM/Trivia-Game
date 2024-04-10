@@ -18,6 +18,10 @@ export const StyledHeader = styled.header`
   gap: 1em;
   box-shadow: 0 0 5px ${({ theme }) => theme.colors.black};
 
+  @media ${({ theme }) => theme.bp.desktopXS} {
+    position: absolute;
+  }
+
   .player-wrapper {
     display: flex;
     flex-direction: row;

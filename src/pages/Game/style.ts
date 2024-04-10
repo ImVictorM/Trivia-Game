@@ -16,7 +16,7 @@ export const StyledGameWrapper = styled.section`
     grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
     gap: 3em;
     margin: 0 auto;
-    margin-top: 7em;
+    margin-top: 2em;
   }
 
   .left {
@@ -31,9 +31,9 @@ export const StyledGameWrapper = styled.section`
       .logo {
         display: block;
         position: absolute;
-        width: 230px;
+        width: 170px;
         z-index: 11;
-        top: -300px;
+        top: -220px;
         right: 50%;
         transform: translateX(50%);
       }
@@ -42,14 +42,8 @@ export const StyledGameWrapper = styled.section`
 
   .right {
     @media ${({ theme }) => theme.bp.desktopXS} {
-      position: relative;
       align-self: baseline;
       margin-top: 3em;
-      .next-button-wrapper {
-        width: 100%;
-        position: absolute;
-        bottom: -2em;
-      }
     }
   }
 `;
@@ -62,4 +56,5 @@ export const StyledAnswersWrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   gap: 1em;
+  border: 3px solid red;
 `;

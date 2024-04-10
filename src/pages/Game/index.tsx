@@ -117,10 +117,9 @@ export default function Game() {
       let stopLoop = false;
       let currentTry = 1;
 
-      abortControllerRef.current?.abort();
-      abortControllerRef.current = new AbortController();
-
       while (!stopLoop && currentTry <= MAX_TRIES_TO_FETCH) {
+        abortControllerRef.current?.abort();
+        abortControllerRef.current = new AbortController();
         try {
           const { response_code: questionResponseCode, results } =
             await getTriviaQuestions({
@@ -215,15 +214,13 @@ export default function Game() {
             </StyledAnswersWrapper>
 
             {(currentQuestionState.answerWasSelected || countdown === 0) && (
-              <div className="next-button-wrapper">
-                <GreenButton
-                  type="button"
-                  data-testid="btn-next"
-                  onClick={changeToNextQuestion}
-                >
-                  Next
-                </GreenButton>
-              </div>
+              <GreenButton
+                type="button"
+                data-testid="btn-next"
+                onClick={changeToNextQuestion}
+              >
+                Next
+              </GreenButton>
             )}
           </div>
         </StyledGameWrapper>
