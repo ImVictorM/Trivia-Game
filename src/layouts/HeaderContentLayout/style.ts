@@ -11,8 +11,9 @@ export const StyledLayout = styled.div`
 `;
 
 export const StyledContent = styled.div`
+  display: flex;
   padding: 1em;
-  min-height: calc(100vh - var(--header-height));
+  min-height: var(--content-height);
   z-index: 1;
 `;
 

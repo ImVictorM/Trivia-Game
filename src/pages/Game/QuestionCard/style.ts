@@ -6,35 +6,53 @@ export const StyledQuestionCard = styled.div`
   background-color: ${({ theme }) => theme.colors.white};
   border-radius: 10px;
   padding: 1em;
+  display: flex;
+  justify-content: center;
+
+  @media ${({ theme }) => theme.bp.desktopXS} {
+    min-height: 400px;
+    padding: 2em;
+  }
 
   .question-theme {
     margin: 0;
-    top: -22.5px;
+    top: -30px;
     right: 1em;
     left: 1em;
     border-radius: 50px;
-    height: 45px;
-    padding: 1em 1em;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     position: absolute;
-    background-color: ${({ theme }) => theme.colors.white};
-    text-align: center;
+    background-color: ${({ theme }) => theme.colors.purple};
     font-weight: 600;
+    padding: 0 1em;
+    box-shadow: 0 4px 4px ${({ theme }) => theme.colors.black + "25"};
+    color: ${({ theme }) => theme.mixins.getContrastColor(theme.colors.purple)};
 
     .scrolling-text-wrapper {
+      width: 100%;
+      text-align: center;
       overflow: hidden;
     }
 
     &.general {
-      background-color: ${({ theme }) => theme.colors.lightGrey};
+      background-color: ${({ theme }) => theme.colors.purple};
+      color: ${({ theme }) =>
+        theme.mixins.getContrastColor(theme.colors.purple)};
     }
 
     &.entertainment {
       background-color: ${({ theme }) => theme.colors.cyan};
+      color: ${({ theme }) => theme.mixins.getContrastColor(theme.colors.cyan)};
     }
 
     &.science,
     &.animals {
       background-color: ${({ theme }) => theme.colors.green};
+      color: ${({ theme }) =>
+        theme.mixins.getContrastColor(theme.colors.green)};
     }
 
     &.geography,
@@ -42,12 +60,15 @@ export const StyledQuestionCard = styled.div`
     &.politics,
     &.mythology {
       background-color: ${({ theme }) => theme.colors.red};
+      color: ${({ theme }) => theme.mixins.getContrastColor(theme.colors.red)};
     }
 
     &.art,
     &.celebrities,
     &.sports {
       background-color: ${({ theme }) => theme.colors.yellow};
+      color: ${({ theme }) =>
+        theme.mixins.getContrastColor(theme.colors.yellow)};
     }
   }
 
@@ -55,7 +76,13 @@ export const StyledQuestionCard = styled.div`
     margin-top: 5em;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     gap: 6em;
+
+    @media ${({ theme }) => theme.bp.desktopXS} {
+      gap: 0;
+      margin-top: 6em;
+    }
 
     .question-text {
       text-align: center;

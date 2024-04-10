@@ -8,7 +8,7 @@ export const StyledHeader = styled.header`
   top: 0;
   left: 0;
   right: 0;
-  z-index: 99;
+  z-index: 10;
 
   display: flex;
   flex-wrap: wrap;

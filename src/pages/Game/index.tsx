@@ -13,6 +13,7 @@ import { GreenButton } from "@/components";
 import QuestionCard from "./QuestionCard";
 import AnswerButton from "./AnswerButton";
 import Loading from "./Loading";
+import { logo } from "@/assets/images";
 
 type CurrentQuestionState = {
   questionIndex: number;
@@ -187,37 +188,44 @@ export default function Game() {
 
       {!isLoading && currentQuestionState.question && (
         <StyledGameWrapper>
-          <QuestionCard
-            category={currentQuestionState.question.category}
-            countdown={countdown}
-            question={currentQuestionState.question.question}
-          />
+          <div className="left">
+            <img className="logo" src={logo} alt="trivia logo" />
+            <QuestionCard
+              category={currentQuestionState.question.category}
+              countdown={countdown}
+              question={currentQuestionState.question.question}
+            />
+          </div>
 
-          <StyledAnswersWrapper data-testid="answer-options">
-            {currentQuestionState.answers.map((answer, index) => (
-              <AnswerButton
-                correctAnswer={currentQuestionState.question!.correct_answer}
-                disabled={
-                  countdown === 0 || currentQuestionState.answerWasSelected
-                }
-                answerWasSelected={currentQuestionState.answerWasSelected}
-                index={index}
-                answer={answer}
-                key={index}
-                onClick={answerQuestion}
-              />
-            ))}
-          </StyledAnswersWrapper>
+          <div className="right">
+            <StyledAnswersWrapper data-testid="answer-options">
+              {currentQuestionState.answers.map((answer, index) => (
+                <AnswerButton
+                  correctAnswer={currentQuestionState.question!.correct_answer}
+                  disabled={
+                    countdown === 0 || currentQuestionState.answerWasSelected
+                  }
+                  answerWasSelected={currentQuestionState.answerWasSelected}
+                  index={index}
+                  answer={answer}
+                  key={index}
+                  onClick={answerQuestion}
+                />
+              ))}
+            </StyledAnswersWrapper>
 
-          {(currentQuestionState.answerWasSelected || countdown === 0) && (
-            <GreenButton
-              type="button"
-              data-testid="btn-next"
-              onClick={changeToNextQuestion}
-            >
-              Next
-            </GreenButton>
-          )}
+            {(currentQuestionState.answerWasSelected || countdown === 0) && (
+              <div className="next-button-wrapper">
+                <GreenButton
+                  type="button"
+                  data-testid="btn-next"
+                  onClick={changeToNextQuestion}
+                >
+                  Next
+                </GreenButton>
+              </div>
+            )}
+          </div>
         </StyledGameWrapper>
       )}
 
