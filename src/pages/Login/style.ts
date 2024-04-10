@@ -1,8 +1,8 @@
 import styled from "styled-components";
-import { loginBackground } from "@/assets/images";
+import { centeredBackground } from "@/assets/images";
 
 export const StyledLoginSection = styled.div`
-  background-image: url(${loginBackground});
+  background-image: url(${centeredBackground});
   background-size: cover;
   min-height: 100vh;
   height: 100vh;
