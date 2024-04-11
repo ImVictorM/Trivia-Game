@@ -1,8 +1,8 @@
 import styled from "styled-components";
-import { feedbackBackground } from "@/assets/images";
+import { centeredBackgroundWithFooter } from "@/assets/images";
 
 export const StyledFeedback = styled.div`
-  background-image: url(${feedbackBackground});
+  background-image: url(${centeredBackgroundWithFooter});
   background-position: center center;
   background-size: cover;
   min-height: 100vh;

@@ -1,27 +1,16 @@
 import styled from "styled-components";
-import { gameBackground } from "@/assets/images";
+import { leftQuestionsMarkBackground } from "@/assets/images";
 
 export const StyledLayout = styled.div`
   position: relative;
-  background-image: url(${gameBackground});
+  background-image: url(${leftQuestionsMarkBackground});
   background-size: cover;
-  background-position: top -2em center;
+  background-position: center center;
   padding-top: var(--header-height);
-  z-index: 0;
 `;
 
 export const StyledContent = styled.div`
   display: flex;
   padding: 1em;
   min-height: var(--content-height);
-  z-index: 1;
-`;
-
-export const PurpleBoxBackground = styled.div`
-  position: absolute;
-  bottom: 0;
-  background-color: ${({ theme }) => theme.colors.purple};
-  width: 100%;
-  height: 15vh;
-  z-index: -1;
 `;
