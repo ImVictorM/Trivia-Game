@@ -9,6 +9,7 @@ import { StyledLoginSection } from "./style";
 import { GreenButton, Input } from "@/components";
 import { settingsCog } from "@/assets/icons";
 import { useToken } from "@/hooks";
+import { getAvatarImg } from "@/services/gravatarApi";
 
 export default function Login() {
   const [loginFormState, setLoginFormState] = useState({
@@ -43,10 +44,11 @@ export default function Login() {
 
       if (tokenResponseCode === 0) {
         setToken(token);
+        const gravatarImageSrc = getAvatarImg(loginFormState.gravatarEmail);
 
         dispatch(
           setPlayer({
-            gravatarEmail: loginFormState.gravatarEmail,
+            gravatarImgSrc: gravatarImageSrc,
             name: loginFormState.name,
           })
         );
