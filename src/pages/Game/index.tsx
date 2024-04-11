@@ -117,6 +117,7 @@ export default function Game() {
       let currentTry = 1;
 
       abortControllerRef.current?.abort();
+
       while (currentTry <= MAX_TRIES_TO_FETCH) {
         abortControllerRef.current = new AbortController();
 

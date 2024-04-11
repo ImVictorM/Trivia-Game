@@ -1,3 +1,4 @@
+import { decodeHtmlEntity } from "@/utils";
 import axios, { AxiosResponse, GenericAbortSignal } from "axios";
 
 const GET_TOKEN_ENDPOINT = "https://opentdb.com/";
@@ -54,5 +55,23 @@ export async function getTriviaQuestions(
       }
     );
 
-  return questionsResponse.data;
+  const decodedResults: Question[] = questionsResponse.data.results.map(
+    (question) => {
+      return {
+        category: decodeHtmlEntity(question.category),
+        correct_answer: decodeHtmlEntity(question.correct_answer),
+        difficulty: decodeHtmlEntity(question.difficulty) as QuestionDifficulty,
+        incorrect_answers: question.incorrect_answers.map((incorrectAnswer) =>
+          decodeHtmlEntity(incorrectAnswer)
+        ),
+        question: decodeHtmlEntity(question.question),
+        type: decodeHtmlEntity(question.type) as QuestionType,
+      };
+    }
+  );
+
+  return {
+    ...questionsResponse.data,
+    results: decodedResults,
+  };
 }
