@@ -119,6 +119,7 @@ export const StyledScrollingText = styled.span<StyledScrollingTextProps>`
   width: 100%;
   display: inline-block;
   white-space: nowrap;
+  line-height: 1.5;
 
   ${({ $isOverflow, $stopAnimation }) => {
     if ($stopAnimation) {

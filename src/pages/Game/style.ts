@@ -56,5 +56,4 @@ export const StyledAnswersWrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   gap: 1em;
-  border: 3px solid red;
 `;

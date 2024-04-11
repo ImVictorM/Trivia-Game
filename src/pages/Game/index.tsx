@@ -114,12 +114,12 @@ export default function Game() {
       setIsLoading(true);
 
       const MAX_TRIES_TO_FETCH = 5;
-      let stopLoop = false;
       let currentTry = 1;
 
-      while (!stopLoop && currentTry <= MAX_TRIES_TO_FETCH) {
-        abortControllerRef.current?.abort();
+      abortControllerRef.current?.abort();
+      while (currentTry <= MAX_TRIES_TO_FETCH) {
         abortControllerRef.current = new AbortController();
+
         try {
           const { response_code: questionResponseCode, results } =
             await getTriviaQuestions({
@@ -141,36 +141,46 @@ export default function Game() {
               answerWasSelected: false,
             });
 
-            stopLoop = true;
+            setErrorMessage("");
             startCountdown();
+            setIsLoading(false);
+
+            return;
           } else {
             // invalid token
-            stopLoop = true;
             clearToken();
-            navigate("/");
+            return;
           }
-
-          setErrorMessage("");
         } catch (error) {
           if (error instanceof Error && error.name === "AbortError") {
-            stopLoop = true;
+            setIsLoading(false);
             return;
           }
           if (axios.isAxiosError(error)) {
-            // request interval very short
             if (error.response?.status === 429) {
+              // request interval very short
               await sleep(5000);
-              currentTry += 1;
             }
           }
+          currentTry += 1;
         }
       }
 
-      setIsLoading(false);
+      setErrorMessage(
+        "Sorry, but it was not possible to fetch questions for your trivia game. Try again later."
+      );
     }
 
     fetchTriviaQuestions();
-  }, [token, clearToken, navigate, startCountdown]);
+
+    return () => abortControllerRef.current?.abort();
+  }, [clearToken, startCountdown, token]);
+
+  useEffect(() => {
+    if (!token) {
+      navigate("/");
+    }
+  }, [token, navigate]);
 
   useEffect(() => {
     dispatch(
