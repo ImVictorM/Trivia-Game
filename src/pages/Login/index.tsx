@@ -44,7 +44,9 @@ export default function Login() {
 
       if (tokenResponseCode === 0) {
         setToken(token);
-        const gravatarImageSrc = getAvatarImg(loginFormState.gravatarEmail);
+        const gravatarImageSrc = await getAvatarImg(
+          loginFormState.gravatarEmail
+        );
 
         dispatch(
           setPlayer({
