@@ -11,15 +11,27 @@ export const StyledHeader = styled.header`
   z-index: 10;
 
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  flex-direction: column;
-  gap: 1em;
   box-shadow: 0 0 5px ${({ theme }) => theme.colors.black};
 
   @media ${({ theme }) => theme.bp.desktopXS} {
     position: absolute;
+  }
+`;
+
+export const StyledHeaderContent = styled.div`
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
+  max-width: 1600px;
+  gap: 1em;
+  flex-wrap: wrap;
+
+  @media ${({ theme }) => theme.bp.desktopXS} {
+    justify-content: end;
   }
 
   .player-wrapper {
