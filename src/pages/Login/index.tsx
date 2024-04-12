@@ -42,8 +42,6 @@ export default function Login() {
       const { token, response_code: tokenResponseCode } =
         await getTriviaToken();
 
-      throw new Error();
-
       if (tokenResponseCode === 0) {
         setToken(token);
         const gravatarImageSrc = await getAvatarImg(
