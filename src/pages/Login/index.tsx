@@ -6,10 +6,11 @@ import { setPlayer } from "@/redux/slices/playerSlice";
 import { getTriviaToken } from "@/services/triviaApi";
 import { logo } from "@/assets/images";
 import { StyledLoginSection } from "./style";
-import { GreenButton, Input } from "@/components";
+import { GreenButton, Input, Toast } from "@/components";
 import { settingsCog } from "@/assets/icons";
 import { useToken } from "@/hooks";
 import { getAvatarImg } from "@/services/gravatarApi";
+import { Bounce, toast } from "react-toastify";
 
 export default function Login() {
   const [loginFormState, setLoginFormState] = useState({
@@ -18,7 +19,6 @@ export default function Login() {
   });
   const [canPlay, setCanPlay] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
   const [shouldNavigate, setShouldNavigate] = useState(false);
 
   const dispatch = useDispatch<AppDispatch>();
@@ -42,6 +42,8 @@ export default function Login() {
       const { token, response_code: tokenResponseCode } =
         await getTriviaToken();
 
+      throw new Error();
+
       if (tokenResponseCode === 0) {
         setToken(token);
         const gravatarImageSrc = await getAvatarImg(
@@ -61,7 +63,7 @@ export default function Login() {
         setShouldNavigate(true);
       }
     } catch (error) {
-      setErrorMessage("There was an unexpected error, please try again.");
+      toast.error("There was an unexpected error, please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -113,7 +115,6 @@ export default function Login() {
             maxLength={320}
           />
         </div>
-        {errorMessage && <span>{errorMessage}</span>}
 
         <GreenButton
           type="submit"
@@ -129,6 +130,19 @@ export default function Login() {
           <img src={settingsCog} alt="settings cog" />
         </Link>
       </form>
+
+      <Toast
+        position="bottom-right"
+        autoClose={4000}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        transition={Bounce}
+      />
     </StyledLoginSection>
   );
 }
