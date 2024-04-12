@@ -20,6 +20,11 @@ export type Question = {
   type: QuestionType;
 };
 
+export type TriviaCategory = {
+  id: number;
+  name: string;
+};
+
 type GetTriviaQuestionsResponse = {
   response_code: number;
   results: Question[];
@@ -31,18 +36,26 @@ type GetTriviaTokenResponse = {
   token: string;
 };
 
+type GetTriviaQuestionsParams = {
+  token: string;
+  amount?: number;
+  signal?: GenericAbortSignal;
+};
+
+type GetTriviaCategoriesResponse = {
+  trivia_categories: TriviaCategory[];
+};
+
+type GetTriviaCategoriesParams = {
+  signal?: GenericAbortSignal;
+};
+
 export async function getTriviaToken(): Promise<GetTriviaTokenResponse> {
   const tokenResponse: AxiosResponse<GetTriviaTokenResponse> =
     await triviaApi.get("api_token.php?command=request");
 
   return tokenResponse.data;
 }
-
-type GetTriviaQuestionsParams = {
-  token: string;
-  amount?: number;
-  signal?: GenericAbortSignal;
-};
 
 export async function getTriviaQuestions(
   args: GetTriviaQuestionsParams
@@ -74,4 +87,14 @@ export async function getTriviaQuestions(
     ...questionsResponse.data,
     results: decodedResults,
   };
+}
+
+export async function getTriviaCategories(
+  args?: GetTriviaCategoriesParams
+): Promise<TriviaCategory[]> {
+  const response: AxiosResponse<GetTriviaCategoriesResponse> =
+    await triviaApi.get("api_category.php", {
+      signal: args?.signal,
+    });
+  return response.data.trivia_categories;
 }

@@ -2,7 +2,7 @@ import { useEffect, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { RootState } from "./redux/store";
-import { Login, Feedback, Game, Ranking } from "./pages";
+import { Login, Feedback, Game, Ranking, Settings } from "./pages";
 
 export default function AppRoutes() {
   const location = useLocation();
@@ -32,7 +32,7 @@ export default function AppRoutes() {
       },
       {
         path: "/settings",
-        element: <div></div>,
+        element: <Settings />,
         requiredPlayer: false,
       },
     ],
@@ -51,7 +51,7 @@ export default function AppRoutes() {
   return (
     <Routes>
       {routes.map((route) => (
-        <Route path={route.path} element={route.element} />
+        <Route key={route.path} path={route.path} element={route.element} />
       ))}
     </Routes>
   );
