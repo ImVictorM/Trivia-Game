@@ -19,6 +19,10 @@ export const StyledLoginSection = styled.div`
     @media ${({ theme }) => theme.bp.mobileL} {
       width: 200px;
     }
+
+    @media ${({ theme }) => theme.bp.desktopXS} {
+      width: 260px;
+    }
   }
 
   .login-form {
@@ -31,10 +35,15 @@ export const StyledLoginSection = styled.div`
     display: flex;
     flex-direction: column;
     width: 91%;
-    max-width: 500px;
+    max-width: 650px;
+    box-shadow: 1px 4px 13px ${({ theme }) => theme.colors.black + "25"};
 
     @media ${({ theme }) => theme.bp.mobileL} {
       padding: 1.5em;
+    }
+
+    @media ${({ theme }) => theme.bp.desktopXS} {
+      padding: 1.5em 2.5em;
     }
 
     .inputs-wrapper {
@@ -46,6 +55,10 @@ export const StyledLoginSection = styled.div`
       width: 30px;
       right: 1em;
       top: 1em;
+
+      @media ${({ theme }) => theme.bp.desktopXS} {
+        width: 40px;
+      }
 
       img {
         transition: transform 0.5s ease;

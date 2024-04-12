@@ -18,7 +18,7 @@ export const StyledRankingContent = styled.section`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  max-width: 800px;
+  max-width: 600px;
   max-height: 800px;
   background-color: white;
   border-radius: 10px;

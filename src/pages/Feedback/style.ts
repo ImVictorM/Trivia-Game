@@ -17,7 +17,8 @@ export const StyledFeedbackContent = styled.section`
   align-items: center;
   justify-content: center;
   width: 100%;
-  max-width: 450px;
+  max-width: 650px;
+  margin: 0 1em;
 
   padding: 1em 0;
 
@@ -43,13 +44,15 @@ export const StyledFeedbackCard = styled.div<StyledFeedbackCardProps>`
   margin-top: 4em;
   background-color: ${({ theme }) => theme.colors.white};
   padding: 6em 0.5em 3em;
+  box-shadow: 0 4px 4px ${({ theme }) => theme.colors.black + "25"};
 
-  width: 95%;
+  width: 100%;
   text-align: center;
   border-radius: 10px;
 
   @media ${({ theme }) => theme.bp.tabletL} {
     margin-top: 4.5em;
+    padding: 6em 2em 3em;
   }
 
   .player-image {
@@ -88,10 +91,9 @@ export const StyledFeedbackCard = styled.div<StyledFeedbackCardProps>`
 `;
 
 export const StyledButtonsWrapper = styled.div`
-  width: 95%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   margin-top: 1em;
   gap: 0.5em;
 `;
