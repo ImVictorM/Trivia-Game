@@ -6,12 +6,10 @@ type StyledLinkButtonProps = {
 };
 
 export const StyledLinkButton = styled.div<StyledLinkButtonProps>`
-  height: 100%;
   width: 100%;
 
   .link {
     display: inline-block;
-    height: 100%;
     width: 100%;
 
     padding: 1em 2em;

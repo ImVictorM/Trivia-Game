@@ -14,6 +14,7 @@ import QuestionCard from "./QuestionCard";
 import AnswerButton from "./AnswerButton";
 import Loading from "./Loading";
 import { logo } from "@/assets/images";
+import GameError from "./GameError";
 
 type CurrentQuestionState = {
   questionIndex: number;
@@ -40,7 +41,7 @@ export default function Game() {
   const { countdown, startCountdown, stopCountdown, restartCountdown } =
     useCountdown(30);
 
-  const [errorMessage, setErrorMessage] = useState<string>();
+  const [hadErrorOnFetching, setHadErrorOnFetching] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const { token, clearToken } = useToken();
 
@@ -142,7 +143,7 @@ export default function Game() {
               answerWasSelected: false,
             });
 
-            setErrorMessage("");
+            setHadErrorOnFetching(false);
             startCountdown();
             setIsLoading(false);
 
@@ -167,9 +168,7 @@ export default function Game() {
         }
       }
 
-      setErrorMessage(
-        "Sorry, but it was not possible to fetch questions for your trivia game. Try again later."
-      );
+      setHadErrorOnFetching(true);
     }
 
     fetchTriviaQuestions();
@@ -196,14 +195,14 @@ export default function Game() {
     <HeaderContentLayout>
       {isLoading && <Loading />}
 
-      {!isLoading && currentQuestionState.question && (
+      {!isLoading && !hadErrorOnFetching && (
         <StyledGameWrapper>
           <div className="left">
             <img className="logo" src={logo} alt="trivia logo" />
             <QuestionCard
-              category={currentQuestionState.question.category}
+              category={currentQuestionState.question!.category}
               countdown={countdown}
-              question={currentQuestionState.question.question}
+              question={currentQuestionState.question!.question}
             />
           </div>
 
@@ -237,7 +236,7 @@ export default function Game() {
         </StyledGameWrapper>
       )}
 
-      {errorMessage && <span>{errorMessage}</span>}
+      {!isLoading && hadErrorOnFetching && <GameError />}
     </HeaderContentLayout>
   );
 }
