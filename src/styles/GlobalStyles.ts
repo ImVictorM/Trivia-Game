@@ -41,6 +41,18 @@ dd {
   margin: 0;
 }
 
+  .main-title {
+    color: ${({ theme }) => theme.colors.purple};
+    text-transform: uppercase;
+    margin-bottom: 0.3em;
+  }
+
+  .secondary-title {
+    opacity: 0.7;
+    color: ${({ theme }) => theme.colors.purple};
+    font-size: 1.2rem;
+  }
+
 button {
   border: none;
   background-color: transparent;

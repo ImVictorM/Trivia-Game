@@ -20,12 +20,12 @@ export const StyledRankingContent = styled.section`
   justify-content: center;
   max-width: 600px;
   max-height: 800px;
-  background-color: white;
+  background-color: ${({ theme }) => theme.colors.white};
   border-radius: 10px;
   width: 90%;
 
   @media ${({ theme }) => theme.bp.tabletL} {
-    padding: 7em 3em 3em;
+    padding: 7em 3em 1em;
   }
 
   .logo {
@@ -41,18 +41,6 @@ export const StyledRankingContent = styled.section`
 
       top: -110px;
     }
-  }
-
-  .main-title {
-    color: ${({ theme }) => theme.colors.purple};
-    text-transform: uppercase;
-    margin-bottom: 0.3em;
-  }
-
-  .secondary-title {
-    opacity: 0.7;
-    color: ${({ theme }) => theme.colors.purple};
-    font-size: 1.2rem;
   }
 `;
 
