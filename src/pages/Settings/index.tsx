@@ -1,6 +1,10 @@
 import { logo } from "@/assets/images";
-import { StyledSettings } from "./style";
-import { GreenButton } from "@/components";
+import {
+  StyledSettings,
+  StyledSettingsContent,
+  StyledSettingsForm,
+} from "./style";
+import { GreenButton, Select } from "@/components";
 import { useEffect, useRef, useState } from "react";
 import {
   QuestionDifficulty,
@@ -41,46 +45,45 @@ export default function Settings() {
 
   return (
     <StyledSettings>
-      <img src={logo} alt="trivia logo" />
-      <h1>Settings</h1>
+      {!isLoading && (
+        <StyledSettingsContent>
+          <img className="logo" src={logo} alt="trivia logo" />
+          <h1 className="main-title">Game Settings</h1>
 
-      <div>
-        {!isLoading && (
-          <form>
-            <label htmlFor="categories">Category</label>
-            <select name="categories" id="categories">
-              <option value={-1}>Any category</option>
-              {categories.map((category) => (
-                <option key={category.id} value={category.id}>
-                  {category.name}
-                </option>
-              ))}
-            </select>
+          <StyledSettingsForm>
+            <div className="selects-wrapper">
+              <Select id="categories" name="categories" label="Category">
+                <option value={-1}>Any category</option>
+                {categories.map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {category.name}
+                  </option>
+                ))}
+              </Select>
 
-            <label htmlFor="difficulties">Difficulty</label>
-            <select name="difficulties" id="difficulties">
-              <option value="any">Any difficulty</option>
-              {difficulties.map((difficulty) => (
-                <option key={difficulty} value={difficulty}>
-                  {difficulty}
-                </option>
-              ))}
-            </select>
+              <Select label="Difficulty" id="difficulties" name="difficulties">
+                <option value="any">Any difficulty</option>
+                {difficulties.map((difficulty) => (
+                  <option key={difficulty} value={difficulty}>
+                    {difficulty}
+                  </option>
+                ))}
+              </Select>
 
-            <label htmlFor="types">Type</label>
-            <select name="types" id="types">
-              <option value="any">Any type</option>
-              {types.map((type) => (
-                <option key={type} value={type}>
-                  {type}
-                </option>
-              ))}
-            </select>
+              <Select label="Type" id="types" name="types">
+                <option value="any">Any type</option>
+                {types.map((type) => (
+                  <option key={type} value={type}>
+                    {type}
+                  </option>
+                ))}
+              </Select>
+            </div>
 
             <GreenButton>Save</GreenButton>
-          </form>
-        )}
-      </div>
+          </StyledSettingsForm>
+        </StyledSettingsContent>
+      )}
     </StyledSettings>
   );
 }
