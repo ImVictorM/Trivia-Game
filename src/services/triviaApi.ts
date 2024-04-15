@@ -1,5 +1,8 @@
 import { decodeHtmlEntity } from "@/utils";
+import { constants } from "@/utils";
 import axios, { AxiosResponse, GenericAbortSignal } from "axios";
+
+const { ANY_CATEGORY_ID } = constants;
 
 const GET_TOKEN_ENDPOINT = "https://opentdb.com/";
 
@@ -7,9 +10,9 @@ const triviaApi = axios.create({
   baseURL: GET_TOKEN_ENDPOINT,
 });
 
-export type QuestionDifficulty = "medium" | "hard" | "easy";
+export type QuestionDifficulty = "any" | "medium" | "hard" | "easy";
 
-export type QuestionType = "multiple" | "boolean";
+export type QuestionType = "any" | "multiple" | "boolean";
 
 export type Question = {
   category: string;
@@ -39,6 +42,9 @@ type GetTriviaTokenResponse = {
 type GetTriviaQuestionsParams = {
   token: string;
   amount?: number;
+  categoryId: number;
+  difficulty: QuestionDifficulty;
+  type: QuestionType;
   signal?: GenericAbortSignal;
 };
 
@@ -60,13 +66,22 @@ export async function getTriviaToken(): Promise<GetTriviaTokenResponse> {
 export async function getTriviaQuestions(
   args: GetTriviaQuestionsParams
 ): Promise<GetTriviaQuestionsResponse> {
+  const defaultAmount = 5;
+
+  const endpoint =
+    `api.php?` +
+    `amount=${args.amount || defaultAmount}` +
+    `&token=${args.token}` +
+    `${
+      args.categoryId !== ANY_CATEGORY_ID ? `&category=${args.categoryId}` : ""
+    }` +
+    `${args.difficulty !== "any" ? `&difficulty=${args.difficulty}` : ""}` +
+    `${args.type !== "any" ? `&type=${args.type}` : ""}`;
+
   const questionsResponse: AxiosResponse<GetTriviaQuestionsResponse> =
-    await triviaApi.get(
-      `api.php?amount=${args.amount || 5}&token=${args.token}`,
-      {
-        signal: args.signal,
-      }
-    );
+    await triviaApi.get(endpoint, {
+      signal: args.signal,
+    });
 
   const decodedResults: Question[] = questionsResponse.data.results.map(
     (question) => {

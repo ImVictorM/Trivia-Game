@@ -1,10 +1,12 @@
 import { useCallback } from "react";
 import useLocalStorage from "./useLocalStorage";
+import { QuestionDifficulty, QuestionType } from "@/services/triviaApi";
+import { constants } from "@/utils/";
 
 type Settings = {
   categoryId: number;
-  difficulty: string;
-  type: string;
+  difficulty: QuestionDifficulty;
+  type: QuestionType;
 };
 
 export default function useGameSettings(): [
@@ -12,7 +14,7 @@ export default function useGameSettings(): [
   (settings: Settings) => void
 ] {
   const [settings, setSettings] = useLocalStorage<Settings>("settings", {
-    categoryId: -1,
+    categoryId: constants.ANY_CATEGORY_ID,
     difficulty: "any",
     type: "any",
   });

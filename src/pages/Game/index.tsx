@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Question, getTriviaQuestions } from "@/services/triviaApi";
-import { useCountdown, useToken } from "@/hooks";
+import { useCountdown, useGameSettings, useToken } from "@/hooks";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { calculateScore, shuffleArray, sleep } from "@/utils";
@@ -40,6 +40,7 @@ export default function Game() {
 
   const { countdown, startCountdown, stopCountdown, restartCountdown } =
     useCountdown(30);
+  const [settings] = useGameSettings();
 
   const [hadErrorOnFetching, setHadErrorOnFetching] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -127,6 +128,9 @@ export default function Game() {
             await getTriviaQuestions({
               token: token,
               signal: abortControllerRef.current.signal,
+              categoryId: settings.categoryId,
+              difficulty: settings.difficulty,
+              type: settings.type,
             });
 
           if (questionResponseCode === 0) {
@@ -174,7 +178,7 @@ export default function Game() {
     fetchTriviaQuestions();
 
     return () => abortControllerRef.current?.abort();
-  }, [clearToken, startCountdown, token]);
+  }, [clearToken, startCountdown, token, settings]);
 
   useEffect(() => {
     if (!token) {
