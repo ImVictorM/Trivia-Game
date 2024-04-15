@@ -6,7 +6,7 @@ import { setPlayer } from "@/redux/slices/playerSlice";
 import { getTriviaToken } from "@/services/triviaApi";
 import { logo } from "@/assets/images";
 import { StyledLoginSection } from "./style";
-import { GreenButton, Input, Toast } from "@/components";
+import { GreenButton, Input, LinkButton, Toast } from "@/components";
 import { settingsCog } from "@/assets/icons";
 import { useToken } from "@/hooks";
 import { getAvatarImg } from "@/services/gravatarApi";
@@ -114,15 +114,21 @@ export default function Login() {
           />
         </div>
 
-        <GreenButton
-          type="submit"
-          data-testid="btn-play"
-          isLoading={isLoading}
-          loadingText="Getting ready..."
-          disabled={!canPlay || isLoading}
-        >
-          Start game
-        </GreenButton>
+        <div className="buttons-wrapper">
+          <GreenButton
+            type="submit"
+            data-testid="btn-play"
+            isLoading={isLoading}
+            loadingText="Getting ready..."
+            disabled={!canPlay || isLoading}
+          >
+            Start game
+          </GreenButton>
+
+          <LinkButton color="cyan" to="/ranking">
+            Ranking
+          </LinkButton>
+        </div>
 
         <Link className="settings" to="/settings" data-testid="btn-settings">
           <img src={settingsCog} alt="settings cog" />

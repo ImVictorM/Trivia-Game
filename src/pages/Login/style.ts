@@ -50,6 +50,13 @@ export const StyledLoginSection = styled.div`
       margin-bottom: 1.5em;
     }
 
+    .buttons-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3em;
+      align-items: center;
+    }
+
     .settings {
       position: absolute;
       width: 30px;
