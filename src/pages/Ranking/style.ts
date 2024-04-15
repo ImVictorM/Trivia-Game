@@ -24,6 +24,10 @@ export const StyledRankingContent = styled.section`
   border-radius: 10px;
   width: 90%;
 
+  @media ${({ theme }) => theme.bp.mobileM} {
+    padding: 7em 1em 1em;
+  }
+
   @media ${({ theme }) => theme.bp.tabletL} {
     padding: 7em 3em 1em;
   }
@@ -115,5 +119,13 @@ export const StyledPlayer = styled.li`
         font-weight: 700;
       }
     }
+  }
+`;
+
+export const StyledEmptyRanking = styled.div`
+  text-align: center;
+
+  p {
+    line-height: 1.5;
   }
 `;
