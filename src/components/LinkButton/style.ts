@@ -21,6 +21,8 @@ export const StyledLinkButton = styled.div<StyledLinkButtonProps>`
     color: ${({ theme, $color }) =>
       theme.mixins.getContrastColor(theme.colors[$color])};
     background-color: ${({ $color, theme }) => theme.colors[$color]};
+    box-shadow: 0 4px 4px ${({ theme }) => theme.colors.black + "25"};
+    border: 1px solid ${({ theme }) => theme.colors.black + "15"};
 
     &:hover {
       cursor: pointer;

@@ -28,6 +28,8 @@ export const StyledGreenButton = styled.button`
 
   &:enabled {
     cursor: pointer;
+    box-shadow: 0 4px 4px ${({ theme }) => theme.colors.black + "25"};
+    border: 1px solid ${({ theme }) => theme.colors.black + "15"};
     &:hover {
       ${({ theme }) => theme.mixins.adjustColorBrightness(theme.colors.green)};
     }
