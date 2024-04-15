@@ -10,7 +10,7 @@ import { GreenButton, Input, Toast } from "@/components";
 import { settingsCog } from "@/assets/icons";
 import { useToken } from "@/hooks";
 import { getAvatarImg } from "@/services/gravatarApi";
-import { Bounce, toast } from "react-toastify";
+import { toast } from "react-toastify";
 
 export default function Login() {
   const [loginFormState, setLoginFormState] = useState({
@@ -129,18 +129,7 @@ export default function Login() {
         </Link>
       </form>
 
-      <Toast
-        position="bottom-right"
-        autoClose={4000}
-        hideProgressBar={false}
-        newestOnTop={true}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        transition={Bounce}
-      />
+      <Toast />
     </StyledLoginSection>
   );
 }

@@ -18,29 +18,34 @@ export const StyledSettingsContent = styled.section`
   max-height: 800px;
   width: 90%;
   border-radius: 10px;
-  padding: 7em 0.5em 1em;
+  padding: 5em 0.5em 1em;
 
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
 
+  @media ${({ theme }) => theme.bp.mobileM} {
+    padding: 5em 1em 1em;
+  }
+
   @media ${({ theme }) => theme.bp.tabletL} {
-    padding: 7em 3em 1em;
+    padding: 5em 3em 1em;
   }
 
   .logo {
-    top: -75px;
     left: 50%;
     transform: translateX(-50%);
 
     position: absolute;
-    width: 150px;
+    width: 120px;
+
+    top: -60px;
 
     @media ${({ theme }) => theme.bp.tabletL} {
-      width: 220px;
+      width: 160px;
 
-      top: -110px;
+      top: -80px;
     }
   }
 `;
@@ -58,7 +63,14 @@ export const StyledSettingsForm = styled.form`
     gap: 0.7em;
   }
 
+  .buttons-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3em;
+  }
+
   & > *:last-child {
-    margin-top: 2em;
+    margin-top: 1em;
   }
 `;

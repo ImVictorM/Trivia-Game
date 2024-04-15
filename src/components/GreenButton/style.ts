@@ -2,11 +2,12 @@ import styled from "styled-components";
 
 export const StyledGreenButton = styled.button`
   background-color: ${({ theme }) => theme.colors.green};
-  color: ${({ theme }) => theme.colors.white};
+  color: ${({ theme }) => theme.mixins.getContrastColor(theme.colors.green)};
   width: 100%;
   padding: 1em 2em;
   transition: all 0.3s;
   border-radius: 5px;
+  transition: all 0.3;
 
   .loading {
     display: flex;
@@ -21,13 +22,14 @@ export const StyledGreenButton = styled.button`
 
   &:disabled {
     opacity: 0.5;
+    color: ${({ theme }) => theme.colors.white};
     cursor: not-allowed;
   }
 
   &:enabled {
     cursor: pointer;
     &:hover {
-      background-color: ${({ theme }) => theme.colors.darkerGreen};
+      ${({ theme }) => theme.mixins.adjustColorBrightness(theme.colors.green)};
     }
   }
 `;

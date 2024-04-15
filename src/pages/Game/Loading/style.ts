@@ -11,7 +11,7 @@ export const StyledLoading = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: ${({ theme }) => theme.colors.white + "25"};
+  background-color: ${({ theme }) => theme.colors.white + "20"};
 
   h1 {
     text-align: center;
