@@ -5,3 +5,5 @@ export { default as timer } from "./timer.svg";
 export { default as incorrectAnswerIcon } from "./incorrect-answer-icon.svg";
 export { default as correctAnswerIcon } from "./correct-answer-icon.svg";
 export { default as dualBallLoadingIcon } from "./dual-ball-loading.svg";
+export { default as errorIcon } from "./error-icon.svg";
+export { default as checkIcon } from "./check-icon.svg";
