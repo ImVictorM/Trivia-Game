@@ -14,6 +14,7 @@ export const StyledAnswerButton = styled.button<{
   flex-direction: row;
   align-items: center;
   gap: 0.5em;
+  box-shadow: 0 2px 10px ${({ theme }) => theme.colors.black + "40"};
 
   ${({ $answerWasSelected, $isCorrectAnswer }) =>
     $answerWasSelected &&

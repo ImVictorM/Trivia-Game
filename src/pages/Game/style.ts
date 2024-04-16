@@ -51,9 +51,9 @@ export const StyledGameWrapper = styled.section`
 export const StyledAnswersWrapper = styled.div`
   width: 100%;
   margin-top: 2em;
-  margin-bottom: 3em;
+  margin-bottom: 1em;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 1em;
+  gap: 0.5em;
 `;

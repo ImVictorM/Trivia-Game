@@ -20,9 +20,7 @@ export const StyledSelect = styled.div`
       background-color: ${({ theme }) => theme.colors.lighterGrey};
       appearance: none;
       border-radius: 5px;
-
-      option {
-      }
+      line-height: 1.5;
     }
 
     &::after,
