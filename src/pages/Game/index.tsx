@@ -1,8 +1,11 @@
-import { useEffect, useRef, useState } from "react";
-import { Question, getTriviaQuestions } from "@/services/triviaApi";
+import { useCallback, useEffect, useState } from "react";
+import {
+  Question,
+  getTriviaQuestions,
+  TriviaResponseCode,
+} from "@/services/triviaApi";
 import { useCountdown, useGameSettings, useToken } from "@/hooks";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { calculateScore, shuffleArray, sleep } from "@/utils";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
@@ -42,16 +45,14 @@ export default function Game() {
     useCountdown(30);
   const [settings] = useGameSettings();
 
-  const [hadErrorOnFetching, setHadErrorOnFetching] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const { token, clearToken } = useToken();
-
-  const abortControllerRef = useRef<AbortController | null>(null);
 
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
-  const changeToNextQuestion = () => {
+  const changeToNextQuestion = useCallback(() => {
     if (!questions) return;
     if (currentQuestionState.questionIndex + 1 < questions.length) {
       // change to next question
@@ -71,7 +72,12 @@ export default function Game() {
       // go to feedback if there is not any remaining questions
       navigate("/feedback");
     }
-  };
+  }, [
+    currentQuestionState.questionIndex,
+    navigate,
+    questions,
+    restartCountdown,
+  ]);
 
   const shuffleAnswers = (question: Question) => {
     const {
@@ -111,6 +117,7 @@ export default function Game() {
     }));
   };
 
+  // Fetch the question on component did mount
   useEffect(() => {
     async function fetchTriviaQuestions() {
       setIsLoading(true);
@@ -118,22 +125,17 @@ export default function Game() {
       const MAX_TRIES_TO_FETCH = 5;
       let currentTry = 1;
 
-      abortControllerRef.current?.abort();
-
       while (currentTry <= MAX_TRIES_TO_FETCH) {
-        abortControllerRef.current = new AbortController();
+        const { response_code: responseCode, results } =
+          await getTriviaQuestions({
+            token: token,
+            categoryId: settings.categoryId,
+            difficulty: settings.difficulty,
+            type: settings.type,
+          });
 
-        try {
-          const { response_code: questionResponseCode, results } =
-            await getTriviaQuestions({
-              token: token,
-              signal: abortControllerRef.current.signal,
-              categoryId: settings.categoryId,
-              difficulty: settings.difficulty,
-              type: settings.type,
-            });
-
-          if (questionResponseCode === 0) {
+        switch (responseCode) {
+          case TriviaResponseCode.SUCCESS: {
             setQuestions(results);
 
             const firstQuestionIndex = 0;
@@ -147,45 +149,56 @@ export default function Game() {
               answerWasSelected: false,
             });
 
-            setHadErrorOnFetching(false);
+            setErrorMessage(null);
             startCountdown();
             setIsLoading(false);
 
             return;
-          } else {
-            // invalid token
+          }
+          case TriviaResponseCode.TOKEN_EMPTY:
+          case TriviaResponseCode.TOKEN_NOT_FOUND: {
+            setIsLoading(false);
             clearToken();
             return;
           }
-        } catch (error) {
-          if (error instanceof Error && error.name === "AbortError") {
+          case TriviaResponseCode.NO_RESULT: {
             setIsLoading(false);
+            setErrorMessage(
+              "Sorry, but we could not find sufficient questions for your game. Try changing your setting to something different!"
+            );
             return;
           }
-          if (axios.isAxiosError(error)) {
-            if (error.response?.status === 429) {
-              // request interval very short
-              await sleep(5000);
-            }
+          case TriviaResponseCode.RATE_LIMIT: {
+            // Each IP can only access the API once every 5 seconds.
+            await sleep(5500);
+            currentTry += 1;
+            break;
           }
-          currentTry += 1;
+          case TriviaResponseCode.INVALID_PARAMETER:
+          default: {
+            setIsLoading(false);
+            setErrorMessage("There was an unexpected error, try again later.");
+            return;
+          }
         }
       }
 
-      setHadErrorOnFetching(true);
+      setErrorMessage(
+        "Sorry, but it was not possible to fetch questions for your trivia game. Try again later."
+      );
     }
 
     fetchTriviaQuestions();
-
-    return () => abortControllerRef.current?.abort();
   }, [clearToken, startCountdown, token, settings]);
 
+  // Go to login if the token doesn't exist
   useEffect(() => {
     if (!token) {
       navigate("/");
     }
   }, [token, navigate]);
 
+  // Update the player global state
   useEffect(() => {
     dispatch(
       setGameStats({
@@ -195,11 +208,25 @@ export default function Game() {
     );
   }, [currentGameStats, dispatch]);
 
+  // Change question pressing "Enter"
+  useEffect(() => {
+    function handleNextOnEnterKeyDown(e: KeyboardEvent) {
+      if (e.key === "Enter" && currentQuestionState.answerWasSelected) {
+        changeToNextQuestion();
+      }
+    }
+
+    document.addEventListener("keydown", handleNextOnEnterKeyDown);
+
+    return () =>
+      document.removeEventListener("keydown", handleNextOnEnterKeyDown);
+  }, [changeToNextQuestion, currentQuestionState.answerWasSelected]);
+
   return (
     <HeaderContentLayout>
       {isLoading && <Loading />}
 
-      {!isLoading && !hadErrorOnFetching && (
+      {!isLoading && !errorMessage && (
         <StyledGameWrapper>
           <div className="left">
             <img className="logo" src={logo} alt="trivia logo" />
@@ -240,7 +267,7 @@ export default function Game() {
         </StyledGameWrapper>
       )}
 
-      {!isLoading && hadErrorOnFetching && <GameError />}
+      {!isLoading && errorMessage && <GameError message={errorMessage} />}
     </HeaderContentLayout>
   );
 }

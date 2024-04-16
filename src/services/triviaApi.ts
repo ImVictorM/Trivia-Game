@@ -10,6 +10,15 @@ const triviaApi = axios.create({
   baseURL: GET_TOKEN_ENDPOINT,
 });
 
+export enum TriviaResponseCode {
+  SUCCESS = 0,
+  NO_RESULT = 1,
+  INVALID_PARAMETER = 2,
+  TOKEN_NOT_FOUND = 3,
+  TOKEN_EMPTY = 4,
+  RATE_LIMIT = 5,
+}
+
 export type QuestionDifficulty = "any" | "medium" | "hard" | "easy";
 
 export type QuestionType = "any" | "multiple" | "boolean";
