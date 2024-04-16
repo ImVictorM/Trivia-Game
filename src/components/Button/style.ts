@@ -1,8 +1,14 @@
 import styled from "styled-components";
+import { DefaultTheme } from "styled-components/dist/types";
 
-export const StyledGreenButton = styled.button`
-  background-color: ${({ theme }) => theme.colors.green};
-  color: ${({ theme }) => theme.mixins.getContrastColor(theme.colors.green)};
+type StyledButtonProps = {
+  $color: keyof DefaultTheme["colors"];
+};
+
+export const StyledButton = styled.button<StyledButtonProps>`
+  background-color: ${({ theme, $color }) => theme.colors[$color]};
+  color: ${({ theme, $color }) =>
+    theme.mixins.getContrastColor(theme.colors[$color])};
   width: 100%;
   padding: 1em 2em;
   transition: all 0.3s;
@@ -32,7 +38,8 @@ export const StyledGreenButton = styled.button`
     box-shadow: 0 4px 4px ${({ theme }) => theme.colors.black + "25"};
     border: 1px solid ${({ theme }) => theme.colors.black + "15"};
     &:hover {
-      ${({ theme }) => theme.mixins.adjustColorBrightness(theme.colors.green)};
+      ${({ theme, $color }) =>
+        theme.mixins.adjustColorBrightness(theme.colors[$color])};
     }
   }
 `;

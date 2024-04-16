@@ -1,20 +1,23 @@
-import { StyledGreenButton } from "./style";
+import { DefaultTheme } from "styled-components";
+import { StyledButton } from "./style";
 import { spinnerLoadingIcon } from "@/assets/icons";
 
-type GreenButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   children: string;
   isLoading?: boolean;
   loadingText?: string;
+  color: keyof DefaultTheme["colors"];
 };
 
-export default function GreenButton({
+export default function Button({
   children,
   isLoading,
+  color,
   loadingText = "Loading...",
   ...defaultButtonProps
-}: GreenButtonProps) {
+}: ButtonProps) {
   return (
-    <StyledGreenButton {...defaultButtonProps}>
+    <StyledButton $color={color} {...defaultButtonProps}>
       {isLoading ? (
         <div className="loading">
           <span>{loadingText}</span>{" "}
@@ -23,6 +26,6 @@ export default function GreenButton({
       ) : (
         children
       )}
-    </StyledGreenButton>
+    </StyledButton>
   );
 }
