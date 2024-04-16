@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { useLocalStorage } from ".";
 
 export default function useToken() {
@@ -15,5 +15,9 @@ export default function useToken() {
     setValue("");
   }, [setValue]);
 
-  return { setToken, clearToken, token: String(value) };
+  const tokenIsEmpty = useMemo(() => {
+    return value === "";
+  }, [value]);
+
+  return { setToken, clearToken, token: value, tokenIsEmpty };
 }

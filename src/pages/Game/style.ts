@@ -1,3 +1,4 @@
+import { QuestionType } from "@/services/triviaApi";
 import styled from "styled-components";
 
 export const StyledGameWrapper = styled.section`
@@ -18,42 +19,47 @@ export const StyledGameWrapper = styled.section`
     margin: 0 auto;
     margin-top: 2em;
   }
+`;
 
-  .left {
-    position: relative;
+export const StyledQuestionWrapper = styled.div`
+  position: relative;
 
-    .logo {
-      display: none;
-    }
-
-    @media ${({ theme }) => theme.bp.desktopXS} {
-      margin-top: 3em;
-      .logo {
-        display: block;
-        position: absolute;
-        width: 170px;
-        z-index: 11;
-        top: -220px;
-        right: 50%;
-        transform: translateX(50%);
-      }
-    }
+  .logo {
+    display: none;
   }
 
-  .right {
-    @media ${({ theme }) => theme.bp.desktopXS} {
-      align-self: baseline;
-      margin-top: 3em;
+  @media ${({ theme }) => theme.bp.desktopXS} {
+    margin-top: 3em;
+    .logo {
+      display: block;
+      position: absolute;
+      width: 170px;
+      z-index: 11;
+      top: -220px;
+      right: 50%;
+      transform: translateX(50%);
     }
   }
 `;
 
-export const StyledAnswersWrapper = styled.div`
-  width: 100%;
-  margin-top: 2em;
-  margin-bottom: 1em;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 0.5em;
+type StyledAnswersWrapperProps = {
+  $questionType: QuestionType;
+};
+
+export const StyledAnswersWrapper = styled.div<StyledAnswersWrapperProps>`
+  @media ${({ theme }) => theme.bp.desktopXS} {
+    align-self: baseline;
+    margin-top: ${({ $questionType }) =>
+      $questionType === "boolean" ? "5em" : "3em"};
+  }
+
+  .answers-options {
+    width: 100%;
+    margin-top: 2em;
+    margin-bottom: 1em;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.5em;
+  }
 `;

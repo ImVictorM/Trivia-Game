@@ -3,6 +3,7 @@ import {
   Question,
   getTriviaQuestions,
   TriviaResponseCode,
+  resetTriviaToken,
 } from "@/services/triviaApi";
 import { useCountdown, useGameSettings, useToken } from "@/hooks";
 import { useNavigate } from "react-router-dom";
@@ -11,7 +12,11 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
 import { setGameStats } from "@/redux/slices/playerSlice";
 import { HeaderContentLayout } from "@/layouts";
-import { StyledAnswersWrapper, StyledGameWrapper } from "./style";
+import {
+  StyledAnswersWrapper,
+  StyledGameWrapper,
+  StyledQuestionWrapper,
+} from "./style";
 import { GreenButton } from "@/components";
 import QuestionCard from "./QuestionCard";
 import AnswerButton from "./AnswerButton";
@@ -47,7 +52,7 @@ export default function Game() {
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const { token, clearToken } = useToken();
+  const { token, clearToken, tokenIsEmpty, setToken } = useToken();
 
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
@@ -155,9 +160,18 @@ export default function Game() {
 
             return;
           }
-          case TriviaResponseCode.TOKEN_EMPTY:
+          case TriviaResponseCode.TOKEN_EMPTY: {
+            const resetResponse = await resetTriviaToken(token);
+            setToken(resetResponse.token);
+            setIsLoading(false);
+            setErrorMessage(null);
+            restartCountdown();
+
+            return;
+          }
           case TriviaResponseCode.TOKEN_NOT_FOUND: {
             setIsLoading(false);
+            stopCountdown();
             clearToken();
             return;
           }
@@ -187,9 +201,19 @@ export default function Game() {
         "Sorry, but it was not possible to fetch questions for your trivia game. Try again later."
       );
     }
-
-    fetchTriviaQuestions();
-  }, [clearToken, startCountdown, token, settings]);
+    if (!tokenIsEmpty) {
+      fetchTriviaQuestions();
+    }
+  }, [
+    clearToken,
+    startCountdown,
+    token,
+    settings,
+    tokenIsEmpty,
+    setToken,
+    restartCountdown,
+    stopCountdown,
+  ]);
 
   // Go to login if the token doesn't exist
   useEffect(() => {
@@ -228,17 +252,19 @@ export default function Game() {
 
       {!isLoading && !errorMessage && (
         <StyledGameWrapper>
-          <div className="left">
+          <StyledQuestionWrapper>
             <img className="logo" src={logo} alt="trivia logo" />
             <QuestionCard
               category={currentQuestionState.question!.category}
               countdown={countdown}
               question={currentQuestionState.question!.question}
             />
-          </div>
+          </StyledQuestionWrapper>
 
-          <div className="right">
-            <StyledAnswersWrapper data-testid="answer-options">
+          <StyledAnswersWrapper
+            $questionType={currentQuestionState.question!.type}
+          >
+            <div className="answers-options" data-testid="answer-options">
               {currentQuestionState.answers.map((answer, index) => (
                 <AnswerButton
                   correctAnswer={currentQuestionState.question!.correct_answer}
@@ -252,7 +278,7 @@ export default function Game() {
                   onClick={answerQuestion}
                 />
               ))}
-            </StyledAnswersWrapper>
+            </div>
 
             {(currentQuestionState.answerWasSelected || countdown === 0) && (
               <GreenButton
@@ -263,7 +289,7 @@ export default function Game() {
                 Next
               </GreenButton>
             )}
-          </div>
+          </StyledAnswersWrapper>
         </StyledGameWrapper>
       )}
 

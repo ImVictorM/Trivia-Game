@@ -23,7 +23,7 @@ export default function Login() {
 
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const { clearToken, setToken, token } = useToken();
+  const { clearToken, setToken, tokenIsEmpty } = useToken();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -44,6 +44,7 @@ export default function Login() {
 
       if (tokenResponseCode === 0) {
         setToken(token);
+
         const gravatarImageSrc = await getAvatarImg(
           loginFormState.gravatarEmail
         );
@@ -75,13 +76,13 @@ export default function Login() {
 
   useEffect(() => {
     if (shouldNavigate) {
-      if (token) {
+      if (!tokenIsEmpty) {
         navigate("/game");
       } else {
         navigate("/");
       }
     }
-  }, [token, shouldNavigate, navigate]);
+  }, [shouldNavigate, navigate, tokenIsEmpty]);
 
   return (
     <StyledLoginSection>

@@ -17,6 +17,7 @@ export enum TriviaResponseCode {
   TOKEN_NOT_FOUND = 3,
   TOKEN_EMPTY = 4,
   RATE_LIMIT = 5,
+  UNMAPPED_ERROR = 6,
 }
 
 export type QuestionDifficulty = "any" | "medium" | "hard" | "easy";
@@ -65,11 +66,24 @@ type GetTriviaCategoriesParams = {
   signal?: GenericAbortSignal;
 };
 
+type resetTriviaTokenResponse = {
+  response_code: number;
+  token: string;
+};
+
 export async function getTriviaToken(): Promise<GetTriviaTokenResponse> {
   const tokenResponse: AxiosResponse<GetTriviaTokenResponse> =
     await triviaApi.get("api_token.php?command=request");
 
   return tokenResponse.data;
+}
+
+export async function resetTriviaToken(
+  token: string
+): Promise<resetTriviaTokenResponse> {
+  const resetResponse: AxiosResponse<resetTriviaTokenResponse> =
+    await triviaApi.get(`api_token.php?command=reset&token=${token}`);
+  return resetResponse.data;
 }
 
 export async function getTriviaQuestions(
@@ -87,30 +101,51 @@ export async function getTriviaQuestions(
     `${args.difficulty !== "any" ? `&difficulty=${args.difficulty}` : ""}` +
     `${args.type !== "any" ? `&type=${args.type}` : ""}`;
 
-  const questionsResponse: AxiosResponse<GetTriviaQuestionsResponse> =
-    await triviaApi.get(endpoint, {
-      signal: args.signal,
-    });
+  try {
+    const questionsResponse: AxiosResponse<GetTriviaQuestionsResponse> =
+      await triviaApi.get(endpoint, {
+        signal: args.signal,
+      });
 
-  const decodedResults: Question[] = questionsResponse.data.results.map(
-    (question) => {
+    const decodedResults: Question[] = questionsResponse.data.results.map(
+      (question) => {
+        return {
+          category: decodeHtmlEntity(question.category),
+          correct_answer: decodeHtmlEntity(question.correct_answer),
+          difficulty: decodeHtmlEntity(
+            question.difficulty
+          ) as QuestionDifficulty,
+          incorrect_answers: question.incorrect_answers.map((incorrectAnswer) =>
+            decodeHtmlEntity(incorrectAnswer)
+          ),
+          question: decodeHtmlEntity(question.question),
+          type: decodeHtmlEntity(question.type) as QuestionType,
+        };
+      }
+    );
+
+    return {
+      ...questionsResponse.data,
+      results: decodedResults,
+    };
+  } catch (e) {
+    const error = e as Error;
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        return error.response.data as GetTriviaQuestionsResponse;
+      } else {
+        return {
+          response_code: 6,
+          results: [],
+        };
+      }
+    } else {
       return {
-        category: decodeHtmlEntity(question.category),
-        correct_answer: decodeHtmlEntity(question.correct_answer),
-        difficulty: decodeHtmlEntity(question.difficulty) as QuestionDifficulty,
-        incorrect_answers: question.incorrect_answers.map((incorrectAnswer) =>
-          decodeHtmlEntity(incorrectAnswer)
-        ),
-        question: decodeHtmlEntity(question.question),
-        type: decodeHtmlEntity(question.type) as QuestionType,
+        response_code: 6,
+        results: [],
       };
     }
-  );
-
-  return {
-    ...questionsResponse.data,
-    results: decodedResults,
-  };
+  }
 }
 
 export async function getTriviaCategories(
