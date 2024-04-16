@@ -40,6 +40,12 @@ export const StyledQuestionWrapper = styled.div`
       transform: translateX(50%);
     }
   }
+
+  .buttons-wrapper {
+    display: grid;
+    grid-template-columns: 75px 75px;
+    width: 150px;
+  }
 `;
 
 type StyledAnswersWrapperProps = {
@@ -61,5 +67,44 @@ export const StyledAnswersWrapper = styled.div<StyledAnswersWrapperProps>`
     flex-direction: column;
     justify-content: center;
     gap: 0.5em;
+  }
+`;
+
+export const StyledAnimatedButton = styled.button`
+  color: ${({ theme }) => theme.colors.white};
+  background-color: ${({ theme }) => theme.colors.red};
+  border-radius: 50px;
+  width: fit-content;
+  padding: 0.6em;
+  transition: width 0.3s ease-in-out;
+
+  .wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+    .icon {
+      width: 30px;
+    }
+
+    .text {
+      line-height: 1.2;
+      max-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      transition: max-width 0.3s ease-in-out;
+      transition: margin-left 0.3s ease-in-out;
+    }
+  }
+
+  &:hover {
+    z-index: 44;
+    .wrapper {
+      .text {
+        margin-left: 0.5rem;
+        max-width: 15rem;
+      }
+    }
   }
 `;

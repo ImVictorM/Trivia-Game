@@ -4,7 +4,7 @@ import {
   StyledSettingsContent,
   StyledSettingsForm,
 } from "./style";
-import { GreenButton, LinkButton, Select, Toast } from "@/components";
+import { Button, LinkButton, Select, Toast } from "@/components";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   QuestionDifficulty,
@@ -136,7 +136,9 @@ export default function GameSettings() {
             </div>
 
             <div className="buttons-wrapper">
-              <GreenButton type="submit">Save</GreenButton>
+              <Button color="green" type="submit">
+                Save
+              </Button>
               <LinkButton color="cyan" to="/">
                 Go back
               </LinkButton>

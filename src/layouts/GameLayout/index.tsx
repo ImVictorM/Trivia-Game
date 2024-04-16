@@ -5,9 +5,7 @@ type HeaderContentLayoutProps = {
   children: React.ReactNode;
 };
 
-export default function HeaderContentLayout({
-  children,
-}: HeaderContentLayoutProps) {
+export default function GameLayout({ children }: HeaderContentLayoutProps) {
   return (
     <StyledLayout>
       <Header />

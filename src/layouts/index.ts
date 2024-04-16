@@ -1,1 +1,1 @@
-export { default as HeaderContentLayout } from "./HeaderContentLayout";
+export { default as GameLayout } from "./GameLayout";

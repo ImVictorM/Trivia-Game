@@ -11,18 +11,20 @@ import { calculateScore, shuffleArray, sleep } from "@/utils";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
 import { setGameStats } from "@/redux/slices/playerSlice";
-import { HeaderContentLayout } from "@/layouts";
+import { GameLayout } from "@/layouts";
 import {
+  StyledAnimatedButton,
   StyledAnswersWrapper,
   StyledGameWrapper,
   StyledQuestionWrapper,
 } from "./style";
-import { GreenButton } from "@/components";
+import { Button } from "@/components";
 import QuestionCard from "./QuestionCard";
 import AnswerButton from "./AnswerButton";
 import Loading from "./Loading";
 import { logo } from "@/assets/images";
 import GameError from "./GameError";
+import { exitDoorIcon, surrenderFlagIcon } from "@/assets/icons";
 
 type CurrentQuestionState = {
   questionIndex: number;
@@ -247,7 +249,7 @@ export default function Game() {
   }, [changeToNextQuestion, currentQuestionState.answerWasSelected]);
 
   return (
-    <HeaderContentLayout>
+    <GameLayout>
       {isLoading && <Loading />}
 
       {!isLoading && !errorMessage && (
@@ -259,6 +261,20 @@ export default function Game() {
               countdown={countdown}
               question={currentQuestionState.question!.question}
             />
+            <div className="buttons-wrapper">
+              <StyledAnimatedButton>
+                <div className="wrapper">
+                  <img className="icon" src={surrenderFlagIcon} />
+                  <span className="text">desistir</span>
+                </div>
+              </StyledAnimatedButton>
+              <StyledAnimatedButton>
+                <div className="wrapper">
+                  <img className="icon" src={exitDoorIcon} />
+                  <span className="text">finalizar partida</span>
+                </div>
+              </StyledAnimatedButton>
+            </div>
           </StyledQuestionWrapper>
 
           <StyledAnswersWrapper
@@ -281,19 +297,20 @@ export default function Game() {
             </div>
 
             {(currentQuestionState.answerWasSelected || countdown === 0) && (
-              <GreenButton
+              <Button
+                color="green"
                 type="button"
                 data-testid="btn-next"
                 onClick={changeToNextQuestion}
               >
                 Next
-              </GreenButton>
+              </Button>
             )}
           </StyledAnswersWrapper>
         </StyledGameWrapper>
       )}
 
       {!isLoading && errorMessage && <GameError message={errorMessage} />}
-    </HeaderContentLayout>
+    </GameLayout>
   );
 }

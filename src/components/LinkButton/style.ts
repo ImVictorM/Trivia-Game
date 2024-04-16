@@ -9,7 +9,10 @@ export const StyledLinkButton = styled.div<StyledLinkButtonProps>`
   width: 100%;
 
   .link {
-    display: inline-block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
     width: 100%;
 
     padding: 1em 2em;
@@ -28,6 +31,10 @@ export const StyledLinkButton = styled.div<StyledLinkButtonProps>`
       cursor: pointer;
       ${({ theme, $color }) =>
         theme.mixins.adjustColorBrightness(theme.colors[$color])}
+    }
+
+    .icon {
+      width: 24px;
     }
   }
 `;
