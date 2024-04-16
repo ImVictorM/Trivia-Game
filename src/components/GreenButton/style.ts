@@ -22,6 +22,7 @@ export const StyledGreenButton = styled.button`
 
   &:disabled {
     opacity: 0.5;
+    border: 1px solid transparent;
     color: ${({ theme }) => theme.colors.white};
     cursor: not-allowed;
   }
