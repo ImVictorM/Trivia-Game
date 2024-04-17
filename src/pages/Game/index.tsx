@@ -5,7 +5,12 @@ import {
   TriviaResponseCode,
   resetTriviaToken,
 } from "@/services/triviaApi";
-import { useCountdown, useGameSettings, useToken } from "@/hooks";
+import {
+  useCountdown,
+  useGameSettings,
+  useScreenDimensions,
+  useToken,
+} from "@/hooks";
 import { useNavigate } from "react-router-dom";
 import { calculateScore, shuffleArray, sleep } from "@/utils";
 import { useDispatch } from "react-redux";
@@ -13,18 +18,18 @@ import { AppDispatch } from "@/redux/store";
 import { setGameStats } from "@/redux/slices/playerSlice";
 import { GameLayout } from "@/layouts";
 import {
-  StyledAnimatedButton,
   StyledAnswersWrapper,
   StyledGameWrapper,
   StyledQuestionWrapper,
 } from "./style";
-import { Button } from "@/components";
+import { Button, RoundAnimatedButton } from "@/components";
 import QuestionCard from "./QuestionCard";
 import AnswerButton from "./AnswerButton";
 import Loading from "./Loading";
 import { logo } from "@/assets/images";
 import GameError from "./GameError";
 import { exitDoorIcon, surrenderFlagIcon } from "@/assets/icons";
+import { sizes } from "@/styles/breakpoints";
 
 type CurrentQuestionState = {
   questionIndex: number;
@@ -54,6 +59,7 @@ export default function Game() {
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const { width } = useScreenDimensions();
   const { token, clearToken, tokenIsEmpty, setToken } = useToken();
 
   const navigate = useNavigate();
@@ -261,20 +267,21 @@ export default function Game() {
               countdown={countdown}
               question={currentQuestionState.question!.question}
             />
-            <div className="buttons-wrapper">
-              <StyledAnimatedButton>
-                <div className="wrapper">
-                  <img className="icon" src={surrenderFlagIcon} />
-                  <span className="text">desistir</span>
-                </div>
-              </StyledAnimatedButton>
-              <StyledAnimatedButton>
-                <div className="wrapper">
-                  <img className="icon" src={exitDoorIcon} />
-                  <span className="text">finalizar partida</span>
-                </div>
-              </StyledAnimatedButton>
-            </div>
+
+            {width > sizes.desktopXS && (
+              <div className="buttons-wrapper">
+                <RoundAnimatedButton
+                  color="yellow"
+                  icon={{ src: exitDoorIcon, alt: "exit door" }}
+                  text="End match"
+                />
+                <RoundAnimatedButton
+                  color="red"
+                  icon={{ src: surrenderFlagIcon, alt: "surrender flag" }}
+                  text="Surrender"
+                />
+              </div>
+            )}
           </StyledQuestionWrapper>
 
           <StyledAnswersWrapper
