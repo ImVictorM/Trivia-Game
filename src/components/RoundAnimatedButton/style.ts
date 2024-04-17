@@ -10,6 +10,7 @@ export const StyledRoundAnimatedButton = styled.div<StyledRoundAnimatedButtonPro
   position: relative;
   width: 50px;
   height: 50px;
+  font-weight: 500;
 
   ${({ $shouldOverlap }) =>
     $shouldOverlap &&
@@ -23,8 +24,8 @@ export const StyledRoundAnimatedButton = styled.div<StyledRoundAnimatedButtonPro
     background-color: ${({ theme, $color }) => theme.colors[$color]};
     color: ${({ theme }) => theme.colors.white};
     min-width: 100%;
-    height: 100%;
-    padding: 0.6em;
+    min-height: 100%;
+    padding: 0.5em;
     transition: width 0.3s ease-in-out;
 
     .button-content {

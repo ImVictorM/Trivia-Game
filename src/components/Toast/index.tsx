@@ -1,7 +1,7 @@
 import { Bounce, ToastContainerProps } from "react-toastify";
 import { StyledToastContainer } from "./style";
 import "react-toastify/ReactToastify.min.css";
-import { checkIcon, errorIcon } from "@/assets/icons";
+import { roundedCheckIcon, errorIcon } from "@/assets/icons";
 
 export default function Toast(props: ToastContainerProps) {
   return (
@@ -21,7 +21,7 @@ export default function Toast(props: ToastContainerProps) {
           case "error":
             return <img src={errorIcon} />;
           case "success":
-            return <img src={checkIcon} />;
+            return <img src={roundedCheckIcon} />;
         }
       }}
       {...props}

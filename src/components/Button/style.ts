@@ -14,6 +14,15 @@ export const StyledButton = styled.button<StyledButtonProps>`
   transition: all 0.3s;
   border-radius: 5px;
   transition: all 0.3;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+  .icon {
+    width: 20px;
+    margin-left: 0.5em;
+  }
 
   .loading {
     display: flex;

@@ -274,11 +274,27 @@ export default function Game() {
                   color="yellow"
                   icon={{ src: exitDoorIcon, alt: "exit door" }}
                   text="End match"
+                  dialog={{
+                    bodyMessage:
+                      "Are you sure you want to end the match? ending the match will save your points and redirect you to the feedback screen.",
+                    title: "End match",
+                    onConfirm: () => {
+                      navigate("/feedback");
+                    },
+                  }}
                 />
                 <RoundAnimatedButton
                   color="red"
                   icon={{ src: surrenderFlagIcon, alt: "surrender flag" }}
                   text="Surrender"
+                  dialog={{
+                    bodyMessage:
+                      "Are you sure you want to surrender? surrendering will make you lose all your points.",
+                    title: "Surrender",
+                    onConfirm: () => {
+                      navigate("/");
+                    },
+                  }}
                 />
               </div>
             )}

@@ -7,12 +7,17 @@ type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   isLoading?: boolean;
   loadingText?: string;
   color: keyof DefaultTheme["colors"];
+  icon?: {
+    src: string;
+    alt: string;
+  };
 };
 
 export default function Button({
   children,
   isLoading,
   color,
+  icon,
   loadingText = "Loading...",
   ...defaultButtonProps
 }: ButtonProps) {
@@ -24,7 +29,10 @@ export default function Button({
           <img src={spinnerLoadingIcon} alt="loading" />
         </div>
       ) : (
-        children
+        <>
+          {children}{" "}
+          {icon && <img className="icon" src={icon.src} alt={icon.alt} />}
+        </>
       )}
     </StyledButton>
   );

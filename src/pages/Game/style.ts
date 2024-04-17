@@ -43,6 +43,7 @@ export const StyledQuestionWrapper = styled.div`
   }
 
   .buttons-wrapper {
+    padding: 0 2em;
     margin-top: 0.5em;
     display: flex;
     flex-direction: row;
