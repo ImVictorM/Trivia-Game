@@ -325,6 +325,7 @@ export default function Game() {
                 type="button"
                 data-testid="btn-next"
                 onClick={changeToNextQuestion}
+                className="next-button"
                 icon={{
                   src: rightArrow,
                   alt: "right arrow",

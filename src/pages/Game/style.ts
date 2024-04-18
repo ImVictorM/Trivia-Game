@@ -56,6 +56,10 @@ type StyledAnswersWrapperProps = {
 };
 
 export const StyledAnswersWrapper = styled.div<StyledAnswersWrapperProps>`
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+
   @media ${({ theme }) => theme.bp.desktopXS} {
     align-self: baseline;
     margin-top: ${({ $questionType }) =>
@@ -70,5 +74,11 @@ export const StyledAnswersWrapper = styled.div<StyledAnswersWrapperProps>`
     flex-direction: column;
     justify-content: center;
     gap: 0.5em;
+  }
+
+  .next-button {
+    align-self: center;
+    max-width: 300px;
+    margin-top: 0.5em;
   }
 `;

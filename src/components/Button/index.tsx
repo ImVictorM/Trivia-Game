@@ -26,6 +26,7 @@ export default function Button({
   dialog,
   onClick,
   loadingText = "Loading...",
+  className,
   ...defaultButtonProps
 }: ButtonProps) {
   const [showDialog, setShowDialog] = useState(false);
@@ -46,6 +47,7 @@ export default function Button({
         onClick={handleClick}
         $color={color}
         {...defaultButtonProps}
+        className={className ? className : ""}
       >
         {isLoading ? (
           <div className="loading">
