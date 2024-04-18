@@ -7,6 +7,7 @@ export const StyledSelect = styled.div`
 
   label {
     margin-bottom: 0.2em;
+    font-size: smaller;
   }
 
   .select-wrapper {
@@ -14,8 +15,8 @@ export const StyledSelect = styled.div`
 
     select {
       width: 100%;
-      border: 0;
-      padding: 1em 1.5em;
+      border: 1px solid ${({ theme }) => theme.colors.lightGrey};
+      padding: 0.375em 2.25em 0.375em 0.75em;
       color: ${({ theme }) => theme.colors.black};
       background-color: ${({ theme }) => theme.colors.lighterGrey};
       appearance: none;
