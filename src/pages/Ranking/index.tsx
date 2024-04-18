@@ -55,7 +55,7 @@ export default function Ranking() {
           )}
         </StyledPlayerList>
         <LinkButton color="green" to="/" data-testid="btn-go-home">
-          Play again
+          Go to start
         </LinkButton>
       </StyledRankingContent>
     </StyledRanking>
