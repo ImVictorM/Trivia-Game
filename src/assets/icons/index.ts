@@ -11,3 +11,4 @@ export { default as exitDoorIcon } from "./exit-door-icon.svg";
 export { default as surrenderFlagIcon } from "./surrender-flag-icon.svg";
 export { default as closeIcon } from "./close-icon.svg";
 export { default as straightCheckIcon } from "./straight-check-icon.svg";
+export { default as rightArrow } from "./right-arrow.svg";

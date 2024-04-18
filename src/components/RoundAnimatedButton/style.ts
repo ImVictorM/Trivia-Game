@@ -25,8 +25,10 @@ export const StyledRoundAnimatedButton = styled.div<StyledRoundAnimatedButtonPro
     color: ${({ theme }) => theme.colors.white};
     min-width: 100%;
     min-height: 100%;
-    padding: 0.5em;
-    transition: width 0.3s ease-in-out;
+    padding: 0.6em;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 4px ${({ theme }) => theme.colors.black + "25"};
+    border: 2px solid ${({ theme }) => theme.colors.black + "30"};
 
     .button-content {
       display: flex;

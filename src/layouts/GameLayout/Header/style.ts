@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 export const StyledHeader = styled.header`
   background-color: ${({ theme }) => theme.colors.white};
@@ -94,13 +94,14 @@ export const StyledHamburgerButton = styled.button<StyledHamburgerButtonProps>`
   transition: opacity, filter 0.15s linear;
 
   .line {
+    --background: ${({ theme }) => theme.colors.purple};
     position: absolute;
     top: 50%;
     right: 0;
     width: 30px;
     height: 2px;
     border-radius: 4px;
-    background-color: ${({ theme }) => theme.colors.darkerGreen};
+    background-color: var(--background);
     transition-duration: 0.22s;
     transition-property: transform;
     transition-delay: ${({ $menuOpen }) => ($menuOpen ? `0.12s` : `0s`)};
@@ -120,7 +121,7 @@ export const StyledHamburgerButton = styled.button<StyledHamburgerButtonProps>`
       width: 30px;
       height: 2px;
       border-radius: 4px;
-      background-color: ${({ theme }) => theme.colors.darkerGreen};
+      background-color: var(--background);
       transition-timing-function: ease;
       transition-duration: 0.15s;
       transition-property: transform;
@@ -161,8 +162,13 @@ export const StyledMenu = styled.aside<StyledMenuProps>`
   height: 100vh;
   padding: 7em 2.3em;
   box-shadow: -10px 0px 30px -15px ${({ theme }) => theme.colors.black};
-  transform: translateX(${({ $menuOpen }) => ($menuOpen ? 0 : 100)}vw);
   transition: all 0.25s cubic-bezier(0.645, 0.045, 0.355, 1);
+
+  ${({ $menuOpen }) =>
+    !$menuOpen &&
+    css`
+      transform: translateX(100vw);
+    `}
 
   .buttons-wrapper {
     margin-top: 5em;

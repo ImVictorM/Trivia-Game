@@ -3,7 +3,7 @@ import { StyledRoundAnimatedButton } from "./style";
 import { useEffect, useRef, useState } from "react";
 import Dialog, { DialogProps } from "../Dialog";
 
-type DialogPropsWithoutShow = Omit<DialogProps, "show" | "onClose">;
+type PartialDialogProps = Omit<DialogProps, "show" | "onClose">;
 
 type RoundAnimatedButtonProps =
   React.ButtonHTMLAttributes<HTMLButtonElement> & {
@@ -13,7 +13,7 @@ type RoundAnimatedButtonProps =
       alt: string;
     };
     text: string;
-    dialog?: DialogPropsWithoutShow;
+    dialog?: PartialDialogProps;
   };
 
 export default function RoundAnimatedButton({

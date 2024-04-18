@@ -28,7 +28,7 @@ import AnswerButton from "./AnswerButton";
 import Loading from "./Loading";
 import { logo } from "@/assets/images";
 import GameError from "./GameError";
-import { exitDoorIcon, surrenderFlagIcon } from "@/assets/icons";
+import { exitDoorIcon, surrenderFlagIcon, rightArrow } from "@/assets/icons";
 import { sizes } from "@/styles/breakpoints";
 
 type CurrentQuestionState = {
@@ -325,6 +325,10 @@ export default function Game() {
                 type="button"
                 data-testid="btn-next"
                 onClick={changeToNextQuestion}
+                icon={{
+                  src: rightArrow,
+                  alt: "right arrow",
+                }}
               >
                 Next
               </Button>
