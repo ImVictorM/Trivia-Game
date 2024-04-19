@@ -1,1 +1,14 @@
-{}
+{
+  "rightArrow": "Right arrow",
+  "cancel": "Cancel",
+  "confirm": "Confirm",
+  "exitDoor": "Exit door",
+  "surrenderFlag": "Surrender flag",
+  "points": "Points",
+  "star": "Star",
+  "timer": "Timer",
+  "loading": "Loading",
+  "tryAgain": "Try again",
+  "error": "Error",
+  "success": "Success"
+}

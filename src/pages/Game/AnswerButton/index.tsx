@@ -1,5 +1,6 @@
 import { correctAnswerIcon, incorrectAnswerIcon } from "@/assets/icons";
 import { StyledAnswerButton } from "./style";
+import { useTranslation } from "react-i18next";
 
 type AnswerButtonProps = {
   correctAnswer: string;
@@ -24,6 +25,7 @@ export default function AnswerButton({
   const handleClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     onClick(e, answer);
   };
+  const { t } = useTranslation(["game"]);
 
   return (
     <StyledAnswerButton
@@ -44,7 +46,7 @@ export default function AnswerButton({
               answer === correctAnswer ? correctAnswerIcon : incorrectAnswerIcon
             }
             alt={
-              answer === correctAnswer ? "correct answer" : "incorrect answer"
+              answer === correctAnswer ? t("correctAnswer") : t("wrongAnswer")
             }
           />
         ) : (

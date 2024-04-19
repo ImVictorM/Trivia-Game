@@ -30,6 +30,7 @@ import { logo } from "@/assets/images";
 import GameError from "./GameError";
 import { exitDoorIcon, surrenderFlagIcon, rightArrow } from "@/assets/icons";
 import { sizes } from "@/styles/breakpoints";
+import { useTranslation } from "react-i18next";
 
 type CurrentQuestionState = {
   questionIndex: number;
@@ -64,6 +65,7 @@ export default function Game() {
 
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
+  const { t } = useTranslation(["game", "common"]);
 
   const changeToNextQuestion = useCallback(() => {
     if (!questions) return;
@@ -185,9 +187,7 @@ export default function Game() {
           }
           case TriviaResponseCode.NO_RESULT: {
             setIsLoading(false);
-            setErrorMessage(
-              "Sorry, but we could not find sufficient questions for your game. Try changing your setting to something different!"
-            );
+            setErrorMessage(t("errors.noResult"));
             return;
           }
           case TriviaResponseCode.RATE_LIMIT: {
@@ -199,15 +199,13 @@ export default function Game() {
           case TriviaResponseCode.INVALID_PARAMETER:
           default: {
             setIsLoading(false);
-            setErrorMessage("There was an unexpected error, try again later.");
+            setErrorMessage(t("errors.generic"));
             return;
           }
         }
       }
 
-      setErrorMessage(
-        "Sorry, but it was not possible to fetch questions for your trivia game. Try again later."
-      );
+      setErrorMessage(t("errors.fetchFailed"));
     }
     if (!tokenIsEmpty) {
       fetchTriviaQuestions();
@@ -221,6 +219,7 @@ export default function Game() {
     setToken,
     restartCountdown,
     stopCountdown,
+    t,
   ]);
 
   // Go to login if the token doesn't exist
@@ -272,12 +271,14 @@ export default function Game() {
               <div className="buttons-wrapper">
                 <RoundAnimatedButton
                   color="yellow"
-                  icon={{ src: exitDoorIcon, alt: "exit door" }}
-                  text="End match"
+                  icon={{
+                    src: exitDoorIcon,
+                    alt: t("exitDoor", { ns: "common" }),
+                  }}
+                  text={t("endMatch.buttonText", { ns: "game" })}
                   dialog={{
-                    bodyMessage:
-                      "Are you sure you want to end the match? ending the match will save your points and redirect you to the feedback screen.",
-                    title: "End match",
+                    bodyMessage: t("endMatch.dialog.body", { ns: "game" }),
+                    title: t("endMatch.dialog.title", { ns: "game" }),
                     onConfirm: () => {
                       navigate("/feedback");
                     },
@@ -285,12 +286,14 @@ export default function Game() {
                 />
                 <RoundAnimatedButton
                   color="red"
-                  icon={{ src: surrenderFlagIcon, alt: "surrender flag" }}
-                  text="Surrender"
+                  icon={{
+                    src: surrenderFlagIcon,
+                    alt: t("surrenderFlag", { ns: "common" }),
+                  }}
+                  text={t("surrender.buttonText", { ns: "game" })}
                   dialog={{
-                    bodyMessage:
-                      "Are you sure you want to surrender? surrendering will make you lose all your points.",
-                    title: "Surrender",
+                    bodyMessage: t("surrender.dialog.body", { ns: "game" }),
+                    title: t("surrender.dialog.title", { ns: "game" }),
                     onConfirm: () => {
                       navigate("/");
                     },
@@ -328,10 +331,10 @@ export default function Game() {
                 className="next-button"
                 icon={{
                   src: rightArrow,
-                  alt: "right arrow",
+                  alt: t("rightArrow", { ns: "common" }),
                 }}
               >
-                Next
+                {t("next", { ns: "game" })}
               </Button>
             )}
           </StyledAnswersWrapper>

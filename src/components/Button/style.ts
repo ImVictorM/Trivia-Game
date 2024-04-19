@@ -10,7 +10,7 @@ export const StyledButton = styled.button<StyledButtonProps>`
   color: ${({ theme, $color }) =>
     theme.mixins.getContrastColor(theme.colors[$color])};
   width: 100%;
-  padding: 1em 2em;
+  padding: 1em 1.5em;
   transition: all 0.3s;
   border-radius: 5px;
   transition: all 0.3;

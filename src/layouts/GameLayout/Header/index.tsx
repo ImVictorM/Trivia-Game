@@ -6,10 +6,12 @@ import { useScreenDimensions } from "@/hooks";
 import { sizes } from "@/styles/breakpoints";
 
 import Menu from "../Menu";
+import { useTranslation } from "react-i18next";
 
 export default function Header() {
   const player = useSelector((state: RootState) => state.player);
   const { width } = useScreenDimensions();
+  const { t } = useTranslation();
 
   return (
     <StyledHeader>
@@ -24,9 +26,10 @@ export default function Header() {
             <span data-testid="header-player-name">{player.name}</span>
           </div>
           <div className="points-wrapper">
-            <img src={star} alt="star" />
+            <img src={star} alt={t("star")} />
             <p>
-              Points: <span data-testid="header-score">{player.score}</span>
+              {`${t("points")}: `}
+              <span data-testid="header-score">{player.score}</span>
             </p>
           </div>
         </StyledPlayerStats>

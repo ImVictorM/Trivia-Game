@@ -26,19 +26,9 @@ export const StyledPlayerStats = styled.div`
   align-items: center;
   gap: 1em;
   flex-wrap: wrap;
-`;
 
-export const StyledHeaderContent = styled.div`
-  display: flex;
-  align-items: center;
-  flex-direction: row;
-  justify-content: space-between;
-  width: 100%;
-  max-width: 1600px;
-  gap: 1em;
-
-  @media ${({ theme }) => theme.bp.desktopXS} {
-    justify-content: end;
+  @media ${({ theme }) => theme.bp.mobileL} {
+    gap: 3em;
   }
 
   .player-wrapper {
@@ -74,5 +64,19 @@ export const StyledHeaderContent = styled.div`
         font-weight: 600;
       }
     }
+  }
+`;
+
+export const StyledHeaderContent = styled.div`
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1600px;
+  gap: 1em;
+
+  @media ${({ theme }) => theme.bp.desktopXS} {
+    justify-content: end;
   }
 `;

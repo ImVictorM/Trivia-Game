@@ -1,0 +1,31 @@
+{
+  "next": "Next question",
+  "gameOptions": "Game options",
+  "remainingTime": "Remaining time",
+  "loading": "Preparing New Questions...",
+  "correctAnswer": "Correct answer",
+  "wrongAnswer": "Wrong answer",
+
+  "surrender": {
+    "buttonText": "Surrender",
+
+    "dialog": {
+      "title": "Surrender",
+      "body": "Are you sure you want to surrender? surrendering will make you lose all your points."
+    }
+  },
+  "endMatch": {
+    "buttonText": "End match",
+
+    "dialog": {
+      "title": "End match",
+      "body": "Are you sure you want to end the match? ending the match will save your points and redirect you to the feedback screen."
+    }
+  },
+
+  "errors": {
+    "noResult": "Sorry, but we could not find sufficient questions for your game. Try changing your setting to something different!",
+    "generic": "There was an unexpected error, try again later.",
+    "fetchFailed": "Sorry, but it was not possible to fetch questions for your trivia game. Try again later."
+  }
+}

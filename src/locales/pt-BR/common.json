@@ -1,1 +1,14 @@
-{}
+{
+  "rightArrow": "Seta para a direita",
+  "cancel": "Cancelar",
+  "confirm": "Confirmar",
+  "exitDoor": "Porta de saída",
+  "surrenderFlag": "Bandeira de rendição",
+  "points": "Pontos",
+  "star": "Estrela",
+  "timer": "Cronômetro",
+  "loading": "Carregando",
+  "tryAgain": "Tentar novamente",
+  "error": "Erro",
+  "success": "Sucesso"
+}

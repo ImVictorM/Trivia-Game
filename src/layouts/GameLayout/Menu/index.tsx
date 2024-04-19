@@ -3,10 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { StyledHamburgerButton, StyledMenu } from "./style";
 import { Button } from "@/components";
 import { exitDoorIcon, surrenderFlagIcon } from "@/assets/icons";
+import { useTranslation } from "react-i18next";
 
 export default function Menu() {
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const { t } = useTranslation(["game", "common"]);
 
   const toggleMenu = () => {
     setMenuOpen((prev) => !prev);
@@ -19,35 +21,37 @@ export default function Menu() {
       </StyledHamburgerButton>
 
       <StyledMenu $menuOpen={menuOpen}>
-        <h2 className="main-title">Game options</h2>
+        <h2 className="main-title">{t("gameOptions", { ns: "game" })}</h2>
+
         <div className="buttons-wrapper">
           <Button
             color="yellow"
-            icon={{ src: exitDoorIcon, alt: "exit door" }}
+            icon={{ src: exitDoorIcon, alt: t("exitDoor", { ns: "common" }) }}
             dialog={{
-              bodyMessage:
-                "Are you sure you want to end the match? ending the match will save your points and redirect you to the feedback screen.",
-              title: "End match",
+              bodyMessage: t("endMatch.dialog.body", { ns: "game" }),
+              title: t("endMatch.dialog.title", { ns: "game" }),
               onConfirm: () => {
                 navigate("/feedback");
               },
             }}
           >
-            End match
+            {t("endMatch.buttonText", { ns: "game" })}
           </Button>
           <Button
             color="red"
-            icon={{ src: surrenderFlagIcon, alt: "surrender flag" }}
+            icon={{
+              src: surrenderFlagIcon,
+              alt: t("surrenderFlag", { ns: "common" }),
+            }}
             dialog={{
-              bodyMessage:
-                "Are you sure you want to surrender? surrendering will make you lose all your points.",
-              title: "Surrender",
+              bodyMessage: t("surrender.dialog.body", { ns: "game" }),
+              title: t("surrender.dialog.title", { ns: "game" }),
               onConfirm: () => {
                 navigate("/");
               },
             }}
           >
-            Surrender
+            {t("surrender.buttonText", { ns: "game" })}
           </Button>
         </div>
       </StyledMenu>

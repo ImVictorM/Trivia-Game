@@ -3,6 +3,7 @@ import { StyledQuestionCard, StyledScrollingText } from "./style";
 import useOverflow from "@/hooks/useOverflow";
 import { timer } from "@/assets/icons";
 import { sleep } from "@/utils";
+import { useTranslation } from "react-i18next";
 
 type QuestionCardProps = {
   countdown: number;
@@ -19,6 +20,7 @@ export default function QuestionCard({
   const questionThemeRef = useRef(null);
   const { isOverflow } = useOverflow(questionThemeRef);
   const categoryClass = category.split(" ")[0].toLowerCase().replace(":", "");
+  const { t } = useTranslation(["game", "common"]);
 
   useEffect(() => {
     async function changeAnimationStateImmediately() {
@@ -52,9 +54,9 @@ export default function QuestionCard({
         </p>
 
         <div className="remaining-time">
-          <img src={timer} alt="timer" />
+          <img src={timer} alt={t("timer", { ns: "common" })} />
           <p>
-            Remaining time: <span>{countdown}</span>s
+            {`${t("remainingTime")}: `} <span>{countdown}</span>s
           </p>
         </div>
       </div>

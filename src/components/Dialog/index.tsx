@@ -1,6 +1,7 @@
 import { closeIcon, straightCheckIcon } from "@/assets/icons";
 import { StyledDialog, StyledDialogOverlay } from "./style";
 import Button from "../Button";
+import { useTranslation } from "react-i18next";
 
 export type DialogProps = {
   show: boolean;
@@ -17,6 +18,7 @@ export default function Dialog({
   title,
   onClose,
 }: DialogProps) {
+  const { t } = useTranslation();
   return (
     <>
       {show && (
@@ -38,14 +40,14 @@ export default function Dialog({
                   onClick={onClose}
                   icon={{ src: closeIcon, alt: "check" }}
                 >
-                  Cancel
+                  {t("cancel")}
                 </Button>
                 <Button
                   color="green"
                   onClick={onConfirm}
                   icon={{ src: straightCheckIcon, alt: "check" }}
                 >
-                  Confirm
+                  {t("confirm")}
                 </Button>
               </div>
             </div>
