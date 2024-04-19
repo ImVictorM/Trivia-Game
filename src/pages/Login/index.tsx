@@ -124,7 +124,7 @@ export default function Login() {
             type="submit"
             data-testid="btn-play"
             isLoading={isLoading}
-            loadingText="Getting ready..."
+            loadingText={t("starting")}
             disabled={!canPlay || isLoading}
           >
             {t("start")}

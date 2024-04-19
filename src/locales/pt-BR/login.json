@@ -1,5 +1,6 @@
 {
   "start": "Iniciar jogo",
+  "starting": "Preparando jogo...",
   "ranking": "Classificação",
   "nameLabel": "Insira seu nome",
   "emailLabel": "Insira seu email ou email do gravatar"

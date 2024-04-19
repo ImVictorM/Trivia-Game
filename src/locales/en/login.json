@@ -1,5 +1,6 @@
 {
   "start": "Start game",
+  "starting": "Getting ready...",
   "ranking": "Ranking",
   "nameLabel": "Enter your name",
   "emailLabel": "Enter your email or gravatar email"
