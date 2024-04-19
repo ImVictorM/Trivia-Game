@@ -16,12 +16,14 @@ import { useGameSettings } from "@/hooks";
 import { toast } from "react-toastify";
 import Loading from "./Loading";
 import { sleep } from "@/utils";
+import { useTranslation } from "react-i18next";
 
 export default function GameSettings() {
   const [settings, setSettings] = useGameSettings();
 
   const [categories, setCategories] = useState<TriviaCategory[]>([]);
   const [settingsFormState, setSettingsFormState] = useState(settings);
+  const { t } = useTranslation(["gameSettings"]);
 
   const isLoading = useMemo(() => {
     return categories.length === 0;
@@ -85,18 +87,18 @@ export default function GameSettings() {
       {!isLoading && (
         <StyledSettingsContent>
           <img className="logo" src={logo} alt="trivia logo" />
-          <h1 className="main-title">Game Settings</h1>
+          <h1 className="main-title title">{t("title")}</h1>
 
           <StyledSettingsForm onSubmit={handleSaveSettings}>
             <div className="selects-wrapper">
               <Select
                 id="categories"
                 name="categoryId"
-                label="Category"
+                label={t("category.label")}
                 onChange={handleSettingsFormChange}
                 value={settingsFormState.categoryId}
               >
-                <option value={-1}>Any category</option>
+                <option value={-1}>{t("category.any")}</option>
                 {categories.map((category) => (
                   <option key={category.id} value={category.id}>
                     {category.name}
@@ -105,28 +107,28 @@ export default function GameSettings() {
               </Select>
 
               <Select
-                label="Difficulty"
+                label={t("difficulty.label")}
                 id="difficulties"
                 name="difficulty"
                 onChange={handleSettingsFormChange}
                 value={settingsFormState.difficulty}
               >
-                <option value="any">Any difficulty</option>
+                <option value="any">{t("difficulty.any")}</option>
                 {difficulties.map((difficulty) => (
                   <option key={difficulty} value={difficulty}>
-                    {difficulty}
+                    {t(`difficulty.${difficulty}`)}
                   </option>
                 ))}
               </Select>
 
               <Select
-                label="Type"
+                label={t("type.label")}
                 id="types"
                 name="type"
                 onChange={handleSettingsFormChange}
                 value={settingsFormState.type}
               >
-                <option value="any">Any type</option>
+                <option value="any">{t("type.any")}</option>
                 {types.map((type) => (
                   <option key={type} value={type}>
                     {type}
@@ -137,10 +139,10 @@ export default function GameSettings() {
 
             <div className="buttons-wrapper">
               <Button color="green" type="submit">
-                Save
+                {t("save")}
               </Button>
               <LinkButton color="cyan" to="/">
-                Go back
+                {t("goBack")}
               </LinkButton>
             </div>
           </StyledSettingsForm>

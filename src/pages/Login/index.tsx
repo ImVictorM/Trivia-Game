@@ -8,10 +8,11 @@ import { logo } from "@/assets/images";
 import { StyledLoginSection } from "./style";
 import { Button, Input, LinkButton, Toast } from "@/components";
 import { settingsCog } from "@/assets/icons";
-import { useLanguage, useToken } from "@/hooks";
+import { useToken } from "@/hooks";
 import { getAvatarImg } from "@/services/gravatarApi";
 import { toast } from "react-toastify";
 import LanguageSelector from "./LanguageSelector";
+import { useTranslation } from "react-i18next";
 
 export default function Login() {
   const [loginFormState, setLoginFormState] = useState({
@@ -21,7 +22,7 @@ export default function Login() {
   const [canPlay, setCanPlay] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [shouldNavigate, setShouldNavigate] = useState(false);
-  const { translate } = useLanguage("login");
+  const { t } = useTranslation(["login"]);
 
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
@@ -99,7 +100,7 @@ export default function Login() {
             id="name"
             required
             data-testid="input-player-name"
-            label={translate("nameLabel")}
+            label={t("nameLabel")}
             onChange={handleChange}
             maxLength={20}
           />
@@ -111,7 +112,7 @@ export default function Login() {
             required
             name="gravatarEmail"
             data-testid="input-gravatar-email"
-            label={translate("emailLabel")}
+            label={t("emailLabel")}
             onChange={handleChange}
             maxLength={320}
           />
@@ -126,11 +127,11 @@ export default function Login() {
             loadingText="Getting ready..."
             disabled={!canPlay || isLoading}
           >
-            {translate("start")}
+            {t("start")}
           </Button>
 
           <LinkButton color="cyan" to="/ranking">
-            {translate("ranking")}
+            {t("ranking")}
           </LinkButton>
         </div>
 

@@ -4,13 +4,13 @@ import { useTranslation } from "react-i18next";
 
 export type AvailableLanguages = "en" | "pt-BR";
 
-export default function useLanguage(page?: string) {
+export default function useLanguage() {
   const [value, setValue] = useLocalStorage<AvailableLanguages>(
     "language",
     "en",
     false
   );
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
 
   const setLanguage = useCallback(
     (language: AvailableLanguages) => {
@@ -23,12 +23,5 @@ export default function useLanguage(page?: string) {
     i18n.changeLanguage(value);
   }, [i18n, value]);
 
-  const translate = useCallback(
-    (key: string) => {
-      return page ? t(`${page}.${key}`) : t(key);
-    },
-    [page, t]
-  );
-
-  return { language: value, setLanguage, translate };
+  return { language: value, setLanguage };
 }

@@ -33,6 +33,11 @@ export const StyledSettingsContent = styled.section`
     padding: 5em 3em 1em;
   }
 
+  .title {
+    text-align: center;
+    padding: 0 1em;
+  }
+
   .logo {
     left: 50%;
     transform: translateX(-50%);

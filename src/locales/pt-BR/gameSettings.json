@@ -1,0 +1,27 @@
+{
+  "title": "Configurações do jogo",
+  "loading": "Carregando configurações...",
+
+  "category": {
+    "label": "Categoria",
+    "any": "Todas"
+  },
+
+  "difficulty": {
+    "label": "Dificuldade",
+    "easy": "fácil",
+    "medium": "médio",
+    "hard": "difícil",
+    "any": "Todas"
+  },
+
+  "type": {
+    "label": "Tipo",
+    "any": "Todos",
+    "multiple": "Múltipla escolha",
+    "boolean": "Verdadeiro/Falso"
+  },
+
+  "save": "Salvar",
+  "goBack": "Voltar"
+}
