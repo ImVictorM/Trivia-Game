@@ -26,10 +26,12 @@ export const StyledLoginSection = styled.div`
   }
 
   .login-form {
+    --padding-top: 2.3em;
     margin-top: 0.3em;
     position: relative;
     background-color: ${({ theme }) => theme.colors.white};
-    padding: 1em;
+    padding: var(--padding-top) 1em 1em;
+
     border-radius: 10px;
 
     display: flex;
@@ -39,11 +41,11 @@ export const StyledLoginSection = styled.div`
     box-shadow: 1px 4px 13px ${({ theme }) => theme.colors.black + "25"};
 
     @media ${({ theme }) => theme.bp.mobileL} {
-      padding: 1.5em;
+      padding: var(--padding-top) 1.5em 1.5em;
     }
 
     @media ${({ theme }) => theme.bp.desktopXS} {
-      padding: 1.5em 2.5em;
+      padding: var(--padding-top) 2.5em 1.5em;
     }
 
     .inputs-wrapper {
@@ -55,6 +57,12 @@ export const StyledLoginSection = styled.div`
       flex-direction: column;
       gap: 0.3em;
       align-items: center;
+    }
+
+    .language-selector {
+      position: absolute;
+      top: 1.3em;
+      right: 4em;
     }
 
     .settings {

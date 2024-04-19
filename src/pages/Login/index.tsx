@@ -8,9 +8,10 @@ import { logo } from "@/assets/images";
 import { StyledLoginSection } from "./style";
 import { Button, Input, LinkButton, Toast } from "@/components";
 import { settingsCog } from "@/assets/icons";
-import { useToken } from "@/hooks";
+import { useLanguage, useToken } from "@/hooks";
 import { getAvatarImg } from "@/services/gravatarApi";
 import { toast } from "react-toastify";
+import LanguageSelector from "./LanguageSelector";
 
 export default function Login() {
   const [loginFormState, setLoginFormState] = useState({
@@ -20,6 +21,7 @@ export default function Login() {
   const [canPlay, setCanPlay] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [shouldNavigate, setShouldNavigate] = useState(false);
+  const { translate } = useLanguage("login");
 
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
@@ -97,7 +99,7 @@ export default function Login() {
             id="name"
             required
             data-testid="input-player-name"
-            label="Enter your name"
+            label={translate("nameLabel")}
             onChange={handleChange}
             maxLength={20}
           />
@@ -109,7 +111,7 @@ export default function Login() {
             required
             name="gravatarEmail"
             data-testid="input-gravatar-email"
-            label="Enter your email or gravatar email"
+            label={translate("emailLabel")}
             onChange={handleChange}
             maxLength={320}
           />
@@ -124,13 +126,15 @@ export default function Login() {
             loadingText="Getting ready..."
             disabled={!canPlay || isLoading}
           >
-            Start game
+            {translate("start")}
           </Button>
 
           <LinkButton color="cyan" to="/ranking">
-            Ranking
+            {translate("ranking")}
           </LinkButton>
         </div>
+
+        <LanguageSelector className="language-selector" />
 
         <Link className="settings" to="/settings" data-testid="btn-settings">
           <img src={settingsCog} alt="settings cog" />
