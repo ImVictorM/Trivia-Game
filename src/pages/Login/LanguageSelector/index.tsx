@@ -1,17 +1,20 @@
+import { useDispatch, useSelector } from "react-redux";
 import { StyledLanguageSelector } from "./style";
-import { useLanguage } from "@/hooks";
+import { AppDispatch, RootState } from "@/redux/store";
+import { setLanguage } from "@/redux/slices/languageSlice";
 
 type LanguageSelectorProps = {
   className: string;
 };
 
 export default function LanguageSelector({ className }: LanguageSelectorProps) {
-  const { language, setLanguage } = useLanguage();
+  const language = useSelector((state: RootState) => state.language);
+  const dispatch = useDispatch<AppDispatch>();
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { value } = e.target;
     if (value === "pt-BR" || value === "en") {
-      setLanguage(value);
+      dispatch(setLanguage({ code: value }));
     } else {
       console.error(`invalid language code: ${value}`);
     }
@@ -21,7 +24,7 @@ export default function LanguageSelector({ className }: LanguageSelectorProps) {
     <StyledLanguageSelector
       name="languages"
       onChange={handleChange}
-      value={language}
+      value={language.code}
       className={className || ""}
     >
       <option value="pt-BR">🇧🇷 PT-BR</option>

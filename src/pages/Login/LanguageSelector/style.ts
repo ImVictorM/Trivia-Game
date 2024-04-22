@@ -6,4 +6,5 @@ export const StyledLanguageSelector = styled.select`
 
   height: 30px;
   outline: none;
+  cursor: pointer;
 `;
