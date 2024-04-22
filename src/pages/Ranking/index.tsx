@@ -24,10 +24,10 @@ export default function Ranking() {
     <StyledRanking>
       <StyledRankingContent>
         <img className="logo" src={logo} alt="trivia logo" />
-        <h1 className="main-title" data-testid="ranking-title">
+        <h1 className="main-title title" data-testid="ranking-title">
           {t("mainTitle")}
         </h1>
-        <h2 className="secondary-title">{t("secondaryTitle")}</h2>
+        <h2 className="secondary-title title">{t("secondaryTitle")}</h2>
         <StyledPlayerList>
           {!rankingIsEmpty &&
             playersRanking.map(({ gravatarImgSrc, name, score }, index) => (

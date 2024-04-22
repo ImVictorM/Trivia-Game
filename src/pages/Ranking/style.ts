@@ -46,6 +46,10 @@ export const StyledRankingContent = styled.section`
       top: -110px;
     }
   }
+
+  .title {
+    text-align: center;
+  }
 `;
 
 export const StyledPlayerList = styled.ul`
