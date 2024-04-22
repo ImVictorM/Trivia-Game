@@ -10,9 +10,11 @@ import {
   StyledRankingContent,
 } from "./style";
 import { useMemo } from "react";
+import { Trans, useTranslation } from "react-i18next";
 
 export default function Ranking() {
   const { playersRanking } = usePlayerRanking();
+  const { t } = useTranslation(["ranking", "common"]);
 
   const rankingIsEmpty = useMemo(() => {
     return playersRanking.length === 0;
@@ -23,9 +25,9 @@ export default function Ranking() {
       <StyledRankingContent>
         <img className="logo" src={logo} alt="trivia logo" />
         <h1 className="main-title" data-testid="ranking-title">
-          Local Ranking
+          {t("mainTitle")}
         </h1>
-        <h2 className="secondary-title">Top 3 highest score</h2>
+        <h2 className="secondary-title">{t("secondaryTitle")}</h2>
         <StyledPlayerList>
           {!rankingIsEmpty &&
             playersRanking.map(({ gravatarImgSrc, name, score }, index) => (
@@ -39,7 +41,7 @@ export default function Ranking() {
                 <div className="points-wrapper">
                   <img className="star-icon" src={star} alt="star" />
                   <p title={`${score} points`} className="points">
-                    <span>{score}</span> points
+                    <span>{score}</span> {t("points", { ns: "common" })}
                   </p>
                 </div>
               </StyledPlayer>
@@ -47,15 +49,14 @@ export default function Ranking() {
           {rankingIsEmpty && (
             <StyledEmptyRanking>
               <p>
-                There are no player in the ranking yet {`:(`}
-                <br />
-                Try playing a match to see your name here!
+                <Trans t={t} i18nKey="emptyRanking" />
               </p>
             </StyledEmptyRanking>
           )}
         </StyledPlayerList>
+
         <LinkButton color="green" to="/" data-testid="btn-go-home">
-          Go to start
+          {t("goToStart")}
         </LinkButton>
       </StyledRankingContent>
     </StyledRanking>
