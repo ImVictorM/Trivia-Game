@@ -10,10 +10,12 @@ import {
 import { LinkButton } from "@/components";
 import { useEffect } from "react";
 import usePlayerRanking from "@/hooks/usePlayerRanking";
+import { Trans, useTranslation } from "react-i18next";
 
 export default function Feedback() {
   const player = useSelector((state: RootState) => state.player);
   const { updateRanking } = usePlayerRanking();
+  const { t } = useTranslation(["feedback", "common"]);
   const isGoodScore = player.assertions > 2;
 
   useEffect(() => {
@@ -37,29 +39,36 @@ export default function Feedback() {
           />
 
           <h1 className="feedback-title" data-testid="feedback-text">
-            {isGoodScore ? "Well Done!" : "Could be better..."}
+            {isGoodScore ? t("goodScoreTitle") : t("badScoreTitle")}
           </h1>
 
           <p>
-            You answered{" "}
-            <span data-testid="feedback-total-question">
-              {player.assertions}
-            </span>{" "}
-            questions correctly!
+            <Trans
+              i18nKey="feedbackText"
+              t={t}
+              count={player.assertions}
+              components={{
+                span: <span data-testid="feedback-total-question" />,
+              }}
+            />
           </p>
 
           <p>
-            Total points earned:{" "}
-            <span data-testid="feedback-total-score">{player.score}</span>
+            <Trans
+              i18nKey="totalPoints"
+              t={t}
+              values={{ playerScore: player.score }}
+              components={{ span: <span data-testid="feedback-total-score" /> }}
+            />
           </p>
         </StyledFeedbackCard>
 
         <StyledButtonsWrapper>
           <LinkButton color="green" to="/" data-testid="btn-play-again">
-            Play Again
+            {t("playAgain", { ns: "common" })}
           </LinkButton>
           <LinkButton color="cyan" to="/ranking" data-testid="btn-ranking">
-            Ranking
+            {t("Ranking", { ns: "common" })}
           </LinkButton>
         </StyledButtonsWrapper>
       </StyledFeedbackContent>

@@ -22,7 +22,7 @@ export default function Login() {
   const [canPlay, setCanPlay] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [shouldNavigate, setShouldNavigate] = useState(false);
-  const { t } = useTranslation(["login"]);
+  const { t } = useTranslation(["login", "common"]);
 
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
@@ -131,7 +131,7 @@ export default function Login() {
           </Button>
 
           <LinkButton color="cyan" to="/ranking">
-            {t("ranking")}
+            {t("ranking", { ns: "common" })}
           </LinkButton>
         </div>
 

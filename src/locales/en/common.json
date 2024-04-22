@@ -10,5 +10,7 @@
   "loading": "Loading",
   "tryAgain": "Try again",
   "error": "Error",
-  "success": "Success"
+  "success": "Success",
+  "playAgain": "Play again",
+  "ranking": "Ranking"
 }

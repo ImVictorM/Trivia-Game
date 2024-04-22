@@ -10,5 +10,7 @@
   "loading": "Carregando",
   "tryAgain": "Tentar novamente",
   "error": "Erro",
-  "success": "Sucesso"
+  "success": "Sucesso",
+  "playAgain": "Jogar novamente",
+  "ranking": "Classificação"
 }
