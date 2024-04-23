@@ -1,4 +1,5 @@
 import { LanguageCode } from "@/redux/slices/languageSlice";
+import { decodeHtmlEntity } from "@/utils";
 import axios, { AxiosResponse } from "axios";
 
 type Text = {
@@ -66,7 +67,7 @@ export async function tryToTranslate(
         key: element.key,
         content: translations
           .slice(element.startIndex, element.endIndex)
-          .map((t) => t.translatedText),
+          .map((t) => decodeHtmlEntity(t.translatedText)),
       };
     });
 
