@@ -78,7 +78,7 @@ export const StyledAnswersWrapper = styled.div<StyledAnswersWrapperProps>`
 
   .next-button {
     align-self: center;
-    max-width: 300px;
+    max-width: 350px;
     margin-top: 0.5em;
   }
 `;

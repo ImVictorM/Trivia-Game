@@ -5,6 +5,7 @@
   "loading": "Preparando novas questões...",
   "correctAnswer": "Questão correta",
   "wrongAnswer": "Questão incorreta",
+  "gettingNextQuestion": "Trocando de pergunta",
 
   "surrender": {
     "buttonText": "Render-se",

@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
-type LanguageCode = "en" | "pt-BR";
+export type LanguageCode = "en" | "pt-BR";
 
 type InitialLanguageState = {
   code: LanguageCode;

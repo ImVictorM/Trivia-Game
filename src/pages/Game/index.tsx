@@ -13,8 +13,8 @@ import {
 } from "@/hooks";
 import { useNavigate } from "react-router-dom";
 import { calculateScore, shuffleArray, sleep } from "@/utils";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/redux/store";
 import { setGameStats } from "@/redux/slices/playerSlice";
 import { GameLayout } from "@/layouts";
 import {
@@ -31,9 +31,9 @@ import GameError from "./GameError";
 import { exitDoorIcon, surrenderFlagIcon, rightArrow } from "@/assets/icons";
 import { sizes } from "@/styles/breakpoints";
 import { useTranslation } from "react-i18next";
+import { tryToTranslate } from "@/services/googleTranslateApi";
 
 type CurrentQuestionState = {
-  questionIndex: number;
   question: Question | null;
   answers: string[];
   answerWasSelected: boolean;
@@ -41,9 +41,9 @@ type CurrentQuestionState = {
 
 export default function Game() {
   const [questions, setQuestions] = useState<Question[]>();
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [currentQuestionState, setCurrentQuestionState] =
     useState<CurrentQuestionState>({
-      questionIndex: 0,
       question: null,
       answers: [],
       answerWasSelected: false,
@@ -60,39 +60,61 @@ export default function Game() {
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isChangingQuestion, setIsChangingQuestion] = useState(false);
   const { width } = useScreenDimensions();
   const { token, clearToken, tokenIsEmpty, setToken } = useToken();
 
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const { t } = useTranslation(["game", "common"]);
+  const language = useSelector((state: RootState) => state.language);
 
-  const changeToNextQuestion = useCallback(() => {
-    if (!questions) return;
-    if (currentQuestionState.questionIndex + 1 < questions.length) {
-      // change to next question
-      setCurrentQuestionState((prevState) => {
-        const nextQuestionIndex = prevState.questionIndex + 1;
-        const nextQuestion = questions[nextQuestionIndex];
+  const translateTriviaQuestion = useCallback(
+    async (q: Question): Promise<Question> => {
+      const { category, correct_answer, incorrect_answers, question } = q;
+      const entries = Object.entries({
+        category,
+        correct_answer,
+        incorrect_answers,
+        question,
+      });
+
+      const toTranslate = entries.map(([key, value]) => {
         return {
-          questionIndex: nextQuestionIndex,
-          question: nextQuestion,
-          answers: shuffleAnswers(nextQuestion),
-          answerWasSelected: false,
+          key: key,
+          content: Array.isArray(value) ? value : [value],
         };
       });
 
-      restartCountdown();
+      const response = await tryToTranslate(toTranslate, "en", "pt-BR");
+
+      const responseToQuestion = response.reduce((acc, element) => {
+        return {
+          ...acc,
+          [element.key]:
+            element.key === "incorrect_answers"
+              ? element.content
+              : element.content[0],
+        };
+      }, {});
+
+      return {
+        ...q,
+        ...responseToQuestion,
+      };
+    },
+    []
+  );
+
+  const changeCurrentQuestionIndex = useCallback(() => {
+    if (!questions) return;
+    if (currentQuestionIndex + 1 < questions.length) {
+      setCurrentQuestionIndex((prev) => prev + 1);
     } else {
       // go to feedback if there is not any remaining questions
       navigate("/feedback");
     }
-  }, [
-    currentQuestionState.questionIndex,
-    navigate,
-    questions,
-    restartCountdown,
-  ]);
+  }, [currentQuestionIndex, navigate, questions]);
 
   const shuffleAnswers = (question: Question) => {
     const {
@@ -153,12 +175,13 @@ export default function Game() {
           case TriviaResponseCode.SUCCESS: {
             setQuestions(results);
 
-            const firstQuestionIndex = 0;
-            const question = results[firstQuestionIndex];
+            const question =
+              language.code === "pt-BR"
+                ? await translateTriviaQuestion(results[0])
+                : results[0];
             const answers = shuffleAnswers(question);
 
             setCurrentQuestionState({
-              questionIndex: firstQuestionIndex,
               answers: answers,
               question: question,
               answerWasSelected: false,
@@ -220,6 +243,39 @@ export default function Game() {
     restartCountdown,
     stopCountdown,
     t,
+    language.code,
+    translateTriviaQuestion,
+  ]);
+
+  // On changing question index
+  useEffect(() => {
+    const changeToNextQuestion = async () => {
+      setIsChangingQuestion(true);
+
+      if (!questions) return;
+      const nextQuestion =
+        language.code === "pt-BR"
+          ? await translateTriviaQuestion(questions[currentQuestionIndex])
+          : questions[currentQuestionIndex];
+
+      setCurrentQuestionState((prev) => ({
+        ...prev,
+        question: nextQuestion,
+        answers: shuffleAnswers(nextQuestion),
+        answerWasSelected: false,
+      }));
+
+      setIsChangingQuestion(false);
+      restartCountdown();
+    };
+
+    changeToNextQuestion();
+  }, [
+    currentQuestionIndex,
+    language.code,
+    questions,
+    restartCountdown,
+    translateTriviaQuestion,
   ]);
 
   // Go to login if the token doesn't exist
@@ -243,7 +299,7 @@ export default function Game() {
   useEffect(() => {
     function handleNextOnEnterKeyDown(e: KeyboardEvent) {
       if (e.key === "Enter" && currentQuestionState.answerWasSelected) {
-        changeToNextQuestion();
+        changeCurrentQuestionIndex();
       }
     }
 
@@ -251,7 +307,7 @@ export default function Game() {
 
     return () =>
       document.removeEventListener("keydown", handleNextOnEnterKeyDown);
-  }, [changeToNextQuestion, currentQuestionState.answerWasSelected]);
+  }, [changeCurrentQuestionIndex, currentQuestionState.answerWasSelected]);
 
   return (
     <GameLayout>
@@ -327,8 +383,11 @@ export default function Game() {
                 color="green"
                 type="button"
                 data-testid="btn-next"
-                onClick={changeToNextQuestion}
+                onClick={changeCurrentQuestionIndex}
                 className="next-button"
+                isLoading={isChangingQuestion}
+                disabled={isChangingQuestion}
+                loadingText={t("gettingNextQuestion")}
                 icon={{
                   src: rightArrow,
                   alt: t("rightArrow", { ns: "common" }),

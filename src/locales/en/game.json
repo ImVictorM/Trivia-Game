@@ -5,6 +5,7 @@
   "loading": "Preparing New Questions...",
   "correctAnswer": "Correct answer",
   "wrongAnswer": "Wrong answer",
+  "gettingNextQuestion": "Getting next question",
 
   "surrender": {
     "buttonText": "Surrender",
