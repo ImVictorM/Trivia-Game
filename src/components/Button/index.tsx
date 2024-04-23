@@ -1,5 +1,5 @@
 import { DefaultTheme } from "styled-components";
-import { StyledButton } from "./style";
+import { StyledButton, StyledButtonWrapper } from "./style";
 import { spinnerLoadingIcon } from "@/assets/icons";
 import Dialog, { DialogProps } from "../Dialog";
 import { useState } from "react";
@@ -42,12 +42,11 @@ export default function Button({
   };
 
   return (
-    <>
+    <StyledButtonWrapper className={className ? className : ""}>
       <StyledButton
         onClick={handleClick}
         $color={color}
         {...defaultButtonProps}
-        className={className ? className : ""}
       >
         {isLoading ? (
           <div className="loading">
@@ -69,6 +68,6 @@ export default function Button({
           onClose={() => setShowDialog(false)}
         />
       )}
-    </>
+    </StyledButtonWrapper>
   );
 }
