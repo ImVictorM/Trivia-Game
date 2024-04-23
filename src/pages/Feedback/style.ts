@@ -96,4 +96,8 @@ export const StyledButtonsWrapper = styled.div`
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   margin-top: 1em;
   gap: 0.5em;
+
+  .button {
+    height: 100%;
+  }
 `;

@@ -12,7 +12,7 @@ import {
   useToken,
 } from "@/hooks";
 import { useNavigate } from "react-router-dom";
-import { calculateScore, shuffleArray, sleep } from "@/utils";
+import { calculateScore, constants, shuffleArray, sleep } from "@/utils";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
 import { setGameStats } from "@/redux/slices/playerSlice";
@@ -71,9 +71,8 @@ export default function Game() {
 
   const translateTriviaQuestion = useCallback(
     async (q: Question): Promise<Question> => {
-      const { category, correct_answer, incorrect_answers, question } = q;
+      const { correct_answer, incorrect_answers, question } = q;
       const entries = Object.entries({
-        category,
         correct_answer,
         incorrect_answers,
         question,
@@ -98,12 +97,19 @@ export default function Game() {
         };
       }, {});
 
+      // 9 => general knowledge category id
+      const triviaCategoryId =
+        constants.TRIVIA_CATEGORIES.find(
+          (category) => category.name === q.category
+        )?.id || 9;
+
       return {
         ...q,
         ...responseToQuestion,
+        category: t(`categories.${triviaCategoryId}`, { ns: "common" }),
       };
     },
-    []
+    [t]
   );
 
   const changeCurrentQuestionIndex = useCallback(() => {

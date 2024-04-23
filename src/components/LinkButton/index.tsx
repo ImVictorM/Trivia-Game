@@ -15,11 +15,12 @@ export default function LinkButton({
   children,
   color,
   icon,
+  className,
   ...defaultLinkProps
 }: LinkButtonProps) {
   return (
     <StyledLinkButton $color={color}>
-      <Link className="link" {...defaultLinkProps}>
+      <Link className={`link ${className || ""}`} {...defaultLinkProps}>
         {children}
         {icon && <img className="icon" src={icon.src} alt={icon.src} />}
       </Link>

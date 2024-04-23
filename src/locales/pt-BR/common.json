@@ -12,5 +12,31 @@
   "error": "Erro",
   "success": "Sucesso",
   "playAgain": "Jogar novamente",
-  "ranking": "Classificação"
+  "ranking": "Classificação",
+  "categories": {
+    "9": "Conhecimento geral",
+    "10": "Entretenimento: Livros",
+    "11": "Entretenimento: Filme",
+    "12": "Entretenimento: Música",
+    "13": "Entretenimento: musicais e teatros",
+    "14": "Entretenimento: Televisão",
+    "15": "Entretenimento: videogames",
+    "16": "Entretenimento: jogos de tabuleiro",
+    "17": "Ciência e Natureza",
+    "18": "Ciência: Computadores",
+    "19": "Ciência: Matemática",
+    "20": "Mitologia",
+    "21": "Esportes",
+    "22": "Geografia",
+    "23": "História",
+    "24": "Política",
+    "25": "Arte",
+    "26": "Celebridades",
+    "27": "Animais",
+    "28": "Veículos",
+    "29": "Entretenimento: Quadrinhos",
+    "30": "Ciência: Gadgets",
+    "31": "Entretenimento: anime e mangá japoneses",
+    "32": "Entretenimento: desenhos animados e animações"
+  }
 }

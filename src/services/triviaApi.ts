@@ -58,14 +58,6 @@ type GetTriviaQuestionsParams = {
   signal?: GenericAbortSignal;
 };
 
-type GetTriviaCategoriesResponse = {
-  trivia_categories: TriviaCategory[];
-};
-
-type GetTriviaCategoriesParams = {
-  signal?: GenericAbortSignal;
-};
-
 type resetTriviaTokenResponse = {
   response_code: number;
   token: string;
@@ -146,14 +138,4 @@ export async function getTriviaQuestions(
       };
     }
   }
-}
-
-export async function getTriviaCategories(
-  args?: GetTriviaCategoriesParams
-): Promise<TriviaCategory[]> {
-  const response: AxiosResponse<GetTriviaCategoriesResponse> =
-    await triviaApi.get("api_category.php", {
-      signal: args?.signal,
-    });
-  return response.data.trivia_categories;
 }

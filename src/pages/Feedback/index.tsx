@@ -64,10 +64,20 @@ export default function Feedback() {
         </StyledFeedbackCard>
 
         <StyledButtonsWrapper>
-          <LinkButton color="green" to="/" data-testid="btn-play-again">
+          <LinkButton
+            className="button"
+            color="green"
+            to="/"
+            data-testid="btn-play-again"
+          >
             {t("playAgain", { ns: "common" })}
           </LinkButton>
-          <LinkButton color="cyan" to="/ranking" data-testid="btn-ranking">
+          <LinkButton
+            className="button"
+            color="cyan"
+            to="/ranking"
+            data-testid="btn-ranking"
+          >
             {t("Ranking", { ns: "common" })}
           </LinkButton>
         </StyledButtonsWrapper>
