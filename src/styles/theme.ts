@@ -1,5 +1,6 @@
 import { mixins } from "./mixins";
 import { mediaBreakPoints } from "./breakpoints";
+import { animations } from "./animation";
 
 export const theme = {
   colors: {
@@ -21,6 +22,7 @@ export const theme = {
   },
   bp: mediaBreakPoints,
   mixins,
+  animations,
 };
 
 export type Theme = typeof theme;

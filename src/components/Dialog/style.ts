@@ -13,13 +13,20 @@ export const StyledDialogOverlay = styled.div`
   align-items: center;
 `;
 
-export const StyledDialog = styled.div`
+type StyledDialogProps = {
+  $shouldAnimateOut: boolean;
+};
+
+export const StyledDialog = styled.div<StyledDialogProps>`
   --border-radius: 10px;
 
   width: 100%;
   max-width: 600px;
   background-color: ${({ theme }) => theme.colors.white};
   border-radius: var(--border-radius);
+  box-shadow: 0 10px 15px rgb(0, 0, 0, 0.2);
+  ${({ theme, $shouldAnimateOut }) =>
+    theme.animations.popupAnimation($shouldAnimateOut)}
 
   .header {
     display: flex;

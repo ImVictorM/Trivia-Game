@@ -2,6 +2,7 @@ import { closeIcon, straightCheckIcon } from "@/assets/icons";
 import { StyledDialog, StyledDialogOverlay } from "./style";
 import Button from "../Button";
 import { useTranslation } from "react-i18next";
+import { useDelayedUnmount } from "@/hooks";
 
 export type DialogProps = {
   show: boolean;
@@ -19,11 +20,13 @@ export default function Dialog({
   onClose,
 }: DialogProps) {
   const { t } = useTranslation();
+  const { shouldRender } = useDelayedUnmount(show, 100);
+
   return (
     <>
-      {show && (
+      {shouldRender && (
         <StyledDialogOverlay>
-          <StyledDialog>
+          <StyledDialog $shouldAnimateOut={!show}>
             <header className="header">
               <h1 className="title">{title}</h1>
               <button className="close" onClick={onClose}>
