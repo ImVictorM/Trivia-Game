@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Question,
   getTriviaQuestions,
@@ -59,7 +59,7 @@ export default function Game() {
   const [settings] = useGameSettings();
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isFetchingQuestions, setIsFetchingQuestions] = useState(true);
   const [isChangingQuestion, setIsChangingQuestion] = useState(false);
   const { width } = useScreenDimensions();
   const { token, clearToken, tokenIsEmpty, setToken } = useToken();
@@ -68,6 +68,20 @@ export default function Game() {
   const dispatch = useDispatch<AppDispatch>();
   const { t } = useTranslation(["game", "common"]);
   const language = useSelector((state: RootState) => state.language);
+
+  const isLoading = useMemo(() => {
+    return !(
+      !isFetchingQuestions &&
+      questions &&
+      currentQuestionState.question &&
+      currentQuestionState.answers.length !== 0
+    );
+  }, [
+    currentQuestionState.answers.length,
+    currentQuestionState.question,
+    isFetchingQuestions,
+    questions,
+  ]);
 
   const translateTriviaQuestion = useCallback(
     async (q: Question): Promise<Question> => {
@@ -163,7 +177,7 @@ export default function Game() {
   // Fetch the question on component did mount
   useEffect(() => {
     async function fetchTriviaQuestions() {
-      setIsLoading(true);
+      setIsFetchingQuestions(true);
 
       const MAX_TRIES_TO_FETCH = 5;
       let currentTry = 1;
@@ -180,42 +194,28 @@ export default function Game() {
         switch (responseCode) {
           case TriviaResponseCode.SUCCESS: {
             setQuestions(results);
-
-            const question =
-              language.code === "pt-BR"
-                ? await translateTriviaQuestion(results[0])
-                : results[0];
-            const answers = shuffleAnswers(question);
-
-            setCurrentQuestionState({
-              answers: answers,
-              question: question,
-              answerWasSelected: false,
-            });
-
             setErrorMessage(null);
-            startCountdown();
-            setIsLoading(false);
+            setIsFetchingQuestions(false);
 
             return;
           }
           case TriviaResponseCode.TOKEN_EMPTY: {
             const resetResponse = await resetTriviaToken(token);
             setToken(resetResponse.token);
-            setIsLoading(false);
+            setIsFetchingQuestions(false);
             setErrorMessage(null);
             restartCountdown();
 
             return;
           }
           case TriviaResponseCode.TOKEN_NOT_FOUND: {
-            setIsLoading(false);
+            setIsFetchingQuestions(false);
             stopCountdown();
             clearToken();
             return;
           }
           case TriviaResponseCode.NO_RESULT: {
-            setIsLoading(false);
+            setIsFetchingQuestions(false);
             setErrorMessage(t("errors.noResult"));
             return;
           }
@@ -227,7 +227,7 @@ export default function Game() {
           }
           case TriviaResponseCode.INVALID_PARAMETER:
           default: {
-            setIsLoading(false);
+            setIsFetchingQuestions(false);
             setErrorMessage(t("errors.generic"));
             return;
           }
@@ -259,6 +259,7 @@ export default function Game() {
       setIsChangingQuestion(true);
 
       if (!questions) return;
+
       const nextQuestion =
         language.code === "pt-BR"
           ? await translateTriviaQuestion(questions[currentQuestionIndex])
@@ -272,7 +273,7 @@ export default function Game() {
       }));
 
       setIsChangingQuestion(false);
-      restartCountdown();
+      startCountdown();
     };
 
     changeToNextQuestion();
@@ -280,7 +281,7 @@ export default function Game() {
     currentQuestionIndex,
     language.code,
     questions,
-    restartCountdown,
+    startCountdown,
     translateTriviaQuestion,
   ]);
 
@@ -291,7 +292,7 @@ export default function Game() {
     }
   }, [token, navigate]);
 
-  // Update the player global state
+  // Update the player global state when score changes
   useEffect(() => {
     dispatch(
       setGameStats({
