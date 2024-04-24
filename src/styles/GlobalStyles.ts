@@ -24,6 +24,15 @@ export const GlobalStyles = createGlobalStyle`
   font-size: calc(15px + 0.390625vw);
   color: ${({ theme }) => theme.colors.black};
   line-height: 1;
+
+  &.blur {
+    #content > * {
+      filter: blur(5px) brightness(0.7);
+      transition: all 0.25s cubic-bezier(0.645, 0.045, 0.355, 1);
+      pointer-events: none;
+      user-select: none;
+    }
+  }
 }
 h1,
 h2,

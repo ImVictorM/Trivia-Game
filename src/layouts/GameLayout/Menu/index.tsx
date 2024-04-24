@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { StyledHamburgerButton, StyledMenu } from "./style";
 import { Button } from "@/components";
@@ -13,6 +13,16 @@ export default function Menu() {
   const toggleMenu = () => {
     setMenuOpen((prev) => !prev);
   };
+
+  useEffect(() => {
+    if (menuOpen) {
+      document.body.classList.add("blur");
+    } else {
+      document.body.classList.remove("blur");
+    }
+
+    return () => document.body.classList.remove("blur");
+  }, [menuOpen]);
 
   return (
     <>
