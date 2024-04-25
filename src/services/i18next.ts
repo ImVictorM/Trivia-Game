@@ -16,3 +16,5 @@ i18next
     fallbackLng: "en",
     returnObjects: true,
   });
+
+export default i18next;

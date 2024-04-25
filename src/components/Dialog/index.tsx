@@ -3,6 +3,7 @@ import { StyledDialog, StyledDialogOverlay } from "./style";
 import Button from "../Button";
 import { useTranslation } from "react-i18next";
 import { useDelayedUnmount } from "@/hooks";
+import { DIALOG_COMPONENT_TEST_ID } from "@/tests/utils/datatestId";
 
 export type DialogProps = {
   show: boolean;
@@ -26,7 +27,10 @@ export default function Dialog({
     <>
       {shouldRender && (
         <StyledDialogOverlay>
-          <StyledDialog $shouldAnimateOut={!show}>
+          <StyledDialog
+            $shouldAnimateOut={!show}
+            data-testid={DIALOG_COMPONENT_TEST_ID}
+          >
             <header className="header">
               <h1 className="title">{title}</h1>
               <button className="close" onClick={onClose}>
