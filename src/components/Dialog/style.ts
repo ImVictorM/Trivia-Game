@@ -19,7 +19,6 @@ type StyledDialogProps = {
 
 export const StyledDialog = styled.div<StyledDialogProps>`
   --border-radius: 10px;
-
   width: 100%;
   max-width: 600px;
   background-color: ${({ theme }) => theme.colors.white};
