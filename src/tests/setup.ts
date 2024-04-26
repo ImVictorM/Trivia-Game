@@ -14,3 +14,11 @@ vi.mock("react-i18next", () => ({
     init: () => {},
   },
 }));
+
+const ResizeObserverMock = vi.fn().mockImplementation(() => ({
+  observe: vi.fn(),
+  unobserve: vi.fn(),
+  disconnect: vi.fn(),
+}));
+
+global.ResizeObserver = ResizeObserverMock;
