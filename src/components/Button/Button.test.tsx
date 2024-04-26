@@ -1,12 +1,11 @@
 import { act, screen } from "@testing-library/react";
 import Button from ".";
 import { renderWithTheme } from "@/tests/utils";
-import {
-  BUTTON_COMPONENT_TEST_ID,
-  DIALOG_COMPONENT_TEST_ID,
-} from "@/tests/utils/datatestId";
+
 import { star } from "@/assets/icons";
 import { userEvent } from "@testing-library/user-event";
+import { BUTTON_COMPONENT_ID } from "./testId";
+import { DIALOG_COMPONENT_ID } from "../Dialog/testId";
 
 describe("Button component", () => {
   const defaultLoadingText = "Loading...";
@@ -18,7 +17,7 @@ describe("Button component", () => {
   it("Renders correctly with minimal configuration", () => {
     renderWithTheme(<Button color="green">Click me</Button>);
 
-    const button = screen.getByTestId(BUTTON_COMPONENT_TEST_ID);
+    const button = screen.getByTestId(BUTTON_COMPONENT_ID);
 
     const loadingIcon = screen.queryByRole("img", { name: /loading/i });
 
@@ -34,7 +33,7 @@ describe("Button component", () => {
       </Button>
     );
 
-    const button = screen.getByTestId(BUTTON_COMPONENT_TEST_ID);
+    const button = screen.getByTestId(BUTTON_COMPONENT_ID);
     const loadingIcon = screen.getByRole("img", { name: /loading/i });
 
     expect(button).not.toHaveTextContent(/Click me/i);
@@ -49,7 +48,7 @@ describe("Button component", () => {
       </Button>
     );
 
-    const button = screen.getByTestId(BUTTON_COMPONENT_TEST_ID);
+    const button = screen.getByTestId(BUTTON_COMPONENT_ID);
     const loadingIcon = screen.getByRole("img", { name: /loading/i });
 
     expect(button).toHaveTextContent(/It is loading now/i);
@@ -66,7 +65,7 @@ describe("Button component", () => {
       </Button>
     );
 
-    const button = screen.getByTestId(BUTTON_COMPONENT_TEST_ID);
+    const button = screen.getByTestId(BUTTON_COMPONENT_ID);
     const customIcon = screen.getByRole("img", { name: customIconName });
 
     expect(button).toContainElement(customIcon);
@@ -84,7 +83,7 @@ describe("Button component", () => {
       </Button>
     );
 
-    const button = screen.getByTestId(BUTTON_COMPONENT_TEST_ID);
+    const button = screen.getByTestId(BUTTON_COMPONENT_ID);
     const customIcon = screen.queryByRole("img", { name: customIconName });
 
     expect(button).not.toContainElement(customIcon);
@@ -100,13 +99,13 @@ describe("Button component", () => {
       </Button>
     );
 
-    const button = screen.getByTestId(BUTTON_COMPONENT_TEST_ID);
+    const button = screen.getByTestId(BUTTON_COMPONENT_ID);
 
     await act(async () => {
       await userEvent.click(button);
     });
 
-    const dialog = screen.getByTestId(DIALOG_COMPONENT_TEST_ID);
+    const dialog = screen.getByTestId(DIALOG_COMPONENT_ID);
     expect(dialog).toBeInTheDocument();
   });
 
@@ -118,13 +117,13 @@ describe("Button component", () => {
       </Button>
     );
 
-    const button = screen.getByTestId(BUTTON_COMPONENT_TEST_ID);
+    const button = screen.getByTestId(BUTTON_COMPONENT_ID);
 
     await act(async () => {
       await userEvent.click(button);
     });
 
-    const dialog = screen.queryByTestId(DIALOG_COMPONENT_TEST_ID);
+    const dialog = screen.queryByTestId(DIALOG_COMPONENT_ID);
     expect(dialog).not.toBeInTheDocument();
     expect(onClickMock).toHaveBeenCalledOnce();
   });
@@ -136,7 +135,7 @@ describe("Button component", () => {
       </Button>
     );
 
-    const button = screen.getByTestId(BUTTON_COMPONENT_TEST_ID);
+    const button = screen.getByTestId(BUTTON_COMPONENT_ID);
 
     expect(button.parentElement).toHaveClass("style");
   });

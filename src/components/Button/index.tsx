@@ -3,7 +3,7 @@ import { StyledButton, StyledButtonWrapper } from "./style";
 import { spinnerLoadingIcon } from "@/assets/icons";
 import Dialog, { DialogProps } from "../Dialog";
 import { useState } from "react";
-import { BUTTON_COMPONENT_TEST_ID } from "@/tests/utils/datatestId";
+import { BUTTON_COMPONENT_ID } from "./testId";
 
 type PartialDialogProps = Omit<DialogProps, "show" | "onClose">;
 
@@ -47,7 +47,7 @@ export default function Button({
       <StyledButton
         onClick={handleClick}
         $color={color}
-        data-testid={BUTTON_COMPONENT_TEST_ID}
+        data-testid={BUTTON_COMPONENT_ID}
         {...defaultButtonProps}
       >
         {isLoading ? (
