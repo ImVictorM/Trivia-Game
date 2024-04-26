@@ -14,7 +14,7 @@ export default function Input({
 }: InputProps) {
   return (
     <StyledInput $inputValue={value}>
-      <input id={id} {...defaultInputProps} />
+      <input id={id} value={value} {...defaultInputProps} />
       <div className="underline" />
       <label htmlFor={id}>{label}</label>
     </StyledInput>
