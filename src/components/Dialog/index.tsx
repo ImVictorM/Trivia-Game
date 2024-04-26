@@ -3,7 +3,11 @@ import { StyledDialog, StyledDialogOverlay } from "./style";
 import Button from "../Button";
 import { useTranslation } from "react-i18next";
 import { useDelayedUnmount } from "@/hooks";
-import { DIALOG_COMPONENT_TEST_ID } from "@/tests/utils/datatestId";
+import {
+  DIALOG_COMPONENT_CLOSE_BUTTON_ID,
+  DIALOG_COMPONENT_ID,
+  DIALOG_COMPONENT_OVERLAY_ID,
+} from "./testId";
 
 export type DialogProps = {
   show: boolean;
@@ -26,14 +30,22 @@ export default function Dialog({
   return (
     <>
       {shouldRender && (
-        <StyledDialogOverlay>
+        <StyledDialogOverlay
+          data-testid={DIALOG_COMPONENT_OVERLAY_ID}
+          onClick={onClose}
+        >
           <StyledDialog
             $shouldAnimateOut={!show}
-            data-testid={DIALOG_COMPONENT_TEST_ID}
+            data-testid={DIALOG_COMPONENT_ID}
+            onClick={(e) => e.stopPropagation()}
           >
             <header className="header">
               <h1 className="title">{title}</h1>
-              <button className="close" onClick={onClose}>
+              <button
+                data-testid={DIALOG_COMPONENT_CLOSE_BUTTON_ID}
+                className="close"
+                onClick={onClose}
+              >
                 <img src={closeIcon} alt="close" />
               </button>
             </header>
