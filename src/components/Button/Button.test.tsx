@@ -3,7 +3,6 @@ import Button from ".";
 import { renderWithTheme } from "@/tests/utils";
 
 import { star } from "@/assets/icons";
-import { userEvent } from "@testing-library/user-event";
 import { BUTTON_COMPONENT_ID } from "./testId";
 import { DIALOG_COMPONENT_ID } from "../Dialog/testId";
 
@@ -90,7 +89,7 @@ describe("Button component", () => {
   });
 
   it("Opens a dialog when dialog option is defined", async () => {
-    renderWithTheme(
+    const { user } = renderWithTheme(
       <Button
         dialog={{ bodyMessage: "dialog message", title: "dialog" }}
         color="green"
@@ -102,7 +101,7 @@ describe("Button component", () => {
     const button = screen.getByTestId(BUTTON_COMPONENT_ID);
 
     await act(async () => {
-      await userEvent.click(button);
+      await user.click(button);
     });
 
     const dialog = screen.getByTestId(DIALOG_COMPONENT_ID);
@@ -111,7 +110,7 @@ describe("Button component", () => {
 
   it("Does not open a dialog when option is undefined and fire onClick", async () => {
     const onClickMock = vi.fn();
-    renderWithTheme(
+    const { user } = renderWithTheme(
       <Button color="green" onClick={onClickMock}>
         Click me
       </Button>
@@ -120,7 +119,7 @@ describe("Button component", () => {
     const button = screen.getByTestId(BUTTON_COMPONENT_ID);
 
     await act(async () => {
-      await userEvent.click(button);
+      await user.click(button);
     });
 
     const dialog = screen.queryByTestId(DIALOG_COMPONENT_ID);

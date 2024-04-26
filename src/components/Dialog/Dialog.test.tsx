@@ -6,7 +6,6 @@ import {
   DIALOG_COMPONENT_ID,
   DIALOG_COMPONENT_OVERLAY_ID,
 } from "./testId";
-import userEvent from "@testing-library/user-event";
 
 describe("Dialog component", () => {
   afterEach(() => {
@@ -55,7 +54,7 @@ describe("Dialog component", () => {
 
   it("Fires the close method correctly when pressing cancel", async () => {
     const onCloseMock = vi.fn();
-    renderWithTheme(
+    const { user } = renderWithTheme(
       <Dialog
         show={true}
         bodyMessage="Hello!"
@@ -66,7 +65,7 @@ describe("Dialog component", () => {
 
     const cancelButton = screen.getByRole("button", { name: /cancel/i });
 
-    await userEvent.click(cancelButton);
+    await user.click(cancelButton);
 
     expect(onCloseMock).toHaveBeenCalledOnce();
   });
@@ -74,7 +73,7 @@ describe("Dialog component", () => {
   it('Fires the close method correctly when pressing "X" button', async () => {
     const onCloseMock = vi.fn();
 
-    renderWithTheme(
+    const { user } = renderWithTheme(
       <Dialog
         show={true}
         bodyMessage="Hello!"
@@ -85,7 +84,7 @@ describe("Dialog component", () => {
 
     const closeButton = screen.getByTestId(DIALOG_COMPONENT_CLOSE_BUTTON_ID);
 
-    await userEvent.click(closeButton);
+    await user.click(closeButton);
 
     expect(onCloseMock).toHaveBeenCalledOnce();
   });
@@ -93,7 +92,7 @@ describe("Dialog component", () => {
   it("Fires the close method correctly when clicking outside the dialog", async () => {
     const onCloseMock = vi.fn();
 
-    renderWithTheme(
+    const { user } = renderWithTheme(
       <Dialog
         show={true}
         bodyMessage="Hello!"
@@ -104,7 +103,7 @@ describe("Dialog component", () => {
 
     const dialogOverlay = screen.getByTestId(DIALOG_COMPONENT_OVERLAY_ID);
 
-    await userEvent.click(dialogOverlay);
+    await user.click(dialogOverlay);
 
     expect(onCloseMock).toHaveBeenCalledOnce();
   });
@@ -112,7 +111,7 @@ describe("Dialog component", () => {
   it("Fires the confirm method when pressing the confirm button", async () => {
     const onConfirmMock = vi.fn();
 
-    renderWithTheme(
+    const { user } = renderWithTheme(
       <Dialog
         show={true}
         bodyMessage="Hello!"
@@ -124,7 +123,7 @@ describe("Dialog component", () => {
 
     const confirmButton = screen.getByRole("button", { name: /confirm/i });
 
-    await userEvent.click(confirmButton);
+    await user.click(confirmButton);
 
     expect(onConfirmMock).toHaveBeenCalledOnce();
   });
