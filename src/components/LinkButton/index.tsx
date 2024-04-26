@@ -19,10 +19,10 @@ export default function LinkButton({
   ...defaultLinkProps
 }: LinkButtonProps) {
   return (
-    <StyledLinkButton $color={color}>
-      <Link className={`link ${className || ""}`} {...defaultLinkProps}>
+    <StyledLinkButton $color={color} className={`${className || ""}`}>
+      <Link className="link" {...defaultLinkProps}>
         {children}
-        {icon && <img className="icon" src={icon.src} alt={icon.src} />}
+        {icon && <img className="icon" src={icon.src} alt={icon.alt} />}
       </Link>
     </StyledLinkButton>
   );
