@@ -21,11 +21,11 @@ export default function useOverflow(
       }
     };
 
-    if (current) {
-      if ("ResizeObserver" in window) {
-        new ResizeObserver(trigger).observe(current);
-      }
-      trigger();
+    if ("ResizeObserver" in window && current) {
+      const resizeObserver = new ResizeObserver(trigger);
+      resizeObserver.observe(current);
+
+      return () => resizeObserver.unobserve(current);
     }
   }, [callback, ref, ref.current?.textContent]);
 

@@ -39,17 +39,14 @@ export default function RoundAnimatedButton({
       }
     };
 
-    const resizeObserver = new ResizeObserver(trigger);
-
-    if (current) {
+    if ("ResizeObserver" in window && current) {
+      const resizeObserver = new ResizeObserver(trigger);
       resizeObserver.observe(current);
-    }
 
-    return () => {
-      if (current) {
+      return () => {
         resizeObserver.unobserve(current);
-      }
-    };
+      };
+    }
   }, []);
 
   const handleOnClick = (
@@ -69,9 +66,10 @@ export default function RoundAnimatedButton({
       <StyledRoundAnimatedButton
         $shouldOverlap={hasIncreasedWidth}
         $color={color}
+        className={`${className || ""}`}
       >
         <button
-          className={`button ${className || ""}`}
+          className="button"
           ref={buttonRef}
           onClick={handleOnClick}
           {...defaultButtonProps}
