@@ -1,4 +1,4 @@
-import { renderWithTheme } from "@/tests/utils";
+import { renderWithProviders } from "@/tests/utils";
 import Dialog, {
   DIALOG_COMPONENT_CLOSE_BUTTON_ID,
   DIALOG_COMPONENT_ID,
@@ -12,7 +12,7 @@ describe("Dialog component", () => {
   });
 
   it("Does not show when the option show is false", () => {
-    renderWithTheme(
+    renderWithProviders(
       <Dialog show={false} bodyMessage="Hello!" title="Testing the dialog" />
     );
 
@@ -22,7 +22,7 @@ describe("Dialog component", () => {
   });
 
   it("Does show when the show option is true", () => {
-    renderWithTheme(
+    renderWithProviders(
       <Dialog show={true} bodyMessage="Hello!" title="Testing the dialog" />
     );
 
@@ -32,7 +32,7 @@ describe("Dialog component", () => {
   });
 
   it("Renders correctly when show options is true", () => {
-    renderWithTheme(
+    renderWithProviders(
       <Dialog show={true} bodyMessage="Hello!" title="Testing the dialog" />
     );
 
@@ -53,7 +53,7 @@ describe("Dialog component", () => {
 
   it("Fires the close method correctly when pressing cancel", async () => {
     const onCloseMock = vi.fn();
-    const { user } = renderWithTheme(
+    const { user } = renderWithProviders(
       <Dialog
         show={true}
         bodyMessage="Hello!"
@@ -72,7 +72,7 @@ describe("Dialog component", () => {
   it('Fires the close method correctly when pressing "X" button', async () => {
     const onCloseMock = vi.fn();
 
-    const { user } = renderWithTheme(
+    const { user } = renderWithProviders(
       <Dialog
         show={true}
         bodyMessage="Hello!"
@@ -91,7 +91,7 @@ describe("Dialog component", () => {
   it("Fires the close method correctly when clicking outside the dialog", async () => {
     const onCloseMock = vi.fn();
 
-    const { user } = renderWithTheme(
+    const { user } = renderWithProviders(
       <Dialog
         show={true}
         bodyMessage="Hello!"
@@ -110,7 +110,7 @@ describe("Dialog component", () => {
   it("Fires the confirm method when pressing the confirm button", async () => {
     const onConfirmMock = vi.fn();
 
-    const { user } = renderWithTheme(
+    const { user } = renderWithProviders(
       <Dialog
         show={true}
         bodyMessage="Hello!"

@@ -1,4 +1,4 @@
-import { renderWithTheme } from "@/tests/utils";
+import { renderWithProviders } from "@/tests/utils";
 import RoundAnimatedButton from ".";
 import { star } from "@/assets/icons";
 import { act, screen } from "@testing-library/react";
@@ -6,7 +6,7 @@ import { DIALOG_COMPONENT_ID } from "../Dialog";
 
 describe("RoundAnimatedButton component", () => {
   it("Renders correctly", async () => {
-    renderWithTheme(
+    renderWithProviders(
       <RoundAnimatedButton
         icon={{ src: star, alt: "star" }}
         text="Round button"
@@ -22,7 +22,7 @@ describe("RoundAnimatedButton component", () => {
   });
 
   it("Opens a dialog when dialog option is defined", async () => {
-    const { user } = renderWithTheme(
+    const { user } = renderWithProviders(
       <RoundAnimatedButton
         icon={{ src: star, alt: "star" }}
         text="Round button"
@@ -43,7 +43,7 @@ describe("RoundAnimatedButton component", () => {
 
   it("Does not open a dialog when option is undefined and fire onClick", async () => {
     const onClickMock = vi.fn();
-    const { user } = renderWithTheme(
+    const { user } = renderWithProviders(
       <RoundAnimatedButton
         icon={{ src: star, alt: "star" }}
         text="Round button"
@@ -64,7 +64,7 @@ describe("RoundAnimatedButton component", () => {
   });
 
   it("Can extend styles through parent className", () => {
-    renderWithTheme(
+    renderWithProviders(
       <RoundAnimatedButton
         icon={{ src: star, alt: "star" }}
         text="Round button"

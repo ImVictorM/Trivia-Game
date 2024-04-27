@@ -1,11 +1,19 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { playerReducer } from "./slices/playerSlice";
 import { languageReducer } from "./slices/languageSlice";
 
-export const store = configureStore({
-  reducer: { player: playerReducer, language: languageReducer },
-  devTools: true,
+const rootReducer = combineReducers({
+  player: playerReducer,
+  language: languageReducer,
 });
 
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
+export const setupStore = (preloadedState?: Partial<RootState>) =>
+  configureStore({
+    reducer: rootReducer,
+    devTools: import.meta.env.DEV,
+    preloadedState,
+  });
+
+export type RootState = ReturnType<typeof rootReducer>;
+export type AppStore = ReturnType<typeof setupStore>;
+export type AppDispatch = AppStore["dispatch"];

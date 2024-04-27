@@ -1,10 +1,10 @@
-import { renderWithTheme } from "@/tests/utils";
+import { renderWithProviders } from "@/tests/utils";
 import Select from ".";
 import { screen } from "@testing-library/react";
 
 describe("Select component", () => {
   it("Can render correctly with a label", () => {
-    renderWithTheme(
+    renderWithProviders(
       <Select id="categories" label="Category" name="categories">
         <option>Category 1</option>
       </Select>
@@ -18,7 +18,7 @@ describe("Select component", () => {
   });
 
   it("Can render correctly without a label", () => {
-    renderWithTheme(
+    renderWithProviders(
       <Select id="options" name="options">
         <option>Option 1</option>
       </Select>

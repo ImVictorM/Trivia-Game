@@ -1,10 +1,10 @@
-import { renderWithTheme } from "@/tests/utils";
+import { renderWithProviders } from "@/tests/utils";
 import Input from ".";
 import { screen } from "@testing-library/react";
 
 describe("Input component", () => {
   it("Renders correctly with value", () => {
-    renderWithTheme(
+    renderWithProviders(
       <Input label="Enter your name" id="name" value="victor" readOnly />
     );
 
@@ -14,7 +14,7 @@ describe("Input component", () => {
   });
 
   it("Renders correctly with empty value", () => {
-    renderWithTheme(
+    renderWithProviders(
       <Input label="Enter your name" id="name" value="" readOnly />
     );
 

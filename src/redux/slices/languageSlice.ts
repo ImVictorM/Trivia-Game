@@ -7,8 +7,7 @@ type InitialLanguageState = {
 };
 
 function getLangFromLocalStorage(): LanguageCode {
-  const localLang = localStorage.getItem("language") || "en";
-  const lang = JSON.parse(localLang);
+  const lang = localStorage.getItem("language") || "en";
 
   if (lang === "en" || lang === "pt-BR") {
     return lang;

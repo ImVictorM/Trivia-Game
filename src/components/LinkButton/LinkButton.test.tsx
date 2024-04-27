@@ -1,11 +1,11 @@
 import LinkButton from ".";
 import { screen } from "@testing-library/react";
 import { star } from "@/assets/icons";
-import { renderWithThemeAndRouter } from "@/tests/utils/";
+import { renderWithProviders } from "@/tests/utils/";
 
 describe("LinkButton component", () => {
   it("Renders correctly with minimal options", () => {
-    renderWithThemeAndRouter(
+    renderWithProviders(
       <LinkButton color="green" to="/">
         Click me
       </LinkButton>
@@ -17,7 +17,7 @@ describe("LinkButton component", () => {
   });
 
   it("Renders correctly with an icon", () => {
-    renderWithThemeAndRouter(
+    renderWithProviders(
       <LinkButton color="green" to="/" icon={{ src: star, alt: "star" }}>
         Click me
       </LinkButton>
@@ -30,7 +30,7 @@ describe("LinkButton component", () => {
   });
 
   it("Can extend styles through parent className", () => {
-    renderWithThemeAndRouter(
+    renderWithProviders(
       <LinkButton
         className="style"
         color="green"

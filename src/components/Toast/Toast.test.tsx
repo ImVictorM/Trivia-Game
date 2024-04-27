@@ -1,4 +1,4 @@
-import { renderWithTheme } from "@/tests/utils";
+import { renderWithProviders } from "@/tests/utils";
 import Toast, {
   TOAST_COMPONENT_ERROR_ICON_ID,
   TOAST_COMPONENT_SUCCESS_ICON_ID,
@@ -8,7 +8,7 @@ import { act, screen } from "@testing-library/react";
 
 describe("Toast component", async () => {
   it("Render the correctly icon if the toast type is error", () => {
-    renderWithTheme(<Toast />);
+    renderWithProviders(<Toast />);
 
     act(() => {
       toast.error("some error");
@@ -22,7 +22,7 @@ describe("Toast component", async () => {
   });
 
   it("Render the correctly icon if the toast type is success", () => {
-    renderWithTheme(<Toast />);
+    renderWithProviders(<Toast />);
 
     act(() => {
       toast.success("success message");

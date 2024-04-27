@@ -1,6 +1,6 @@
 import { act, screen } from "@testing-library/react";
 import Button, { BUTTON_COMPONENT_ID } from ".";
-import { renderWithTheme } from "@/tests/utils";
+import { renderWithProviders } from "@/tests/utils";
 
 import { star } from "@/assets/icons";
 import { DIALOG_COMPONENT_ID } from "../Dialog";
@@ -13,7 +13,7 @@ describe("Button component", () => {
   });
 
   it("Renders correctly with minimal configuration", () => {
-    renderWithTheme(<Button color="green">Click me</Button>);
+    renderWithProviders(<Button color="green">Click me</Button>);
 
     const button = screen.getByTestId(BUTTON_COMPONENT_ID);
 
@@ -25,7 +25,7 @@ describe("Button component", () => {
   });
 
   it("Renders loading with default loading text", () => {
-    renderWithTheme(
+    renderWithProviders(
       <Button isLoading={true} color="green">
         Click me
       </Button>
@@ -40,7 +40,7 @@ describe("Button component", () => {
   });
 
   it("Renders loading with custom loading text", () => {
-    renderWithTheme(
+    renderWithProviders(
       <Button loadingText="It is loading now" isLoading={true} color="green">
         Click me
       </Button>
@@ -57,7 +57,7 @@ describe("Button component", () => {
 
   it("Renders correctly with a custom icon", () => {
     const customIconName = "custom icon";
-    renderWithTheme(
+    renderWithProviders(
       <Button icon={{ alt: customIconName, src: star }} color="green">
         Click me
       </Button>
@@ -71,7 +71,7 @@ describe("Button component", () => {
 
   it("Does not renders the custom icon when is loading", () => {
     const customIconName = "custom icon";
-    renderWithTheme(
+    renderWithProviders(
       <Button
         isLoading={true}
         icon={{ alt: customIconName, src: star }}
@@ -88,7 +88,7 @@ describe("Button component", () => {
   });
 
   it("Opens a dialog when dialog option is defined", async () => {
-    const { user } = renderWithTheme(
+    const { user } = renderWithProviders(
       <Button
         dialog={{ bodyMessage: "dialog message", title: "dialog" }}
         color="green"
@@ -109,7 +109,7 @@ describe("Button component", () => {
 
   it("Does not open a dialog when option is undefined and fire onClick", async () => {
     const onClickMock = vi.fn();
-    const { user } = renderWithTheme(
+    const { user } = renderWithProviders(
       <Button color="green" onClick={onClickMock}>
         Click me
       </Button>
@@ -127,7 +127,7 @@ describe("Button component", () => {
   });
 
   it("Can extend styles through parent className", () => {
-    renderWithTheme(
+    renderWithProviders(
       <Button color="green" className="style">
         Click me
       </Button>

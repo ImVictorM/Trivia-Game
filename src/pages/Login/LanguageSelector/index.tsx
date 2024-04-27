@@ -7,6 +7,8 @@ type LanguageSelectorProps = {
   className: string;
 };
 
+export const LANGUAGE_SELECTOR_COMPONENT_ID = "language-selector-element";
+
 export default function LanguageSelector({ className }: LanguageSelectorProps) {
   const language = useSelector((state: RootState) => state.language);
   const dispatch = useDispatch<AppDispatch>();
@@ -26,6 +28,7 @@ export default function LanguageSelector({ className }: LanguageSelectorProps) {
       onChange={handleChange}
       value={language.code}
       className={className || ""}
+      data-testid={LANGUAGE_SELECTOR_COMPONENT_ID}
     >
       <option value="pt-BR">🇧🇷 PT-BR</option>
       <option value="en">🇺🇸 EN-US</option>
