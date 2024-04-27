@@ -1,11 +1,10 @@
 import { renderWithTheme } from "@/tests/utils";
-import Dialog from ".";
-import { screen } from "@testing-library/react";
-import {
+import Dialog, {
   DIALOG_COMPONENT_CLOSE_BUTTON_ID,
   DIALOG_COMPONENT_ID,
   DIALOG_COMPONENT_OVERLAY_ID,
-} from "./testId";
+} from ".";
+import { screen } from "@testing-library/react";
 
 describe("Dialog component", () => {
   afterEach(() => {

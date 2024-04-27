@@ -2,7 +2,7 @@ import { renderWithTheme } from "@/tests/utils";
 import RoundAnimatedButton from ".";
 import { star } from "@/assets/icons";
 import { act, screen } from "@testing-library/react";
-import { DIALOG_COMPONENT_ID } from "../Dialog/testId";
+import { DIALOG_COMPONENT_ID } from "../Dialog";
 
 describe("RoundAnimatedButton component", () => {
   it("Renders correctly", async () => {

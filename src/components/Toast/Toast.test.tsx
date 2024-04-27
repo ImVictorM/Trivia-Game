@@ -1,11 +1,10 @@
 import { renderWithTheme } from "@/tests/utils";
-import Toast from ".";
-import { toast } from "react-toastify";
-import { act, screen } from "@testing-library/react";
-import {
+import Toast, {
   TOAST_COMPONENT_ERROR_ICON_ID,
   TOAST_COMPONENT_SUCCESS_ICON_ID,
-} from "./testId";
+} from ".";
+import { toast } from "react-toastify";
+import { act, screen } from "@testing-library/react";
 
 describe("Toast component", async () => {
   it("Render the correctly icon if the toast type is error", () => {

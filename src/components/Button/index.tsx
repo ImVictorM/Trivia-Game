@@ -3,7 +3,6 @@ import { StyledButton, StyledButtonWrapper } from "./style";
 import { spinnerLoadingIcon } from "@/assets/icons";
 import Dialog, { DialogProps } from "../Dialog";
 import { useState } from "react";
-import { BUTTON_COMPONENT_ID } from "./testId";
 
 type PartialDialogProps = Omit<DialogProps, "show" | "onClose">;
 
@@ -18,6 +17,8 @@ type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   };
   dialog?: PartialDialogProps;
 };
+
+export const BUTTON_COMPONENT_ID = "button-element";
 
 export default function Button({
   children,

@@ -3,11 +3,6 @@ import { StyledDialog, StyledDialogOverlay } from "./style";
 import Button from "../Button";
 import { useTranslation } from "react-i18next";
 import { useDelayedUnmount } from "@/hooks";
-import {
-  DIALOG_COMPONENT_CLOSE_BUTTON_ID,
-  DIALOG_COMPONENT_ID,
-  DIALOG_COMPONENT_OVERLAY_ID,
-} from "./testId";
 
 export type DialogProps = {
   show: boolean;
@@ -16,6 +11,10 @@ export type DialogProps = {
   onConfirm?: () => void;
   onClose?: () => void;
 };
+
+export const DIALOG_COMPONENT_ID = "dialog-element";
+export const DIALOG_COMPONENT_CLOSE_BUTTON_ID = "dialog-element-cancel-button";
+export const DIALOG_COMPONENT_OVERLAY_ID = "dialog-element-overlay";
 
 export default function Dialog({
   show,

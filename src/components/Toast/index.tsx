@@ -3,10 +3,9 @@ import { StyledToastContainer } from "./style";
 import "react-toastify/ReactToastify.min.css";
 import { roundedCheckIcon, errorIcon } from "@/assets/icons";
 import { useTranslation } from "react-i18next";
-import {
-  TOAST_COMPONENT_ERROR_ICON_ID,
-  TOAST_COMPONENT_SUCCESS_ICON_ID,
-} from "./testId";
+
+export const TOAST_COMPONENT_ERROR_ICON_ID = "toast-element-error-icon";
+export const TOAST_COMPONENT_SUCCESS_ICON_ID = "toast-element-success-icon";
 
 export default function Toast(props: ToastContainerProps) {
   const { t } = useTranslation();

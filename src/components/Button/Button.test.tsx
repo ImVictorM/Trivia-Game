@@ -1,10 +1,9 @@
 import { act, screen } from "@testing-library/react";
-import Button from ".";
+import Button, { BUTTON_COMPONENT_ID } from ".";
 import { renderWithTheme } from "@/tests/utils";
 
 import { star } from "@/assets/icons";
-import { BUTTON_COMPONENT_ID } from "./testId";
-import { DIALOG_COMPONENT_ID } from "../Dialog/testId";
+import { DIALOG_COMPONENT_ID } from "../Dialog";
 
 describe("Button component", () => {
   const defaultLoadingText = "Loading...";
