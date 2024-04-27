@@ -1,4 +1,14 @@
-import { TriviaCategory } from "@/services/triviaApi";
+export type TriviaCategory = {
+  id: number;
+  name: string;
+};
+
+export type LanguageCode = "en" | "pt-BR";
+
+export type Language = {
+  name: string;
+  code: LanguageCode;
+};
 
 export default {
   ANY_CATEGORY_ID: -1,
@@ -100,4 +110,14 @@ export default {
       name: "Entertainment: Cartoon & Animations",
     },
   ] as TriviaCategory[],
+  LANGUAGES: [
+    {
+      name: "🇧🇷 PT-BR",
+      code: "pt-BR",
+    },
+    {
+      name: "🇺🇸 EN-US",
+      code: "en",
+    },
+  ] as Language[],
 };

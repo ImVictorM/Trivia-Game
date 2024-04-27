@@ -1,6 +1,5 @@
+import { LanguageCode } from "@/utils/constants";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-
-export type LanguageCode = "en" | "pt-BR";
 
 type InitialLanguageState = {
   code: LanguageCode;

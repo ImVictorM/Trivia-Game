@@ -33,11 +33,6 @@ export type Question = {
   type: QuestionType;
 };
 
-export type TriviaCategory = {
-  id: number;
-  name: string;
-};
-
 type GetTriviaQuestionsResponse = {
   response_code: number;
   results: Question[];

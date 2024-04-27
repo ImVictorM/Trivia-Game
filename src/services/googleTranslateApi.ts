@@ -1,5 +1,5 @@
-import { LanguageCode } from "@/redux/slices/languageSlice";
 import { decodeHtmlEntity } from "@/utils";
+import { LanguageCode } from "@/utils/constants";
 import axios, { AxiosResponse } from "axios";
 
 type Text = {

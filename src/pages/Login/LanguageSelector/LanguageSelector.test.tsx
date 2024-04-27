@@ -1,12 +1,12 @@
 import { renderWithProviders } from "@/tests/utils";
 import LanguageSelector, { LANGUAGE_SELECTOR_COMPONENT_ID } from ".";
 import { act, screen } from "@testing-library/react";
+import { constants } from "@/utils";
 
 describe("Login page: Language component", () => {
   it("Renders correctly", () => {
     renderWithProviders(<LanguageSelector />);
 
-    const availableLanguages = ["en", "pt-BR"];
     const select = screen.queryByTestId(LANGUAGE_SELECTOR_COMPONENT_ID);
     const options = screen.queryAllByRole("option");
 
@@ -15,7 +15,12 @@ describe("Login page: Language component", () => {
     expect(options).toHaveLength(2);
 
     options.forEach((option) => {
-      expect(availableLanguages).toContain(option.getAttribute("value"));
+      const optionValue = option.getAttribute("value");
+      const language = constants.LANGUAGES.find(
+        ({ code }) => code === optionValue
+      );
+      expect(language).not.toBeUndefined();
+      expect(option).toHaveTextContent(language!.name);
     });
   });
 
