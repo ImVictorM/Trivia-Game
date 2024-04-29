@@ -2,13 +2,16 @@ import LinkButton from ".";
 import { screen } from "@testing-library/react";
 import { star } from "@/assets/icons";
 import { renderWithProviders } from "@/tests/utils/";
+import { BrowserRouter } from "react-router-dom";
 
 describe("LinkButton component", () => {
   it("Renders correctly with minimal options", () => {
     renderWithProviders(
-      <LinkButton color="green" to="/">
-        Click me
-      </LinkButton>
+      <BrowserRouter>
+        <LinkButton color="green" to="/">
+          Click me
+        </LinkButton>
+      </BrowserRouter>
     );
 
     const link = screen.queryByRole("link", { name: /click me/i });
@@ -18,9 +21,11 @@ describe("LinkButton component", () => {
 
   it("Renders correctly with an icon", () => {
     renderWithProviders(
-      <LinkButton color="green" to="/" icon={{ src: star, alt: "star" }}>
-        Click me
-      </LinkButton>
+      <BrowserRouter>
+        <LinkButton color="green" to="/" icon={{ src: star, alt: "star" }}>
+          Click me
+        </LinkButton>
+      </BrowserRouter>
     );
 
     const link = screen.getByRole("link", { name: /click me/i });
@@ -31,14 +36,16 @@ describe("LinkButton component", () => {
 
   it("Can extend styles through parent className", () => {
     renderWithProviders(
-      <LinkButton
-        className="style"
-        color="green"
-        to="/"
-        icon={{ src: star, alt: "star" }}
-      >
-        Click me
-      </LinkButton>
+      <BrowserRouter>
+        <LinkButton
+          className="style"
+          color="green"
+          to="/"
+          icon={{ src: star, alt: "star" }}
+        >
+          Click me
+        </LinkButton>
+      </BrowserRouter>
     );
     const link = screen.getByRole("link", { name: /click me/i });
 

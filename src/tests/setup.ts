@@ -1,4 +1,5 @@
 import "@testing-library/jest-dom/vitest";
+import { TransProps } from "react-i18next";
 
 vi.mock("react-i18next", () => ({
   useTranslation: () => {
@@ -13,6 +14,7 @@ vi.mock("react-i18next", () => ({
     type: "3rdParty",
     init: () => {},
   },
+  Trans: ({ children }: TransProps<string>) => children,
 }));
 
 const ResizeObserverMock = vi.fn().mockImplementation(() => ({

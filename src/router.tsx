@@ -2,7 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import { Login, Game, Feedback, Ranking, GameSettings } from "./pages";
 import { UserRequiredRoute } from "./components";
 
-const router = createBrowserRouter([
+export const routes = [
   {
     path: "/",
     element: <Login />,
@@ -31,6 +31,8 @@ const router = createBrowserRouter([
     path: "/settings",
     element: <GameSettings />,
   },
-]);
+];
+
+const router = createBrowserRouter(routes);
 
 export default router;

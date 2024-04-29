@@ -2,7 +2,7 @@ import { RenderOptions, render } from "@testing-library/react";
 import { Provider } from "react-redux";
 import { AppStore, RootState, setupStore } from "@/redux/store";
 import { PropsWithChildren } from "react";
-import { BrowserRouter } from "react-router-dom";
+
 import { ThemeProvider } from "styled-components";
 import { theme } from "@/styles/theme";
 import userEvent from "@testing-library/user-event";
@@ -18,22 +18,15 @@ export default function renderWithProviders(
   {
     preloadedState = {},
     store = setupStore(preloadedState),
-    route,
     ...renderOptions
   }: ExtendendRenderOptions = {}
 ) {
   function Wrapper({ children }: PropsWithChildren): JSX.Element {
     return (
-      <BrowserRouter>
-        <Provider store={store}>
-          <ThemeProvider theme={theme}>{children}</ThemeProvider>
-        </Provider>
-      </BrowserRouter>
+      <Provider store={store}>
+        <ThemeProvider theme={theme}>{children}</ThemeProvider>
+      </Provider>
     );
-  }
-
-  if (route) {
-    window.history.pushState({}, "Test page", route);
   }
 
   return {
