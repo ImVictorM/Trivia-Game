@@ -7,7 +7,7 @@ import { ThemeProvider } from "styled-components";
 import { theme } from "@/styles/theme";
 import userEvent from "@testing-library/user-event";
 
-type ExtendendRenderOptions = Omit<RenderOptions, "queries"> & {
+type ExtendedRenderOptions = Omit<RenderOptions, "queries"> & {
   preloadedState?: Partial<RootState>;
   store?: AppStore;
   route?: string;
@@ -19,7 +19,7 @@ export default function renderWithProviders(
     preloadedState = {},
     store = setupStore(preloadedState),
     ...renderOptions
-  }: ExtendendRenderOptions = {}
+  }: ExtendedRenderOptions = {}
 ) {
   function Wrapper({ children }: PropsWithChildren): JSX.Element {
     return (

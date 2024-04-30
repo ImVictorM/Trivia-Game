@@ -123,7 +123,7 @@ describe("Login page", () => {
     expect(loginPage).not.toBeInTheDocument();
   });
 
-  it("Shows an toast error when there is an error on retriving the player token", async () => {
+  it("Shows an toast error when there is an error on retrieving the player token", async () => {
     vi.spyOn(triviaService, "getTriviaToken").mockRejectedValue(new Error());
 
     const { user } = renderWithRouter(["/"]);
