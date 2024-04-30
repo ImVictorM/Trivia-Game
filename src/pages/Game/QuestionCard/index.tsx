@@ -11,6 +11,13 @@ type QuestionCardProps = {
   question: string;
 };
 
+export const GAME_QUESTION_CARD_COMPONENT_ID = "game-question-card";
+export const GAME_QUESTION_CARD_COMPONENT_CATEGORY_ID =
+  "game-question-card-category";
+export const GAME_QUESTION_CARD_COMPONENT_TEXT_ID = "game-question-card-text";
+export const GAME_QUESTION_CARD_COMPONENT_COUNTDOWN_ID =
+  "game-question-card-countdown";
+
 export default function QuestionCard({
   category,
   countdown,
@@ -33,30 +40,35 @@ export default function QuestionCard({
   }, [category]);
 
   return (
-    <StyledQuestionCard>
-      <div
-        className={`question-theme ${categoryClass}`}
-        data-testid="question-category"
-      >
+    <StyledQuestionCard data-testid={GAME_QUESTION_CARD_COMPONENT_ID}>
+      <div className={`question-theme ${categoryClass}`}>
         <div className="scrolling-text-wrapper">
           <StyledScrollingText
             ref={questionThemeRef}
             $stopAnimation={stopAnimation}
             $isOverflow={isOverflow}
+            data-testid={GAME_QUESTION_CARD_COMPONENT_CATEGORY_ID}
           >
             {category}
           </StyledScrollingText>
         </div>
       </div>
       <div className="question-content-wrapper">
-        <p className="question-text" data-testid="question-text">
+        <p
+          className="question-text"
+          data-testid={GAME_QUESTION_CARD_COMPONENT_TEXT_ID}
+        >
           {question}
         </p>
 
         <div className="remaining-time">
           <img src={timer} alt={t("timer", { ns: "common" })} />
           <p>
-            {`${t("remainingTime")}: `} <span>{countdown}</span>s
+            {`${t("remainingTime")}: `}{" "}
+            <span data-testid={GAME_QUESTION_CARD_COMPONENT_COUNTDOWN_ID}>
+              {countdown}
+            </span>
+            s
           </p>
         </div>
       </div>
