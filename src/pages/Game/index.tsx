@@ -39,6 +39,8 @@ type CurrentQuestionState = {
   answerWasSelected: boolean;
 };
 
+export const GAME_PAGE_ID = "game-page";
+
 export default function Game() {
   const [questions, setQuestions] = useState<Question[]>();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -317,7 +319,7 @@ export default function Game() {
   }, [changeCurrentQuestionIndex, currentQuestionState.answerWasSelected]);
 
   return (
-    <GameLayout>
+    <GameLayout data-testid={GAME_PAGE_ID}>
       {isLoading && <Loading />}
 
       {!isLoading && !errorMessage && (

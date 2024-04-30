@@ -12,6 +12,8 @@ import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 import { constants } from "@/utils";
 
+export const SETTINGS_PAGE_ID = "settings-page";
+
 export default function GameSettings() {
   const [settings, setSettings] = useGameSettings();
 
@@ -40,7 +42,7 @@ export default function GameSettings() {
   };
 
   return (
-    <StyledSettings>
+    <StyledSettings data-testid={SETTINGS_PAGE_ID}>
       <StyledSettingsContent>
         <img className="logo" src={logo} alt="trivia logo" />
         <h1 className="main-title title">{t("title")}</h1>

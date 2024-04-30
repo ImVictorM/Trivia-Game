@@ -33,12 +33,12 @@ export type Question = {
   type: QuestionType;
 };
 
-type GetTriviaQuestionsResponse = {
+export type GetTriviaQuestionsResponse = {
   response_code: number;
   results: Question[];
 };
 
-type GetTriviaTokenResponse = {
+export type GetTriviaTokenResponse = {
   response_code: number;
   response_message: string;
   token: string;

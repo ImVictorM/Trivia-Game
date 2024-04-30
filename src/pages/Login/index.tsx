@@ -1,5 +1,5 @@
 import { AppDispatch } from "@/redux/store";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { setPlayer } from "@/redux/slices/playerSlice";
@@ -14,15 +14,34 @@ import { toast } from "react-toastify";
 import LanguageSelector from "./LanguageSelector";
 import { useTranslation } from "react-i18next";
 
+export const LOGIN_PAGE_ID = "login-page";
+export const LOGIN_PAGE_PLAY_BUTTON_ID = "login-page-button-play";
+export const LOGIN_PAGE_SETTINGS_BUTTON_ID = "login-page-button-settings";
+export const LOGIN_PAGE_RANKING_BUTTON_ID = "login-page-button-ranking";
+export const LOGIN_PAGE_NAME_INPUT_ID = "login-page-input-name";
+export const LOGIN_PAGE_EMAIL_INPUT_ID = "login-page-input-email";
+
 export default function Login() {
   const [loginFormState, setLoginFormState] = useState({
     name: "",
     gravatarEmail: "",
   });
-  const [canPlay, setCanPlay] = useState(false);
+
   const [isLoading, setIsLoading] = useState(false);
   const [shouldNavigate, setShouldNavigate] = useState(false);
   const { t } = useTranslation(["login", "common"]);
+
+  const canPlay = useMemo(() => {
+    return (
+      loginFormState.name.length > 0 &&
+      loginFormState.gravatarEmail.length > 0 &&
+      !isLoading
+    );
+  }, [
+    isLoading,
+    loginFormState.gravatarEmail.length,
+    loginFormState.name.length,
+  ]);
 
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
@@ -42,29 +61,21 @@ export default function Login() {
     setIsLoading(true);
 
     try {
-      const { token, response_code: tokenResponseCode } =
-        await getTriviaToken();
+      const { token } = await getTriviaToken();
+      setToken(token);
 
-      if (tokenResponseCode === 0) {
-        setToken(token);
+      const gravatarImageSrc = await getAvatarImg(loginFormState.gravatarEmail);
 
-        const gravatarImageSrc = await getAvatarImg(
-          loginFormState.gravatarEmail
-        );
+      dispatch(
+        setPlayer({
+          gravatarImgSrc: gravatarImageSrc,
+          name: loginFormState.name,
+        })
+      );
 
-        dispatch(
-          setPlayer({
-            gravatarImgSrc: gravatarImageSrc,
-            name: loginFormState.name,
-          })
-        );
-
-        setShouldNavigate(true);
-      } else {
-        clearToken();
-        setShouldNavigate(true);
-      }
+      setShouldNavigate(true);
     } catch (error) {
+      clearToken();
       toast.error("There was an unexpected error, please try again.");
     } finally {
       setIsLoading(false);
@@ -72,23 +83,13 @@ export default function Login() {
   };
 
   useEffect(() => {
-    setCanPlay(
-      loginFormState.name.length > 0 && loginFormState.gravatarEmail.length > 0
-    );
-  }, [loginFormState]);
-
-  useEffect(() => {
-    if (shouldNavigate) {
-      if (!tokenIsEmpty) {
-        navigate("/game");
-      } else {
-        navigate("/");
-      }
+    if (shouldNavigate && !tokenIsEmpty) {
+      navigate("/game");
     }
   }, [shouldNavigate, navigate, tokenIsEmpty]);
 
   return (
-    <StyledLoginSection>
+    <StyledLoginSection data-testid={LOGIN_PAGE_ID}>
       <img className="logo" src={logo} alt="trivia" />
 
       <form className="login-form" onSubmit={handleSubmit}>
@@ -99,7 +100,7 @@ export default function Login() {
             name="name"
             id="name"
             required
-            data-testid="input-player-name"
+            data-testid={LOGIN_PAGE_NAME_INPUT_ID}
             label={t("nameLabel")}
             onChange={handleChange}
             maxLength={20}
@@ -111,7 +112,7 @@ export default function Login() {
             id="email"
             required
             name="gravatarEmail"
-            data-testid="input-gravatar-email"
+            data-testid={LOGIN_PAGE_EMAIL_INPUT_ID}
             label={t("emailLabel")}
             onChange={handleChange}
             maxLength={320}
@@ -122,22 +123,30 @@ export default function Login() {
           <Button
             color="green"
             type="submit"
-            data-testid="btn-play"
+            data-testid={LOGIN_PAGE_PLAY_BUTTON_ID}
             isLoading={isLoading}
             loadingText={t("starting")}
-            disabled={!canPlay || isLoading}
+            disabled={!canPlay}
           >
             {t("start")}
           </Button>
 
-          <LinkButton color="cyan" to="/ranking">
+          <LinkButton
+            color="cyan"
+            to="/ranking"
+            data-testid={LOGIN_PAGE_RANKING_BUTTON_ID}
+          >
             {t("ranking", { ns: "common" })}
           </LinkButton>
         </div>
 
         <LanguageSelector className="language-selector" />
 
-        <Link className="settings" to="/settings" data-testid="btn-settings">
+        <Link
+          className="settings"
+          to="/settings"
+          data-testid={LOGIN_PAGE_SETTINGS_BUTTON_ID}
+        >
           <img src={settingsCog} alt="settings cog" />
         </Link>
       </form>

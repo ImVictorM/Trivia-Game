@@ -17,10 +17,30 @@ vi.mock("react-i18next", () => ({
   Trans: ({ children }: TransProps<string>) => children,
 }));
 
-const ResizeObserverMock = vi.fn().mockImplementation(() => ({
+vi.mock("axios", () => {
+  return {
+    default: {
+      post: vi.fn(),
+      get: vi.fn(),
+      delete: vi.fn(),
+      put: vi.fn(),
+      create: vi.fn().mockReturnThis(),
+      interceptors: {
+        request: {
+          use: vi.fn(),
+          eject: vi.fn(),
+        },
+        response: {
+          use: vi.fn(),
+          eject: vi.fn(),
+        },
+      },
+    },
+  };
+});
+
+global.ResizeObserver = vi.fn().mockImplementation(() => ({
   observe: vi.fn(),
   unobserve: vi.fn(),
   disconnect: vi.fn(),
 }));
-
-global.ResizeObserver = ResizeObserverMock;

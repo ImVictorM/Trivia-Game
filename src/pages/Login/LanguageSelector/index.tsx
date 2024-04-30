@@ -31,7 +31,9 @@ export default function LanguageSelector({ className }: LanguageSelectorProps) {
       data-testid={LANGUAGE_SELECTOR_COMPONENT_ID}
     >
       {LANGUAGES.map(({ code, name }) => (
-        <option value={code}>{name}</option>
+        <option key={code} value={code}>
+          {name}
+        </option>
       ))}
     </StyledLanguageSelector>
   );

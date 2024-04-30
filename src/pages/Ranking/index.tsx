@@ -12,6 +12,8 @@ import {
 import { useMemo } from "react";
 import { Trans, useTranslation } from "react-i18next";
 
+export const RANKING_PAGE_ID = "ranking-page";
+
 export default function Ranking() {
   const { playersRanking } = usePlayerRanking();
   const { t } = useTranslation(["ranking", "common"]);
@@ -21,7 +23,7 @@ export default function Ranking() {
   }, [playersRanking]);
 
   return (
-    <StyledRanking>
+    <StyledRanking data-testid={RANKING_PAGE_ID}>
       <StyledRankingContent>
         <img className="logo" src={logo} alt="trivia logo" />
         <h1 className="main-title title" data-testid="ranking-title">

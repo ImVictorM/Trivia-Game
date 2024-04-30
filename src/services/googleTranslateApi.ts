@@ -2,7 +2,7 @@ import { decodeHtmlEntity } from "@/utils";
 import { LanguageCode } from "@/utils/constants";
 import axios, { AxiosResponse } from "axios";
 
-type Text = {
+export type Text = {
   key: string;
   content: string[];
 };
