@@ -7,12 +7,20 @@ type AnswerButtonProps = {
   answer: string;
   answerWasSelected: boolean;
   index: number;
-  disabled: boolean;
-  onClick: (
+  disabled?: boolean;
+  onClick?: (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     answer: string
   ) => void;
 };
+
+export const ANSWER_BUTTON_COMPONENT_ID = "answer-button";
+export const ANSWER_BUTTON_COMPONENT_LETTER_ID = "answer-button-letter";
+export const ANSWER_BUTTON_COMPONENT_ANSWER_ID = "answer-button-answer";
+export const ANSWER_BUTTON_COMPONENT_CORRECT_ICON_ID =
+  "answers-button-wrong-icon";
+export const ANSWER_BUTTON_COMPONENT_WRONG_ICON_ID =
+  "answers-button-wrong-icon";
 
 export default function AnswerButton({
   correctAnswer,
@@ -20,19 +28,19 @@ export default function AnswerButton({
   answerWasSelected,
   index,
   onClick,
-  disabled,
+  disabled = false,
 }: AnswerButtonProps) {
   const handleClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    onClick(e, answer);
+    if (onClick) {
+      onClick(e, answer);
+    }
   };
   const { t } = useTranslation(["game"]);
 
   return (
     <StyledAnswerButton
       type="button"
-      data-testid={
-        answer === correctAnswer ? "correct-answer" : `wrong-answer-${index}`
-      }
+      data-testid={ANSWER_BUTTON_COMPONENT_ID}
       $answerWasSelected={answerWasSelected}
       $isCorrectAnswer={answer === correctAnswer}
       onClick={handleClick}
@@ -48,14 +56,24 @@ export default function AnswerButton({
             alt={
               answer === correctAnswer ? t("correctAnswer") : t("wrongAnswer")
             }
+            data-testid={
+              answer === correctAnswer
+                ? ANSWER_BUTTON_COMPONENT_CORRECT_ICON_ID
+                : ANSWER_BUTTON_COMPONENT_WRONG_ICON_ID
+            }
           />
         ) : (
-          <span className="alternative-letter">
+          <span
+            className="alternative-letter"
+            data-testid={ANSWER_BUTTON_COMPONENT_LETTER_ID}
+          >
             {String.fromCharCode(index + 1 + 64)}
           </span>
         )}
       </div>
-      <span className="answer">{answer}</span>
+      <span className="answer" data-testid={ANSWER_BUTTON_COMPONENT_ANSWER_ID}>
+        {answer}
+      </span>
     </StyledAnswerButton>
   );
 }
