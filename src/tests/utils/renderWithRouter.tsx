@@ -16,15 +16,30 @@ export default function renderWithRouter(
 ): ReturnType<typeof renderWithProviders>;
 
 export default function renderWithRouter(
-  arg1: React.ReactElement | string[],
-  arg2: number = 0
+  routes: RouteObject[],
+  initialRoutes: string[],
+  initialRouteIndex?: number
+): ReturnType<typeof renderWithProviders>;
+
+export default function renderWithRouter(
+  arg1: React.ReactElement | string[] | RouteObject[],
+  arg2?: number | string[],
+  arg3?: number
 ) {
   let routerRoutes: RouteObject[];
   let initialRoutes: string[];
+  let initialRouteIndex: number;
 
   if (Array.isArray(arg1)) {
-    routerRoutes = routes;
-    initialRoutes = arg1;
+    if (Array.isArray(arg2)) {
+      routerRoutes = arg1 as RouteObject[];
+      initialRoutes = arg2 as string[];
+      initialRouteIndex = arg3 || 0;
+    } else {
+      routerRoutes = routes;
+      initialRoutes = arg1 as string[];
+      initialRouteIndex = arg2 || 0;
+    }
   } else {
     routerRoutes = [
       {
@@ -33,11 +48,12 @@ export default function renderWithRouter(
       },
     ];
     initialRoutes = ["/"];
+    initialRouteIndex = 0;
   }
 
   const testRouter = createMemoryRouter(routerRoutes, {
     initialEntries: initialRoutes,
-    initialIndex: arg2,
+    initialIndex: initialRouteIndex,
   });
 
   return { ...renderWithProviders(<RouterProvider router={testRouter} />) };
