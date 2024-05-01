@@ -5,17 +5,12 @@ import {
   TriviaResponseCode,
   resetTriviaToken,
 } from "@/services/triviaApi";
-import {
-  useCountdown,
-  useGameSettings,
-  useScreenDimensions,
-  useToken,
-} from "@/hooks";
+import { useCountdown, useGameSettings, useScreenDimensions } from "@/hooks";
 import { useNavigate } from "react-router-dom";
 import { calculateScore, constants, shuffleArray, sleep } from "@/utils";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
-import { setGameStats } from "@/redux/slices/playerSlice";
+import { setGameStats, setToken } from "@/redux/slices/playerSlice";
 import { GameLayout } from "@/layouts";
 import {
   StyledAnswersWrapper,
@@ -64,11 +59,11 @@ export default function Game() {
   const [isFetchingQuestions, setIsFetchingQuestions] = useState(true);
   const [isChangingQuestion, setIsChangingQuestion] = useState(false);
   const { width } = useScreenDimensions();
-  const { token, clearToken, tokenIsEmpty, setToken } = useToken();
 
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const { t } = useTranslation(["game", "common"]);
+  const token = useSelector((state: RootState) => state.player.token);
   const language = useSelector((state: RootState) => state.language);
 
   const isLoading = useMemo(() => {
@@ -178,7 +173,7 @@ export default function Game() {
 
   // Fetch the question on component did mount
   useEffect(() => {
-    async function fetchTriviaQuestions() {
+    async function fetchTriviaQuestions(token: string) {
       setIsFetchingQuestions(true);
 
       const MAX_TRIES_TO_FETCH = 5;
@@ -203,7 +198,7 @@ export default function Game() {
           }
           case TriviaResponseCode.TOKEN_EMPTY: {
             const resetResponse = await resetTriviaToken(token);
-            setToken(resetResponse.token);
+            dispatch(setToken({ value: resetResponse.token }));
             setIsFetchingQuestions(false);
             setErrorMessage(null);
             restartCountdown();
@@ -213,7 +208,7 @@ export default function Game() {
           case TriviaResponseCode.TOKEN_NOT_FOUND: {
             setIsFetchingQuestions(false);
             stopCountdown();
-            clearToken();
+            dispatch(setToken({ value: undefined }));
             return;
           }
           case TriviaResponseCode.NO_RESULT: {
@@ -238,21 +233,19 @@ export default function Game() {
 
       setErrorMessage(t("errors.fetchFailed"));
     }
-    if (!tokenIsEmpty) {
-      fetchTriviaQuestions();
+    if (token) {
+      fetchTriviaQuestions(token);
     }
   }, [
-    clearToken,
     startCountdown,
     token,
     settings,
-    tokenIsEmpty,
-    setToken,
     restartCountdown,
     stopCountdown,
     t,
     language.code,
     translateTriviaQuestion,
+    dispatch,
   ]);
 
   // On changing question index
@@ -292,7 +285,7 @@ export default function Game() {
     if (!token) {
       navigate("/");
     }
-  }, [token, navigate]);
+  }, [navigate, token]);
 
   // Update the player global state when score changes
   useEffect(() => {
@@ -319,11 +312,11 @@ export default function Game() {
   }, [changeCurrentQuestionIndex, currentQuestionState.answerWasSelected]);
 
   return (
-    <GameLayout data-testid={GAME_PAGE_ID}>
+    <GameLayout>
       {isLoading && <Loading />}
 
       {!isLoading && !errorMessage && (
-        <StyledGameWrapper>
+        <StyledGameWrapper data-testid={GAME_PAGE_ID}>
           <StyledQuestionWrapper>
             <img className="logo" src={logo} alt="trivia logo" />
             <QuestionCard

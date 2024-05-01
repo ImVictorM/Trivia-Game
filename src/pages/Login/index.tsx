@@ -1,14 +1,13 @@
-import { AppDispatch } from "@/redux/store";
+import { AppDispatch, RootState } from "@/redux/store";
 import { useEffect, useMemo, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { setPlayer } from "@/redux/slices/playerSlice";
+import { setPlayer, setToken } from "@/redux/slices/playerSlice";
 import { getTriviaToken } from "@/services/triviaApi";
 import { logo } from "@/assets/images";
 import { StyledLoginSection } from "./style";
 import { Button, Input, LinkButton, Toast } from "@/components";
 import { settingsCog } from "@/assets/icons";
-import { useToken } from "@/hooks";
 import { getAvatarImg } from "@/services/gravatarApi";
 import { toast } from "react-toastify";
 import LanguageSelector from "./LanguageSelector";
@@ -44,8 +43,8 @@ export default function Login() {
   ]);
 
   const dispatch = useDispatch<AppDispatch>();
+  const token = useSelector((state: RootState) => state.player.token);
   const navigate = useNavigate();
-  const { clearToken, setToken, tokenIsEmpty } = useToken();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -62,7 +61,7 @@ export default function Login() {
 
     try {
       const { token } = await getTriviaToken();
-      setToken(token);
+      dispatch(setToken({ value: token }));
 
       const gravatarImageSrc = await getAvatarImg(loginFormState.gravatarEmail);
 
@@ -75,7 +74,7 @@ export default function Login() {
 
       setShouldNavigate(true);
     } catch (error) {
-      clearToken();
+      dispatch(setToken({ value: undefined }));
       toast.error("There was an unexpected error, please try again.");
     } finally {
       setIsLoading(false);
@@ -83,10 +82,10 @@ export default function Login() {
   };
 
   useEffect(() => {
-    if (shouldNavigate && !tokenIsEmpty) {
+    if (shouldNavigate && token) {
       navigate("/game");
     }
-  }, [shouldNavigate, navigate, tokenIsEmpty]);
+  }, [shouldNavigate, navigate, token]);
 
   return (
     <StyledLoginSection data-testid={LOGIN_PAGE_ID}>

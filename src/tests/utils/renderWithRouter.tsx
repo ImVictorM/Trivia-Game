@@ -3,42 +3,51 @@ import {
   RouterProvider,
   createMemoryRouter,
 } from "react-router-dom";
-import renderWithProviders from "./renderWithProviders";
+import renderWithProviders, {
+  ExtendedRenderOptions,
+} from "./renderWithProviders";
 import { routes } from "@/router";
 
 export default function renderWithRouter(
-  ui: React.ReactElement
+  ui: React.ReactElement,
+  options?: ExtendedRenderOptions
 ): ReturnType<typeof renderWithProviders>;
 
 export default function renderWithRouter(
   initialRoutes: string[],
-  initialRouteIndex?: number
+  initialRouteIndex?: number,
+  options?: ExtendedRenderOptions
 ): ReturnType<typeof renderWithProviders>;
 
 export default function renderWithRouter(
   routes: RouteObject[],
   initialRoutes: string[],
-  initialRouteIndex?: number
+  initialRouteIndex?: number,
+  options?: ExtendedRenderOptions
 ): ReturnType<typeof renderWithProviders>;
 
 export default function renderWithRouter(
   arg1: React.ReactElement | string[] | RouteObject[],
-  arg2?: number | string[],
-  arg3?: number
+  arg2?: number | string[] | ExtendedRenderOptions,
+  arg3?: number | ExtendedRenderOptions,
+  arg4?: ExtendedRenderOptions
 ) {
   let routerRoutes: RouteObject[];
   let initialRoutes: string[];
   let initialRouteIndex: number;
+  let options: ExtendedRenderOptions | undefined;
 
   if (Array.isArray(arg1)) {
     if (Array.isArray(arg2)) {
       routerRoutes = arg1 as RouteObject[];
       initialRoutes = arg2 as string[];
-      initialRouteIndex = arg3 || 0;
+      initialRouteIndex = Number(arg3) || 0;
+      options = arg4;
     } else {
       routerRoutes = routes;
       initialRoutes = arg1 as string[];
-      initialRouteIndex = arg2 || 0;
+      initialRouteIndex = Number(arg2) || 0;
+      options = arg3 as ExtendedRenderOptions | undefined;
     }
   } else {
     routerRoutes = [
@@ -49,6 +58,7 @@ export default function renderWithRouter(
     ];
     initialRoutes = ["/"];
     initialRouteIndex = 0;
+    options = arg2 as ExtendedRenderOptions | undefined;
   }
 
   const testRouter = createMemoryRouter(routerRoutes, {
@@ -56,5 +66,7 @@ export default function renderWithRouter(
     initialIndex: initialRouteIndex,
   });
 
-  return { ...renderWithProviders(<RouterProvider router={testRouter} />) };
+  return {
+    ...renderWithProviders(<RouterProvider router={testRouter} />, options),
+  };
 }

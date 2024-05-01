@@ -7,7 +7,7 @@ import { ThemeProvider } from "styled-components";
 import { theme } from "@/styles/theme";
 import userEvent from "@testing-library/user-event";
 
-type ExtendedRenderOptions = Omit<RenderOptions, "queries"> & {
+export type ExtendedRenderOptions = Omit<RenderOptions, "queries"> & {
   preloadedState?: Partial<RootState>;
   store?: AppStore;
   route?: string;

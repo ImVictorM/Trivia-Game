@@ -53,7 +53,7 @@ type GetTriviaQuestionsParams = {
   signal?: GenericAbortSignal;
 };
 
-type resetTriviaTokenResponse = {
+export type ResetTriviaTokenResponse = {
   response_code: number;
   token: string;
 };
@@ -67,8 +67,8 @@ export async function getTriviaToken(): Promise<GetTriviaTokenResponse> {
 
 export async function resetTriviaToken(
   token: string
-): Promise<resetTriviaTokenResponse> {
-  const resetResponse: AxiosResponse<resetTriviaTokenResponse> =
+): Promise<ResetTriviaTokenResponse> {
+  const resetResponse: AxiosResponse<ResetTriviaTokenResponse> =
     await triviaApi.get(`api_token.php?command=reset&token=${token}`);
   return resetResponse.data;
 }
