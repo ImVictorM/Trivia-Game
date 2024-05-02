@@ -1,9 +1,10 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   Question,
   getTriviaQuestions,
   TriviaResponseCode,
   resetTriviaToken,
+  QuestionDifficulty,
 } from "@/services/triviaApi";
 import { useCountdown, useGameSettings, useScreenDimensions } from "@/hooks";
 import { useNavigate } from "react-router-dom";
@@ -31,19 +32,20 @@ import { tryToTranslate } from "@/services/googleTranslateApi";
 type CurrentQuestionState = {
   question: Question | null;
   answers: string[];
-  answerWasSelected: boolean;
 };
 
 export const GAME_PAGE_ID = "game-page";
+export const GAME_PAGE_NEXT_BUTTON_ID = "game-page-next-button";
+export const GAME_PAGE_OPTIONS_ID = "game-page-options";
 
 export default function Game() {
-  const [questions, setQuestions] = useState<Question[]>();
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [questions, setQuestions] = useState<Question[]>([]);
+  const questionIndexRef = useRef<number>(0);
+  const [answerWasSelected, setAnswerWasSelected] = useState(false);
   const [currentQuestionState, setCurrentQuestionState] =
     useState<CurrentQuestionState>({
       question: null,
       answers: [],
-      answerWasSelected: false,
     });
 
   const [currentGameStats, setCurrentGameStats] = useState({
@@ -65,20 +67,6 @@ export default function Game() {
   const { t } = useTranslation(["game", "common"]);
   const token = useSelector((state: RootState) => state.player.token);
   const language = useSelector((state: RootState) => state.language);
-
-  const isLoading = useMemo(() => {
-    return !(
-      !isFetchingQuestions &&
-      questions &&
-      currentQuestionState.question &&
-      currentQuestionState.answers.length !== 0
-    );
-  }, [
-    currentQuestionState.answers.length,
-    currentQuestionState.question,
-    isFetchingQuestions,
-    questions,
-  ]);
 
   const translateTriviaQuestion = useCallback(
     async (q: Question): Promise<Question> => {
@@ -123,15 +111,41 @@ export default function Game() {
     [t]
   );
 
-  const changeCurrentQuestionIndex = useCallback(() => {
-    if (!questions) return;
-    if (currentQuestionIndex + 1 < questions.length) {
-      setCurrentQuestionIndex((prev) => prev + 1);
-    } else {
-      // go to feedback if there is not any remaining questions
-      navigate("/feedback");
-    }
-  }, [currentQuestionIndex, navigate, questions]);
+  const setQuestionAndStartGame = useCallback(
+    async (question: Question) => {
+      setIsChangingQuestion(true);
+
+      const nextQuestion =
+        language.code === "pt-BR"
+          ? await translateTriviaQuestion(question)
+          : question;
+
+      setCurrentQuestionState({
+        question: nextQuestion,
+        answers: shuffleAnswers(nextQuestion),
+      });
+
+      setIsChangingQuestion(false);
+      setAnswerWasSelected(false);
+      startCountdown();
+    },
+    [language.code, startCountdown, translateTriviaQuestion]
+  );
+
+  const changeToNextQuestion = useCallback(
+    async (questions: Question[]) => {
+      const nextQuestionIndex = questionIndexRef.current + 1;
+
+      if (nextQuestionIndex < questions.length) {
+        questionIndexRef.current += 1;
+        setQuestionAndStartGame(questions[nextQuestionIndex]);
+      } else {
+        // go to feedback if there is not any remaining questions
+        navigate("/feedback");
+      }
+    },
+    [navigate, setQuestionAndStartGame]
+  );
 
   const shuffleAnswers = (question: Question) => {
     const {
@@ -145,17 +159,11 @@ export default function Game() {
 
   const answerQuestion = (
     _e: React.MouseEvent<HTMLButtonElement>,
-    answer: string
+    isCorrectAnswer: boolean,
+    difficulty: QuestionDifficulty
   ) => {
-    if (!currentQuestionState.question) return;
-
-    const correctAnswer = currentQuestionState.question.correct_answer;
-
-    if (correctAnswer === answer) {
-      const score = calculateScore(
-        currentQuestionState.question.difficulty,
-        countdown
-      );
+    if (isCorrectAnswer) {
+      const score = calculateScore(difficulty, countdown);
 
       setCurrentGameStats((prevStats) => ({
         currentScore: prevStats.currentScore + score,
@@ -163,12 +171,8 @@ export default function Game() {
       }));
     }
 
+    setAnswerWasSelected(true);
     stopCountdown();
-
-    setCurrentQuestionState((prev) => ({
-      ...prev,
-      answerWasSelected: true,
-    }));
   };
 
   // Fetch the question on component did mount
@@ -191,6 +195,7 @@ export default function Game() {
         switch (responseCode) {
           case TriviaResponseCode.SUCCESS: {
             setQuestions(results);
+            setQuestionAndStartGame(results[questionIndexRef.current]);
             setErrorMessage(null);
             setIsFetchingQuestions(false);
 
@@ -201,14 +206,14 @@ export default function Game() {
             dispatch(setToken({ value: resetResponse.token }));
             setIsFetchingQuestions(false);
             setErrorMessage(null);
-            restartCountdown();
+            stopCountdown();
 
             return;
           }
           case TriviaResponseCode.TOKEN_NOT_FOUND: {
+            dispatch(setToken({ value: undefined }));
             setIsFetchingQuestions(false);
             stopCountdown();
-            dispatch(setToken({ value: undefined }));
             return;
           }
           case TriviaResponseCode.NO_RESULT: {
@@ -233,51 +238,21 @@ export default function Game() {
 
       setErrorMessage(t("errors.fetchFailed"));
     }
+
     if (token) {
       fetchTriviaQuestions(token);
     }
   }, [
-    startCountdown,
-    token,
-    settings,
+    changeToNextQuestion,
+    dispatch,
     restartCountdown,
+    setQuestionAndStartGame,
+    settings.categoryId,
+    settings.difficulty,
+    settings.type,
     stopCountdown,
     t,
-    language.code,
-    translateTriviaQuestion,
-    dispatch,
-  ]);
-
-  // On changing question index
-  useEffect(() => {
-    const changeToNextQuestion = async () => {
-      setIsChangingQuestion(true);
-
-      if (!questions) return;
-
-      const nextQuestion =
-        language.code === "pt-BR"
-          ? await translateTriviaQuestion(questions[currentQuestionIndex])
-          : questions[currentQuestionIndex];
-
-      setCurrentQuestionState((prev) => ({
-        ...prev,
-        question: nextQuestion,
-        answers: shuffleAnswers(nextQuestion),
-        answerWasSelected: false,
-      }));
-
-      setIsChangingQuestion(false);
-      startCountdown();
-    };
-
-    changeToNextQuestion();
-  }, [
-    currentQuestionIndex,
-    language.code,
-    questions,
-    startCountdown,
-    translateTriviaQuestion,
+    token,
   ]);
 
   // Go to login if the token doesn't exist
@@ -295,13 +270,13 @@ export default function Game() {
         score: currentGameStats.currentScore,
       })
     );
-  }, [currentGameStats, dispatch]);
+  }, [currentGameStats.assertions, currentGameStats.currentScore, dispatch]);
 
   // Change question pressing "Enter"
   useEffect(() => {
-    function handleNextOnEnterKeyDown(e: KeyboardEvent) {
-      if (e.key === "Enter" && currentQuestionState.answerWasSelected) {
-        changeCurrentQuestionIndex();
+    async function handleNextOnEnterKeyDown(e: KeyboardEvent) {
+      if (e.key === "Enter" && answerWasSelected && questions) {
+        await changeToNextQuestion(questions);
       }
     }
 
@@ -309,100 +284,113 @@ export default function Game() {
 
     return () =>
       document.removeEventListener("keydown", handleNextOnEnterKeyDown);
-  }, [changeCurrentQuestionIndex, currentQuestionState.answerWasSelected]);
+  }, [changeToNextQuestion, answerWasSelected, questions]);
 
   return (
     <GameLayout>
-      {isLoading && <Loading />}
+      {isFetchingQuestions && <Loading />}
 
-      {!isLoading && !errorMessage && (
-        <StyledGameWrapper data-testid={GAME_PAGE_ID}>
-          <StyledQuestionWrapper>
-            <img className="logo" src={logo} alt="trivia logo" />
-            <QuestionCard
-              category={currentQuestionState.question!.category}
-              countdown={countdown}
-              question={currentQuestionState.question!.question}
-            />
+      {!isFetchingQuestions &&
+        (errorMessage ? (
+          <GameError message={errorMessage} />
+        ) : (
+          currentQuestionState.question && (
+            <StyledGameWrapper data-testid={GAME_PAGE_ID}>
+              <StyledQuestionWrapper>
+                <img className="logo" src={logo} alt="trivia logo" />
 
-            {width > sizes.desktopXS && (
-              <div className="buttons-wrapper">
-                <RoundAnimatedButton
-                  color="yellow"
-                  icon={{
-                    src: exitDoorIcon,
-                    alt: t("exitDoor", { ns: "common" }),
-                  }}
-                  text={t("endMatch.buttonText", { ns: "game" })}
-                  dialog={{
-                    bodyMessage: t("endMatch.dialog.body", { ns: "game" }),
-                    title: t("endMatch.dialog.title", { ns: "game" }),
-                    onConfirm: () => {
-                      navigate("/feedback");
-                    },
-                  }}
+                <QuestionCard
+                  category={currentQuestionState.question.category}
+                  countdown={countdown}
+                  question={currentQuestionState.question.question}
                 />
-                <RoundAnimatedButton
-                  color="red"
-                  icon={{
-                    src: surrenderFlagIcon,
-                    alt: t("surrenderFlag", { ns: "common" }),
-                  }}
-                  text={t("surrender.buttonText", { ns: "game" })}
-                  dialog={{
-                    bodyMessage: t("surrender.dialog.body", { ns: "game" }),
-                    title: t("surrender.dialog.title", { ns: "game" }),
-                    onConfirm: () => {
-                      navigate("/");
-                    },
-                  }}
-                />
-              </div>
-            )}
-          </StyledQuestionWrapper>
 
-          <StyledAnswersWrapper
-            $questionType={currentQuestionState.question!.type}
-          >
-            <div className="answers-options" data-testid="answer-options">
-              {currentQuestionState.answers.map((answer, index) => (
-                <AnswerButton
-                  correctAnswer={currentQuestionState.question!.correct_answer}
-                  disabled={
-                    countdown === 0 || currentQuestionState.answerWasSelected
-                  }
-                  answerWasSelected={currentQuestionState.answerWasSelected}
-                  index={index}
-                  answer={answer}
-                  key={index}
-                  onClick={answerQuestion}
-                />
-              ))}
-            </div>
+                {width > sizes.desktopXS && (
+                  <div className="buttons-wrapper">
+                    <RoundAnimatedButton
+                      color="yellow"
+                      icon={{
+                        src: exitDoorIcon,
+                        alt: t("exitDoor", { ns: "common" }),
+                      }}
+                      text={t("endMatch.buttonText", { ns: "game" })}
+                      dialog={{
+                        bodyMessage: t("endMatch.dialog.body", { ns: "game" }),
+                        title: t("endMatch.dialog.title", { ns: "game" }),
+                        onConfirm: () => {
+                          navigate("/feedback");
+                        },
+                      }}
+                    />
+                    <RoundAnimatedButton
+                      color="red"
+                      icon={{
+                        src: surrenderFlagIcon,
+                        alt: t("surrenderFlag", { ns: "common" }),
+                      }}
+                      text={t("surrender.buttonText", { ns: "game" })}
+                      dialog={{
+                        bodyMessage: t("surrender.dialog.body", { ns: "game" }),
+                        title: t("surrender.dialog.title", { ns: "game" }),
+                        onConfirm: () => {
+                          navigate("/");
+                        },
+                      }}
+                    />
+                  </div>
+                )}
+              </StyledQuestionWrapper>
 
-            {(currentQuestionState.answerWasSelected || countdown === 0) && (
-              <Button
-                color="green"
-                type="button"
-                data-testid="btn-next"
-                onClick={changeCurrentQuestionIndex}
-                className="next-button"
-                isLoading={isChangingQuestion}
-                disabled={isChangingQuestion}
-                loadingText={t("gettingNextQuestion")}
-                icon={{
-                  src: rightArrow,
-                  alt: t("rightArrow", { ns: "common" }),
-                }}
+              <StyledAnswersWrapper
+                $questionType={currentQuestionState.question.type}
               >
-                {t("next", { ns: "game" })}
-              </Button>
-            )}
-          </StyledAnswersWrapper>
-        </StyledGameWrapper>
-      )}
+                <div
+                  className="answers-options"
+                  data-testid={GAME_PAGE_OPTIONS_ID}
+                >
+                  {currentQuestionState.answers.map((answer, index) => (
+                    <AnswerButton
+                      correctAnswer={
+                        currentQuestionState.question!.correct_answer
+                      }
+                      disabled={countdown === 0 || answerWasSelected}
+                      answerWasSelected={answerWasSelected}
+                      index={index}
+                      answer={answer}
+                      key={index}
+                      onClick={(event, isCorrectAnswer) =>
+                        answerQuestion(
+                          event,
+                          isCorrectAnswer,
+                          currentQuestionState.question!.difficulty
+                        )
+                      }
+                    />
+                  ))}
+                </div>
 
-      {!isLoading && errorMessage && <GameError message={errorMessage} />}
+                {(answerWasSelected || countdown === 0) && (
+                  <Button
+                    color="green"
+                    type="button"
+                    data-testid={GAME_PAGE_NEXT_BUTTON_ID}
+                    onClick={() => changeToNextQuestion(questions)}
+                    className="next-button"
+                    isLoading={isChangingQuestion}
+                    disabled={isChangingQuestion}
+                    loadingText={t("gettingNextQuestion")}
+                    icon={{
+                      src: rightArrow,
+                      alt: t("rightArrow", { ns: "common" }),
+                    }}
+                  >
+                    {t("next", { ns: "game" })}
+                  </Button>
+                )}
+              </StyledAnswersWrapper>
+            </StyledGameWrapper>
+          )
+        ))}
     </GameLayout>
   );
 }

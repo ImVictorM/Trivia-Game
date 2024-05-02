@@ -10,7 +10,7 @@ type AnswerButtonProps = {
   disabled?: boolean;
   onClick?: (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    answer: string
+    isCorrectAnswer: boolean
   ) => void;
 };
 
@@ -30,19 +30,21 @@ export default function AnswerButton({
   onClick,
   disabled = false,
 }: AnswerButtonProps) {
+  const isCorrectAnswer = answer === correctAnswer;
+  const { t } = useTranslation(["game"]);
+
   const handleClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     if (onClick) {
-      onClick(e, answer);
+      onClick(e, isCorrectAnswer);
     }
   };
-  const { t } = useTranslation(["game"]);
 
   return (
     <StyledAnswerButton
       type="button"
       data-testid={ANSWER_BUTTON_COMPONENT_ID}
       $answerWasSelected={answerWasSelected}
-      $isCorrectAnswer={answer === correctAnswer}
+      $isCorrectAnswer={isCorrectAnswer}
       onClick={handleClick}
       disabled={disabled}
     >
@@ -50,14 +52,10 @@ export default function AnswerButton({
         {answerWasSelected ? (
           <img
             className="feedback-icon"
-            src={
-              answer === correctAnswer ? correctAnswerIcon : incorrectAnswerIcon
-            }
-            alt={
-              answer === correctAnswer ? t("correctAnswer") : t("wrongAnswer")
-            }
+            src={isCorrectAnswer ? correctAnswerIcon : incorrectAnswerIcon}
+            alt={isCorrectAnswer ? t("correctAnswer") : t("wrongAnswer")}
             data-testid={
-              answer === correctAnswer
+              isCorrectAnswer
                 ? ANSWER_BUTTON_COMPONENT_CORRECT_ICON_ID
                 : ANSWER_BUTTON_COMPONENT_WRONG_ICON_ID
             }
