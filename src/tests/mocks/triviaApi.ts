@@ -1,6 +1,7 @@
 import {
   GetTriviaQuestionsResponse,
   GetTriviaTokenResponse,
+  ResetTriviaTokenResponse,
   TriviaResponseCode,
 } from "@/services/triviaApi";
 
@@ -8,6 +9,16 @@ export const GET_TOKEN_SUCCESS: GetTriviaTokenResponse = {
   response_code: TriviaResponseCode.SUCCESS,
   response_message: "success",
   token: "token",
+};
+
+export const RESET_TOKEN_SUCCESS: ResetTriviaTokenResponse = {
+  response_code: TriviaResponseCode.SUCCESS,
+  token: "token",
+};
+
+export const GET_QUESTION_UNMAPPED: GetTriviaQuestionsResponse = {
+  response_code: TriviaResponseCode.UNMAPPED_ERROR,
+  results: [],
 };
 
 export const GET_QUESTIONS_SUCCESS: GetTriviaQuestionsResponse = {

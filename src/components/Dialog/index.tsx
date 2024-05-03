@@ -13,7 +13,10 @@ export type DialogProps = {
 };
 
 export const DIALOG_COMPONENT_ID = "dialog-element";
-export const DIALOG_COMPONENT_CLOSE_BUTTON_ID = "dialog-element-cancel-button";
+export const DIALOG_COMPONENT_CLOSE_BUTTON_ID = "dialog-element-close-button";
+export const DIALOG_COMPONENT_CANCEL_BUTTON_ID = "dialog-element-cancel-button";
+export const DIALOG_COMPONENT_CONFIRM_BUTTON_ID =
+  "dialog-element-confirm-button";
 export const DIALOG_COMPONENT_OVERLAY_ID = "dialog-element-overlay";
 
 export default function Dialog({
@@ -45,7 +48,7 @@ export default function Dialog({
                 className="close"
                 onClick={onClose}
               >
-                <img src={closeIcon} alt="close" />
+                <img src={closeIcon} alt={t("close")} />
               </button>
             </header>
 
@@ -56,14 +59,16 @@ export default function Dialog({
                 <Button
                   color="red"
                   onClick={onClose}
-                  icon={{ src: closeIcon, alt: "check" }}
+                  icon={{ src: closeIcon, alt: t("close") }}
+                  data-testid={DIALOG_COMPONENT_CANCEL_BUTTON_ID}
                 >
                   {t("cancel")}
                 </Button>
                 <Button
                   color="green"
                   onClick={onConfirm}
-                  icon={{ src: straightCheckIcon, alt: "check" }}
+                  data-testid={DIALOG_COMPONENT_CONFIRM_BUTTON_ID}
+                  icon={{ src: straightCheckIcon, alt: t("check") }}
                 >
                   {t("confirm")}
                 </Button>

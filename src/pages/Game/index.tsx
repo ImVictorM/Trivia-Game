@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   Question,
   getTriviaQuestions,
@@ -37,9 +37,11 @@ type CurrentQuestionState = {
 export const GAME_PAGE_ID = "game-page";
 export const GAME_PAGE_NEXT_BUTTON_ID = "game-page-next-button";
 export const GAME_PAGE_OPTIONS_ID = "game-page-options";
+export const GAME_PAGE_SURRENDER_BUTTON_ID = "game-page-surrender-button";
+export const GAME_PAGE_END_MATCH_BUTTON_ID = "game-page-end-match-button";
 
 export default function Game() {
-  const [questions, setQuestions] = useState<Question[]>([]);
+  const [questions, setQuestions] = useState<Question[]>();
   const questionIndexRef = useRef<number>(0);
   const [answerWasSelected, setAnswerWasSelected] = useState(false);
   const [currentQuestionState, setCurrentQuestionState] =
@@ -53,8 +55,7 @@ export default function Game() {
     assertions: 0,
   });
 
-  const { countdown, startCountdown, stopCountdown, restartCountdown } =
-    useCountdown(30);
+  const { countdown, startCountdown, stopCountdown } = useCountdown(30);
   const [settings] = useGameSettings();
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -101,7 +102,6 @@ export default function Game() {
         constants.TRIVIA_CATEGORIES.find(
           (category) => category.name === q.category
         )?.id || 9;
-
       return {
         ...q,
         ...responseToQuestion,
@@ -110,6 +110,10 @@ export default function Game() {
     },
     [t]
   );
+
+  const showNextButton = useMemo(() => {
+    return answerWasSelected || countdown === 0;
+  }, [answerWasSelected, countdown]);
 
   const setQuestionAndStartGame = useCallback(
     async (question: Question) => {
@@ -126,26 +130,24 @@ export default function Game() {
       });
 
       setIsChangingQuestion(false);
-      setAnswerWasSelected(false);
+
       startCountdown();
     },
     [language.code, startCountdown, translateTriviaQuestion]
   );
+  const changeToNextQuestion = useCallback(async () => {
+    if (!questions || questions.length === 0) return;
+    const nextQuestionIndex = questionIndexRef.current + 1;
 
-  const changeToNextQuestion = useCallback(
-    async (questions: Question[]) => {
-      const nextQuestionIndex = questionIndexRef.current + 1;
-
-      if (nextQuestionIndex < questions.length) {
-        questionIndexRef.current += 1;
-        setQuestionAndStartGame(questions[nextQuestionIndex]);
-      } else {
-        // go to feedback if there is not any remaining questions
-        navigate("/feedback");
-      }
-    },
-    [navigate, setQuestionAndStartGame]
-  );
+    if (nextQuestionIndex < questions.length) {
+      questionIndexRef.current += 1;
+      setAnswerWasSelected(false);
+      setQuestionAndStartGame(questions[nextQuestionIndex]);
+    } else {
+      // go to feedback if there is not any remaining questions
+      navigate("/feedback");
+    }
+  }, [navigate, questions, setQuestionAndStartGame]);
 
   const shuffleAnswers = (question: Question) => {
     const {
@@ -195,9 +197,9 @@ export default function Game() {
         switch (responseCode) {
           case TriviaResponseCode.SUCCESS: {
             setQuestions(results);
-            setQuestionAndStartGame(results[questionIndexRef.current]);
             setErrorMessage(null);
             setIsFetchingQuestions(false);
+            setQuestionAndStartGame(results[questionIndexRef.current]);
 
             return;
           }
@@ -236,24 +238,14 @@ export default function Game() {
         }
       }
 
+      setIsFetchingQuestions(false);
       setErrorMessage(t("errors.fetchFailed"));
     }
 
     if (token) {
       fetchTriviaQuestions(token);
     }
-  }, [
-    changeToNextQuestion,
-    dispatch,
-    restartCountdown,
-    setQuestionAndStartGame,
-    settings.categoryId,
-    settings.difficulty,
-    settings.type,
-    stopCountdown,
-    t,
-    token,
-  ]);
+  }, [dispatch, settings, stopCountdown, token, setQuestionAndStartGame, t]);
 
   // Go to login if the token doesn't exist
   useEffect(() => {
@@ -276,7 +268,7 @@ export default function Game() {
   useEffect(() => {
     async function handleNextOnEnterKeyDown(e: KeyboardEvent) {
       if (e.key === "Enter" && answerWasSelected && questions) {
-        await changeToNextQuestion(questions);
+        await changeToNextQuestion();
       }
     }
 
@@ -308,6 +300,7 @@ export default function Game() {
                 {width > sizes.desktopXS && (
                   <div className="buttons-wrapper">
                     <RoundAnimatedButton
+                      data-testid={GAME_PAGE_END_MATCH_BUTTON_ID}
                       color="yellow"
                       icon={{
                         src: exitDoorIcon,
@@ -323,6 +316,7 @@ export default function Game() {
                       }}
                     />
                     <RoundAnimatedButton
+                      data-testid={GAME_PAGE_SURRENDER_BUTTON_ID}
                       color="red"
                       icon={{
                         src: surrenderFlagIcon,
@@ -353,11 +347,11 @@ export default function Game() {
                       correctAnswer={
                         currentQuestionState.question!.correct_answer
                       }
-                      disabled={countdown === 0 || answerWasSelected}
                       answerWasSelected={answerWasSelected}
                       index={index}
                       answer={answer}
                       key={index}
+                      disabled={showNextButton}
                       onClick={(event, isCorrectAnswer) =>
                         answerQuestion(
                           event,
@@ -369,12 +363,12 @@ export default function Game() {
                   ))}
                 </div>
 
-                {(answerWasSelected || countdown === 0) && (
+                {showNextButton && (
                   <Button
                     color="green"
                     type="button"
                     data-testid={GAME_PAGE_NEXT_BUTTON_ID}
-                    onClick={() => changeToNextQuestion(questions)}
+                    onClick={changeToNextQuestion}
                     className="next-button"
                     isLoading={isChangingQuestion}
                     disabled={isChangingQuestion}

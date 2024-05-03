@@ -122,13 +122,13 @@ export async function getTriviaQuestions(
         return error.response.data as GetTriviaQuestionsResponse;
       } else {
         return {
-          response_code: 6,
+          response_code: TriviaResponseCode.UNMAPPED_ERROR,
           results: [],
         };
       }
     } else {
       return {
-        response_code: 6,
+        response_code: TriviaResponseCode.UNMAPPED_ERROR,
         results: [],
       };
     }

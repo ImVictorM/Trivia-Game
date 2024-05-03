@@ -1,6 +1,8 @@
 import { renderWithProviders } from "@/tests/utils";
 import Dialog, {
+  DIALOG_COMPONENT_CANCEL_BUTTON_ID,
   DIALOG_COMPONENT_CLOSE_BUTTON_ID,
+  DIALOG_COMPONENT_CONFIRM_BUTTON_ID,
   DIALOG_COMPONENT_ID,
   DIALOG_COMPONENT_OVERLAY_ID,
 } from ".";
@@ -40,8 +42,12 @@ describe("Dialog component", () => {
       name: /testing the dialog/i,
     });
     const bodyMessage = screen.queryByText(/hello!/i);
-    const confirmButton = screen.queryByRole("button", { name: /confirm/i });
-    const cancelButton = screen.queryByRole("button", { name: /cancel/i });
+    const confirmButton = screen.queryByTestId(
+      DIALOG_COMPONENT_CONFIRM_BUTTON_ID
+    );
+    const cancelButton = screen.queryByTestId(
+      DIALOG_COMPONENT_CANCEL_BUTTON_ID
+    );
     const closeButton = screen.queryByTestId(DIALOG_COMPONENT_CLOSE_BUTTON_ID);
 
     expect(title).toBeInTheDocument();
@@ -62,7 +68,7 @@ describe("Dialog component", () => {
       />
     );
 
-    const cancelButton = screen.getByRole("button", { name: /cancel/i });
+    const cancelButton = screen.getByTestId(DIALOG_COMPONENT_CANCEL_BUTTON_ID);
 
     await user.click(cancelButton);
 
@@ -120,7 +126,9 @@ describe("Dialog component", () => {
       />
     );
 
-    const confirmButton = screen.getByRole("button", { name: /confirm/i });
+    const confirmButton = screen.getByTestId(
+      DIALOG_COMPONENT_CONFIRM_BUTTON_ID
+    );
 
     await user.click(confirmButton);
 

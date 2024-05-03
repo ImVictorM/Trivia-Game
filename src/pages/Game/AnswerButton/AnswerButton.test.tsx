@@ -119,7 +119,7 @@ describe("Game page: AnswerButton component", () => {
     expect(onClickMock).toHaveBeenCalledOnce();
     expect(onClickMock).toHaveBeenCalledWith(
       expect.objectContaining({ type: "click" }),
-      question.correct_answer
+      true
     );
   });
 });
