@@ -206,7 +206,6 @@ export default function Game() {
           case TriviaResponseCode.TOKEN_EMPTY: {
             const resetResponse = await resetTriviaToken(token);
             dispatch(setToken({ value: resetResponse.token }));
-            setIsFetchingQuestions(false);
             setErrorMessage(null);
             stopCountdown();
 

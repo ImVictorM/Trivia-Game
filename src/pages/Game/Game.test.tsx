@@ -4,8 +4,15 @@ import * as triviaService from "@/services/triviaApi";
 import * as utils from "@/utils";
 import * as translateService from "@/services/googleTranslateApi";
 import {
+  GET_QUESTIONS_INVALID_PARAMETER,
+  GET_QUESTIONS_NO_RESULT,
+  GET_QUESTIONS_ONE_QUESTION,
+  GET_QUESTIONS_RATE_LIMIT,
   GET_QUESTIONS_SUCCESS,
-  GET_QUESTION_UNMAPPED,
+  GET_QUESTIONS_TOKEN_EMPTY,
+  GET_QUESTIONS_TOKEN_NOT_FOUND,
+  GET_QUESTIONS_UNMAPPED,
+  RESET_TOKEN_SUCCESS,
 } from "@/tests/mocks/triviaApi";
 import { bear } from "@/assets/defaultAvatars";
 import { act, waitForElementToBeRemoved } from "@testing-library/react";
@@ -46,7 +53,7 @@ describe("Game page", () => {
     vi.unstubAllGlobals();
   });
 
-  const initialPreloadedState: Partial<RootState> = {
+  const initialPreloadedState: RootState = {
     player: {
       assertions: 0,
       gravatarImgSrc: bear,
@@ -59,10 +66,10 @@ describe("Game page", () => {
 
   type RenderOptions = {
     onBeforeRender?: () => void;
-    preloadedState?: Partial<RootState>;
+    preloadedState?: RootState;
   };
 
-  const renderAndWithForLoading = async (options?: RenderOptions) => {
+  const renderAndWaitForLoading = async (options?: RenderOptions) => {
     vi.stubGlobal("innerWidth", sizes.desktopM);
 
     if (options && options.onBeforeRender) {
@@ -88,41 +95,23 @@ describe("Game page", () => {
     return render;
   };
 
-  it("Renders correctly when there is no error", async () => {
-    vi.spyOn(triviaService, "getTriviaQuestions").mockResolvedValue(
-      GET_QUESTIONS_SUCCESS
-    );
-    const { store } = await renderAndWithForLoading();
-
-    await screen.findByTestId(GAME_PAGE_ID);
-
-    const remainingTime = screen.getByTestId(
-      GAME_QUESTION_CARD_COMPONENT_COUNTDOWN_ID
-    );
-    const errorComponent = screen.queryByTestId(GAME_ERROR_COMPONENT_ID);
-    const nextButton = screen.queryByTestId(GAME_PAGE_NEXT_BUTTON_ID);
+  const checkIfQuestionIsInTheScreen = async (
+    question: triviaService.Question
+  ) => {
     const category = screen.getByTestId(
       GAME_QUESTION_CARD_COMPONENT_CATEGORY_ID
     );
-    const question = screen.getByTestId(GAME_QUESTION_CARD_COMPONENT_TEXT_ID);
+    const questionText = screen.getByTestId(
+      GAME_QUESTION_CARD_COMPONENT_TEXT_ID
+    );
     const answers = screen.getAllByTestId(ANSWER_BUTTON_COMPONENT_ID);
 
-    const firstQuestion = GET_QUESTIONS_SUCCESS.results[0];
-
-    screen.getByTestId(GAME_PAGE_OPTIONS_ID);
-    screen.getByTestId(GAME_QUESTION_CARD_COMPONENT_ID);
-    screen.getByTestId(GAME_PAGE_SURRENDER_BUTTON_ID);
-    screen.getByTestId(GAME_PAGE_END_MATCH_BUTTON_ID);
-
-    expect(question).toHaveTextContent(firstQuestion.question);
-    expect(errorComponent).not.toBeInTheDocument();
-    expect(nextButton).not.toBeInTheDocument();
-    expect(remainingTime).toHaveTextContent("30");
-    expect(category).toHaveTextContent(firstQuestion.category);
+    expect(questionText).toHaveTextContent(question.question);
+    expect(category).toHaveTextContent(question.category);
 
     const expectedAnswers = [
-      firstQuestion.correct_answer,
-      ...firstQuestion.incorrect_answers,
+      question.correct_answer,
+      ...question.incorrect_answers,
     ];
 
     expectedAnswers.forEach((answer) => {
@@ -131,6 +120,64 @@ describe("Game page", () => {
       );
       expect(answerInScreen).not.toBeUndefined();
     });
+  };
+
+  const checkIfQuestionsIsNotInTheScreen = async (
+    question: triviaService.Question
+  ) => {
+    const category = screen.getByTestId(
+      GAME_QUESTION_CARD_COMPONENT_CATEGORY_ID
+    );
+    const questionText = screen.getByTestId(
+      GAME_QUESTION_CARD_COMPONENT_TEXT_ID
+    );
+    const answers = screen.getAllByTestId(ANSWER_BUTTON_COMPONENT_ID);
+
+    expect(questionText).not.toHaveTextContent(question.question);
+    expect(category).not.toHaveTextContent(question.category);
+
+    const expectedAnswers = [
+      question.correct_answer,
+      ...question.incorrect_answers,
+    ];
+
+    expectedAnswers.forEach((answer) => {
+      const answerInScreen = answers.find((a) =>
+        a.textContent?.includes(answer)
+      );
+      expect(answerInScreen).toBeUndefined();
+    });
+  };
+
+  const checkIfGameStateIsInitial = () => {
+    const remainingTime = screen.getByTestId(
+      GAME_QUESTION_CARD_COMPONENT_COUNTDOWN_ID
+    );
+    const errorComponent = screen.queryByTestId(GAME_ERROR_COMPONENT_ID);
+    const nextButton = screen.queryByTestId(GAME_PAGE_NEXT_BUTTON_ID);
+
+    expect(errorComponent).not.toBeInTheDocument();
+    expect(nextButton).not.toBeInTheDocument();
+    expect(remainingTime).toHaveTextContent("30");
+  };
+
+  it("Renders correctly when there is no error", async () => {
+    vi.spyOn(triviaService, "getTriviaQuestions").mockResolvedValue(
+      GET_QUESTIONS_SUCCESS
+    );
+    const { store } = await renderAndWaitForLoading();
+
+    await screen.findByTestId(GAME_PAGE_ID);
+
+    const firstQuestion = GET_QUESTIONS_SUCCESS.results[0];
+
+    await checkIfQuestionIsInTheScreen(firstQuestion);
+    checkIfGameStateIsInitial();
+
+    screen.getByTestId(GAME_PAGE_OPTIONS_ID);
+    screen.getByTestId(GAME_QUESTION_CARD_COMPONENT_ID);
+    screen.getByTestId(GAME_PAGE_SURRENDER_BUTTON_ID);
+    screen.getByTestId(GAME_PAGE_END_MATCH_BUTTON_ID);
 
     const player = store.getState().player;
     expect(player.assertions).toEqual(0);
@@ -139,9 +186,9 @@ describe("Game page", () => {
 
   it("Renders the GameError component when there is an error fetching the questions", async () => {
     vi.spyOn(triviaService, "getTriviaQuestions").mockResolvedValue(
-      GET_QUESTION_UNMAPPED
+      GET_QUESTIONS_UNMAPPED
     );
-    await renderAndWithForLoading();
+    await renderAndWaitForLoading();
 
     const game = screen.queryByTestId(GAME_PAGE_ID);
     const gameError = screen.queryByTestId(GAME_ERROR_COMPONENT_ID);
@@ -154,7 +201,7 @@ describe("Game page", () => {
     vi.spyOn(triviaService, "getTriviaQuestions").mockResolvedValue(
       GET_QUESTIONS_SUCCESS
     );
-    const { user } = await renderAndWithForLoading();
+    const { user } = await renderAndWaitForLoading();
 
     const answers = screen.getAllByTestId(ANSWER_BUTTON_COMPONENT_ID);
 
@@ -175,7 +222,7 @@ describe("Game page", () => {
     vi.spyOn(triviaService, "getTriviaQuestions").mockResolvedValue(
       GET_QUESTIONS_SUCCESS
     );
-    await renderAndWithForLoading({
+    await renderAndWaitForLoading({
       onBeforeRender: () => {
         vi.stubGlobal("innerWidth", sizes.mobileS);
       },
@@ -192,7 +239,7 @@ describe("Game page", () => {
     vi.spyOn(triviaService, "getTriviaQuestions").mockResolvedValue(
       GET_QUESTIONS_SUCCESS
     );
-    const { user } = await renderAndWithForLoading();
+    const { user } = await renderAndWaitForLoading();
 
     const endMatchBtn = screen.getByTestId(GAME_PAGE_END_MATCH_BUTTON_ID);
 
@@ -211,11 +258,32 @@ describe("Game page", () => {
     expect(mockNavigate).toHaveBeenCalledWith("/feedback");
   });
 
+  it("Navigates to /feedback when there is no more questions", async () => {
+    vi.spyOn(triviaService, "getTriviaQuestions").mockResolvedValue(
+      GET_QUESTIONS_ONE_QUESTION
+    );
+
+    const { user } = await renderAndWaitForLoading();
+    const firstAnswers = screen.getAllByTestId(ANSWER_BUTTON_COMPONENT_ID)[0];
+
+    await act(async () => {
+      await user.click(firstAnswers);
+    });
+
+    const nextButton = screen.getByTestId(GAME_PAGE_NEXT_BUTTON_ID);
+
+    await act(async () => {
+      await user.click(nextButton);
+    });
+
+    expect(mockNavigate).toHaveBeenCalledWith("/feedback");
+  });
+
   it("Navigates to / when clicking the surrender button", async () => {
     vi.spyOn(triviaService, "getTriviaQuestions").mockResolvedValue(
       GET_QUESTIONS_SUCCESS
     );
-    const { user } = await renderAndWithForLoading();
+    const { user } = await renderAndWaitForLoading();
 
     const surrenderBtn = screen.getByTestId(GAME_PAGE_SURRENDER_BUTTON_ID);
 
@@ -239,7 +307,7 @@ describe("Game page", () => {
       GET_QUESTIONS_SUCCESS
     );
     vi.spyOn(utils, "calculateScore").mockReturnValueOnce(100);
-    const { user, store } = await renderAndWithForLoading();
+    const { user, store } = await renderAndWaitForLoading();
 
     const correctAnswer = screen
       .getAllByTestId(ANSWER_BUTTON_COMPONENT_ID)
@@ -265,7 +333,7 @@ describe("Game page", () => {
       GET_QUESTIONS_SUCCESS
     );
 
-    await renderAndWithForLoading({
+    await renderAndWaitForLoading({
       preloadedState: {
         ...initialPreloadedState,
         language: { code: "pt-BR" },
@@ -281,7 +349,7 @@ describe("Game page", () => {
     vi.spyOn(triviaService, "getTriviaQuestions").mockResolvedValue(
       GET_QUESTIONS_SUCCESS
     );
-    const { user } = await renderAndWithForLoading();
+    const { user } = await renderAndWaitForLoading();
 
     const firstAnswers = screen.getAllByTestId(ANSWER_BUTTON_COMPONENT_ID)[0];
 
@@ -295,61 +363,141 @@ describe("Game page", () => {
       await user.click(nextButton);
     });
 
-    const remainingTime = screen.getByTestId(
-      GAME_QUESTION_CARD_COMPONENT_COUNTDOWN_ID
-    );
-
-    const category = screen.getByTestId(
-      GAME_QUESTION_CARD_COMPONENT_CATEGORY_ID
-    );
-    const question = screen.getByTestId(GAME_QUESTION_CARD_COMPONENT_TEXT_ID);
-    const answers = screen.getAllByTestId(ANSWER_BUTTON_COMPONENT_ID);
-
     const firstQuestion = GET_QUESTIONS_SUCCESS.results[0];
     const secondQuestion = GET_QUESTIONS_SUCCESS.results[1];
 
-    const firstQuestionAnswers = [
-      firstQuestion.correct_answer,
-      ...firstQuestion.incorrect_answers,
-    ];
-
-    const secondQuestionAnswers = [
-      secondQuestion.correct_answer,
-      ...secondQuestion.incorrect_answers,
-    ];
-
-    expect(question).not.toHaveTextContent(firstQuestion.question);
-    expect(question).toHaveTextContent(secondQuestion.question);
-    expect(category).not.toHaveTextContent(firstQuestion.category);
-    expect(category).toHaveTextContent(secondQuestion.category);
-    expect(remainingTime).toHaveTextContent("30");
-
-    expect(nextButton).not.toBeInTheDocument();
-
-    firstQuestionAnswers.forEach((answer) => {
-      const answerInScreen = answers.find((a) =>
-        a.textContent?.includes(answer)
-      );
-      expect(answerInScreen).toBeUndefined();
-    });
-
-    secondQuestionAnswers.forEach((answer) => {
-      const answerInScreen = answers.find((a) =>
-        a.textContent?.includes(answer)
-      );
-      expect(answerInScreen).not.toBeUndefined();
-    });
+    checkIfGameStateIsInitial();
+    await checkIfQuestionIsInTheScreen(secondQuestion);
+    await checkIfQuestionsIsNotInTheScreen(firstQuestion);
   });
 
-  // it("Resets the token when session Token has returned all possible questions for the specified query", async () => {});
+  it("Resets the token when session Token has returned all possible questions for the specified query", async () => {
+    const getQuestionsSpy = vi
+      .spyOn(triviaService, "getTriviaQuestions")
+      .mockResolvedValueOnce(GET_QUESTIONS_TOKEN_EMPTY)
+      .mockResolvedValueOnce(GET_QUESTIONS_SUCCESS);
 
-  // it("Navigates to / when token is not found", async () => {});
+    const resetSpy = vi
+      .spyOn(triviaService, "resetTriviaToken")
+      .mockResolvedValue(RESET_TOKEN_SUCCESS);
 
-  // it("Tries to fetch questions again if api returns a rate limit response", async () => {});
+    await renderAndWaitForLoading();
 
-  // it("Renders error component when an invalid parameter error is returned from the api", async () => {});
+    const firstQuestion = GET_QUESTIONS_SUCCESS.results[0];
 
-  // it("Renders error component when some unexpected error is returned from the api", async () => {});
+    checkIfGameStateIsInitial();
+    await checkIfQuestionIsInTheScreen(firstQuestion);
 
-  // it("Changes to next question when pressing Enter after selecting an answer", async () => {});
+    expect(getQuestionsSpy).toHaveBeenCalledTimes(2);
+    expect(resetSpy).toHaveBeenCalledOnce();
+  });
+
+  it("Navigates to / when token is not found", async () => {
+    vi.spyOn(triviaService, "getTriviaQuestions").mockResolvedValue(
+      GET_QUESTIONS_SUCCESS
+    );
+    renderWithRouter([{ path: "/game", element: <Game /> }], ["/game"], 0, {
+      preloadedState: {
+        ...initialPreloadedState,
+        player: {
+          ...initialPreloadedState.player,
+          token: undefined,
+        },
+      },
+    });
+
+    expect(mockNavigate).toHaveBeenCalledWith("/");
+  });
+
+  it("Navigates to / when api response with token not found", async () => {
+    vi.spyOn(triviaService, "getTriviaQuestions").mockResolvedValue(
+      GET_QUESTIONS_TOKEN_NOT_FOUND
+    );
+
+    await renderAndWaitForLoading();
+
+    expect(mockNavigate).toHaveBeenCalledWith("/");
+  });
+
+  it("Tries to fetch questions again if api returns a rate limit response", async () => {
+    vi.spyOn(triviaService, "getTriviaQuestions")
+      .mockResolvedValueOnce(GET_QUESTIONS_RATE_LIMIT)
+      .mockResolvedValueOnce(GET_QUESTIONS_SUCCESS);
+
+    const sleepSpy = vi.spyOn(utils, "sleep").mockImplementation(() => {
+      return new Promise((resolve) => resolve(null));
+    });
+
+    await renderAndWaitForLoading();
+
+    await checkIfQuestionIsInTheScreen(GET_QUESTIONS_SUCCESS.results[0]);
+    expect(sleepSpy).toHaveBeenCalled();
+  });
+
+  it("Renders error component when an invalid parameter error is returned from the api", async () => {
+    vi.spyOn(triviaService, "getTriviaQuestions").mockResolvedValue(
+      GET_QUESTIONS_INVALID_PARAMETER
+    );
+
+    await renderAndWaitForLoading();
+
+    const gamePage = screen.queryByTestId(GAME_PAGE_ID);
+    const errorComponent = screen.queryByTestId(GAME_ERROR_COMPONENT_ID);
+
+    expect(gamePage).not.toBeInTheDocument();
+    expect(errorComponent).toBeInTheDocument();
+  });
+
+  it("Changes to next question when pressing Enter after selecting an answer", async () => {
+    vi.spyOn(triviaService, "getTriviaQuestions").mockResolvedValue(
+      GET_QUESTIONS_SUCCESS
+    );
+
+    const { user } = await renderAndWaitForLoading();
+
+    const firstAnswers = screen.getAllByTestId(ANSWER_BUTTON_COMPONENT_ID)[0];
+
+    await act(async () => {
+      await user.click(firstAnswers);
+    });
+
+    await act(async () => {
+      await user.keyboard("{Enter}");
+    });
+
+    checkIfGameStateIsInitial();
+    await checkIfQuestionIsInTheScreen(GET_QUESTIONS_SUCCESS.results[1]);
+    await checkIfQuestionsIsNotInTheScreen(GET_QUESTIONS_SUCCESS.results[0]);
+  });
+
+  it("Loads the error component after trying to fetch questions indefinitely", async () => {
+    vi.spyOn(triviaService, "getTriviaQuestions").mockResolvedValue(
+      GET_QUESTIONS_RATE_LIMIT
+    );
+    vi.spyOn(utils, "sleep").mockImplementation(
+      () => new Promise((resolve) => resolve(null))
+    );
+
+    await renderAndWaitForLoading();
+
+    const gamePage = screen.queryByTestId(GAME_PAGE_ID);
+    const errorComponent = screen.queryByTestId(GAME_ERROR_COMPONENT_ID);
+
+    expect(gamePage).not.toBeInTheDocument();
+    expect(errorComponent).toBeInTheDocument();
+  });
+
+  it("Loads the error component when the api returns no results", async () => {
+    vi.spyOn(triviaService, "getTriviaQuestions").mockResolvedValue(
+      GET_QUESTIONS_NO_RESULT
+    );
+
+    await renderAndWaitForLoading();
+
+    const gamePage = screen.queryByTestId(GAME_PAGE_ID);
+    const errorComponent = screen.queryByTestId(GAME_ERROR_COMPONENT_ID);
+
+    expect(gamePage).not.toBeInTheDocument();
+    expect(errorComponent).toBeInTheDocument();
+  });
 });
