@@ -13,6 +13,10 @@ import { useMemo } from "react";
 import { Trans, useTranslation } from "react-i18next";
 
 export const RANKING_PAGE_ID = "ranking-page";
+export const RANKING_PAGE_TITLE_ID = "ranking-page-title";
+export const RANKING_PAGE_PLAYER_ID = "ranking-page-player";
+export const RANKING_PAGE_EMPTY_ID = "ranking-page-empty";
+export const RANKING_PAGE_GO_BACK_ID = "ranking-page-go-back";
 
 export default function Ranking() {
   const { playersRanking } = usePlayerRanking();
@@ -26,17 +30,24 @@ export default function Ranking() {
     <StyledRanking data-testid={RANKING_PAGE_ID}>
       <StyledRankingContent>
         <img className="logo" src={logo} alt="trivia logo" />
-        <h1 className="main-title title" data-testid="ranking-title">
+        <h1 className="main-title title" data-testid={RANKING_PAGE_TITLE_ID}>
           {t("mainTitle")}
         </h1>
         <h2 className="secondary-title title">{t("secondaryTitle")}</h2>
         <StyledPlayerList>
           {!rankingIsEmpty &&
             playersRanking.map(({ gravatarImgSrc, name, score }, index) => (
-              <StyledPlayer key={`${index}_${name}_${score}`}>
+              <StyledPlayer
+                key={`${index}_${name}_${score}`}
+                data-testid={RANKING_PAGE_PLAYER_ID}
+              >
                 <div className="player-wrapper">
-                  <img className="player-img" src={gravatarImgSrc} />
-                  <p title={name} className="player-name">
+                  <img className="player-img" src={gravatarImgSrc} alt={name} />
+                  <p
+                    title={name}
+                    className="player-name"
+                    data-testid={`${index}_name`}
+                  >
                     {name}
                   </p>
                 </div>
@@ -50,14 +61,14 @@ export default function Ranking() {
             ))}
           {rankingIsEmpty && (
             <StyledEmptyRanking>
-              <p>
+              <p data-testid={RANKING_PAGE_EMPTY_ID}>
                 <Trans t={t} i18nKey="emptyRanking" />
               </p>
             </StyledEmptyRanking>
           )}
         </StyledPlayerList>
 
-        <LinkButton color="green" to="/" data-testid="btn-go-home">
+        <LinkButton color="green" to="/" data-testid={RANKING_PAGE_GO_BACK_ID}>
           {t("goToStart")}
         </LinkButton>
       </StyledRankingContent>

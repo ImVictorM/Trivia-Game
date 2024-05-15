@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import useLocalStorage from "./useLocalStorage";
 
-type Player = {
+export type RankingPlayer = {
   name: string;
   gravatarImgSrc: string;
   score: number;
@@ -9,15 +9,15 @@ type Player = {
 
 export default function usePlayerRanking() {
   const MAX_PLAYERS_IN_RANKING = 3;
-  const [playersRanking, setPlayersRanking] = useLocalStorage<Player[]>(
+  const [playersRanking, setPlayersRanking] = useLocalStorage<RankingPlayer[]>(
     "ranking",
     []
   );
 
   const updateRanking = useCallback(
-    (player: Player) => {
+    (player: RankingPlayer) => {
       setPlayersRanking((prevPlayersRanking) => {
-        const updatedPlayersRanking: Player[] = [];
+        const updatedPlayersRanking: RankingPlayer[] = [];
         let playerWasInserted = false;
         let index = 0;
 
