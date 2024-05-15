@@ -5,6 +5,12 @@ import { Button } from "@/components";
 import { exitDoorIcon, surrenderFlagIcon } from "@/assets/icons";
 import { useTranslation } from "react-i18next";
 
+export const MENU_COMPONENT_ID = "menu-element";
+export const MENU_COMPONENT_HAMBURGER_ID = "menu-element-hamburger";
+export const MENU_COMPONENT_SIDEBAR_ID = "menu-element-sidebar";
+export const MENU_COMPONENT_END_MATCH_ID = "menu-element-end-match";
+export const MENU_COMPONENT_SURRENDER_ID = "menu-element-surrender";
+
 export default function Menu() {
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
@@ -25,12 +31,16 @@ export default function Menu() {
   }, [menuOpen]);
 
   return (
-    <>
-      <StyledHamburgerButton onClick={toggleMenu} $menuOpen={menuOpen}>
+    <div data-testid={MENU_COMPONENT_ID}>
+      <StyledHamburgerButton
+        onClick={toggleMenu}
+        $menuOpen={menuOpen}
+        data-testid={MENU_COMPONENT_HAMBURGER_ID}
+      >
         <div className="line" />
       </StyledHamburgerButton>
 
-      <StyledMenu $menuOpen={menuOpen}>
+      <StyledMenu $menuOpen={menuOpen} data-testid={MENU_COMPONENT_SIDEBAR_ID}>
         <h2 className="main-title">{t("gameOptions", { ns: "game" })}</h2>
 
         <div className="buttons-wrapper">
@@ -44,10 +54,12 @@ export default function Menu() {
                 navigate("/feedback");
               },
             }}
+            data-testid={MENU_COMPONENT_END_MATCH_ID}
           >
             {t("endMatch.buttonText", { ns: "game" })}
           </Button>
           <Button
+            data-testid={MENU_COMPONENT_SURRENDER_ID}
             color="red"
             icon={{
               src: surrenderFlagIcon,
@@ -65,6 +77,6 @@ export default function Menu() {
           </Button>
         </div>
       </StyledMenu>
-    </>
+    </div>
   );
 }

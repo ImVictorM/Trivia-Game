@@ -5,12 +5,17 @@ type HeaderContentLayoutProps = {
   children: React.ReactNode;
 };
 
+export const GAME_LAYOUT_ID = "game-layout";
+export const GAME_LAYOUT_CONTENT_ID = "game-layout-content";
+
 export default function GameLayout({ children }: HeaderContentLayoutProps) {
   return (
-    <StyledLayout>
+    <StyledLayout data-testid={GAME_LAYOUT_ID}>
       <Header />
 
-      <StyledContent id="content">{children}</StyledContent>
+      <StyledContent data-testid={GAME_LAYOUT_CONTENT_ID} id="content">
+        {children}
+      </StyledContent>
     </StyledLayout>
   );
 }
