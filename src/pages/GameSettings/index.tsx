@@ -13,6 +13,13 @@ import { useTranslation } from "react-i18next";
 import { constants } from "@/utils";
 
 export const SETTINGS_PAGE_ID = "settings-page";
+export const SETTINGS_PAGE_TITLE_ID = "settings-page-title";
+export const SETTINGS_PAGE_CATEGORY_COMBO_ID = "settings-page-category-combo";
+export const SETTINGS_PAGE_DIFFICULTY_COMBO_ID =
+  "settings-page-difficulty-combo";
+export const SETTINGS_PAGE_TYPE_COMBO_ID = "settings-page-type-combo";
+export const SETTINGS_PAGE_SAVE_ID = "settings-page-save";
+export const SETTINGS_PAGE_GO_BACK_ID = "settings-page-go-back";
 
 export default function GameSettings() {
   const [settings, setSettings] = useGameSettings();
@@ -45,7 +52,9 @@ export default function GameSettings() {
     <StyledSettings data-testid={SETTINGS_PAGE_ID}>
       <StyledSettingsContent>
         <img className="logo" src={logo} alt="trivia logo" />
-        <h1 className="main-title title">{t("title")}</h1>
+        <h1 className="main-title title" data-testid={SETTINGS_PAGE_TITLE_ID}>
+          {t("title")}
+        </h1>
 
         <StyledSettingsForm onSubmit={handleSaveSettings}>
           <div className="selects-wrapper">
@@ -55,6 +64,7 @@ export default function GameSettings() {
               label={t("category.label")}
               onChange={handleSettingsFormChange}
               value={settingsFormState.categoryId}
+              data-testid={SETTINGS_PAGE_CATEGORY_COMBO_ID}
             >
               <option value={constants.ANY_CATEGORY_ID}>
                 {t("category.any")}
@@ -71,6 +81,7 @@ export default function GameSettings() {
               id="difficulties"
               name="difficulty"
               onChange={handleSettingsFormChange}
+              data-testid={SETTINGS_PAGE_DIFFICULTY_COMBO_ID}
               value={settingsFormState.difficulty}
             >
               <option value="any">{t("difficulty.any")}</option>
@@ -85,6 +96,7 @@ export default function GameSettings() {
               label={t("type.label")}
               id="types"
               name="type"
+              data-testid={SETTINGS_PAGE_TYPE_COMBO_ID}
               onChange={handleSettingsFormChange}
               value={settingsFormState.type}
             >
@@ -98,10 +110,18 @@ export default function GameSettings() {
           </div>
 
           <div className="buttons-wrapper">
-            <Button color="green" type="submit">
+            <Button
+              color="green"
+              type="submit"
+              data-testid={SETTINGS_PAGE_SAVE_ID}
+            >
               {t("save")}
             </Button>
-            <LinkButton color="cyan" to="/">
+            <LinkButton
+              color="cyan"
+              to="/"
+              data-testid={SETTINGS_PAGE_GO_BACK_ID}
+            >
               {t("goBack")}
             </LinkButton>
           </div>

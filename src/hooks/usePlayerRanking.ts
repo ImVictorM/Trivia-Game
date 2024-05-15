@@ -20,6 +20,7 @@ export default function usePlayerRanking() {
         const updatedPlayersRanking: Player[] = [];
         let playerWasInserted = false;
         let index = 0;
+
         while (!playerWasInserted && index < MAX_PLAYERS_IN_RANKING) {
           const playerInRanking = prevPlayersRanking[index];
 
@@ -41,6 +42,7 @@ export default function usePlayerRanking() {
             playerWasInserted = true;
           }
         }
+
         return updatedPlayersRanking;
       });
     },
