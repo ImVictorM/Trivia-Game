@@ -21,7 +21,7 @@ const scaleDownKeyframes = keyframes`
 `;
 
 const bounceInRightKeyframes = keyframes`
-0% {
+  0% {
     opacity: 0;
     transform: translateX(300px);
   }

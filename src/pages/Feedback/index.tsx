@@ -8,9 +8,11 @@ import {
   StyledFeedbackContent,
 } from "./style";
 import { LinkButton } from "@/components";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import usePlayerRanking from "@/hooks/usePlayerRanking";
 import { Trans, useTranslation } from "react-i18next";
+import { useScreenDimensions } from "@/hooks";
+import Confetti from "react-confetti";
 
 export const FEEDBACK_PAGE_PLAYER_SCORE_ID = "feedback-page-player-score";
 export const FEEDBACK_PAGE_PLAYER_ASSERTIONS_ID =
@@ -22,8 +24,10 @@ export const FEEDBACK_PAGE_RANKING_ID = "feedback-page-ranking";
 
 export default function Feedback() {
   const player = useSelector((state: RootState) => state.player);
+  const [showConfetti, setShowConfetti] = useState(false);
   const { updateRanking } = usePlayerRanking();
   const { t } = useTranslation(["feedback", "common"]);
+  const { height, width } = useScreenDimensions();
   const isGoodScore = player.assertions > 2;
 
   useEffect(() => {
@@ -32,10 +36,24 @@ export default function Feedback() {
       gravatarImgSrc: player.gravatarImgSrc,
       score: player.score,
     });
-  }, [player, updateRanking]);
+
+    if (isGoodScore) {
+      setShowConfetti(true);
+
+      setTimeout(() => {
+        setShowConfetti(false);
+      }, 5000);
+    }
+  }, [isGoodScore, player, updateRanking]);
 
   return (
     <StyledFeedback>
+      <Confetti
+        numberOfPieces={200}
+        recycle={showConfetti}
+        width={width}
+        height={height}
+      />
       <StyledFeedbackContent>
         <img className="logo" src={logo} alt="trivia logo" />
 
