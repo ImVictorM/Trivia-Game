@@ -53,7 +53,7 @@ This application supports two languages: English (en) and Portuguese (pt-BR). Th
 />
 
 ## APIs used in this project 🌐
-- [Open Trivia Database](https://opentdb.com/): The core api used in this project. that's where the questions for the game is coming from!
+- [Open Trivia Database](https://opentdb.com/): The core API used in this project. that's where the questions for the game is coming from!
 - [Gravatar](https://docs.gravatar.com/): Used for getting players' image in an easy way.
 - [Google translate](https://cloud.google.com/translate/docs/reference/rest): Used to translate some dynamic texts.
 
