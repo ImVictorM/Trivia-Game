@@ -19,7 +19,7 @@ type StyledDialogProps = {
 
 export const StyledDialog = styled.div<StyledDialogProps>`
   --border-radius: 10px;
-  width: 100%;
+  width: 90%;
   max-width: 600px;
   background-color: ${({ theme }) => theme.colors.white};
   border-radius: var(--border-radius);
@@ -51,8 +51,11 @@ export const StyledDialog = styled.div<StyledDialogProps>`
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    padding: 2em 1em;
 
-    padding: 2em 4em;
+    @media ${({ theme }) => theme.bp.mobileL} {
+      padding: 2em 4em;
+    }
 
     .text {
       text-align: center;
@@ -61,8 +64,14 @@ export const StyledDialog = styled.div<StyledDialogProps>`
     .buttons-wrapper {
       margin-top: 2em;
       display: flex;
-      flex-direction: row;
-      gap: 3em;
+      flex-direction: column-reverse;
+      gap: 0.5em;
+      width: 100%;
+
+      @media ${({ theme }) => theme.bp.mobileL} {
+        flex-direction: row;
+        gap: 1.5em;
+      }
     }
   }
 `;
