@@ -80,5 +80,6 @@ export const StyledAnswersWrapper = styled.div<StyledAnswersWrapperProps>`
     align-self: center;
     max-width: 350px;
     margin-top: 0.5em;
+    ${({ theme }) => theme.animations.bounceInRightAnimation}
   }
 `;
