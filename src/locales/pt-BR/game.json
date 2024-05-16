@@ -1,0 +1,33 @@
+{
+  "next": "Próxima questão",
+  "gameOptions": "Opçoes do jogo",
+  "remainingTime": "Tempo restante",
+  "loading": "Preparando novas questões...",
+  "correctAnswer": "Questão correta",
+  "wrongAnswer": "Questão incorreta",
+  "gettingNextQuestion": "Trocando de pergunta",
+
+  "surrender": {
+    "buttonText": "Render-se",
+
+    "dialog": {
+      "title": "Render-se",
+      "body": "Tem certeza que deseja se render? A rendição fará com que você perca todos os seus pontos."
+    }
+  },
+
+  "endMatch": {
+    "buttonText": "Finalizar partida",
+
+    "dialog": {
+      "title": "Finalizar partida",
+      "body": "Tem certeza de que deseja encerrar a partida? encerrar a partida salvará seus pontos e o redirecionará para a tela de feedback."
+    }
+  },
+
+  "errors": {
+    "noResult": "Desculpe, mas não encontramos perguntas suficientes para o seu jogo. Altere suas configurações e tente novamente!",
+    "generic": "Ocorreu um erro inesperado. Tente novamente mais tarde.",
+    "fetchFailed": "Desculpe, mas não foi possível buscar perguntas para o seu jogo de trivia. Tente mais tarde."
+  }
+}

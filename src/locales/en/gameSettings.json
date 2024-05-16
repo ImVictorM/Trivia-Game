@@ -1,0 +1,27 @@
+{
+  "title": "Game Settings",
+  "loading": "Loading settings...",
+
+  "category": {
+    "label": "Category",
+    "any": "Any category"
+  },
+
+  "difficulty": {
+    "label": "Difficulty",
+    "easy": "easy",
+    "medium": "medium",
+    "hard": "hard",
+    "any": "Any difficulty"
+  },
+
+  "type": {
+    "label": "Type",
+    "any": "Any type",
+    "multiple": "multiple",
+    "boolean": "boolean"
+  },
+
+  "save": "Save",
+  "goBack": "Go back"
+}

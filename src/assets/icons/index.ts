@@ -1,0 +1,14 @@
+export { default as settingsCog } from "./settings-cog.svg";
+export { default as spinnerLoadingIcon } from "./spinner-loading-icon.svg";
+export { default as star } from "./star.svg";
+export { default as timer } from "./timer.svg";
+export { default as incorrectAnswerIcon } from "./incorrect-answer-icon.svg";
+export { default as correctAnswerIcon } from "./correct-answer-icon.svg";
+export { default as dualBallLoadingIcon } from "./dual-ball-loading.svg";
+export { default as errorIcon } from "./error-icon.svg";
+export { default as roundedCheckIcon } from "./rounded-check-icon.svg";
+export { default as exitDoorIcon } from "./exit-door-icon.svg";
+export { default as surrenderFlagIcon } from "./surrender-flag-icon.svg";
+export { default as closeIcon } from "./close-icon.svg";
+export { default as straightCheckIcon } from "./straight-check-icon.svg";
+export { default as rightArrow } from "./right-arrow.svg";

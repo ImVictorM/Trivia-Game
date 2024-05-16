@@ -1,0 +1,7 @@
+{
+  "goodScoreTitle": "Well Done!",
+  "badScoreTitle": "Could be better...",
+  "feedbackText_one": "You answered <span>{{count}}</span> question correctly!",
+  "feedbackText_other": "You answered <span>{{count}}</span> questions correctly!",
+  "totalPoints": "Total points earned: <span>{{playerScore}}</span>"
+}

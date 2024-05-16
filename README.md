@@ -1,134 +1,100 @@
-# Trivia 🧩
+# Trivia Game 🧩
 
 ## Project Context 💡
 
-Quiz game based on the trivia game style, where the user can:
-- Log in to the game and, if their email is registered on the Gravatar website, have your photo associated with the user's profile;
-- Access the page referring to the game, where you must choose one of the available answers before the time goes out or the answer is considered wrong;
-- Be redirected after 5 answered questions to the score screen, where the text shown depends on the number of correct answers;
-- View the ranking page, if you like, at the end of each game.
+Quiz game with varying topics and a local ranking. The game consists of a round of 5 questions where the user can choose the theme, difficulty, and type of questions, which can be multiple choice or true/false. At the end of a round, the player can view their performance, and if it is good, they will be registered in a local ranking.
+This application supports two languages: English (en) and Portuguese (pt-BR). The translations were done mixing dynamic and static translation files. I used i18next for the static translations and Google Translate API for the dynamic translations (reference to APIs below).
 
-The functionalities of this project were developed by a group of 5 people, according to the demands defined in a kanban board, using pair programming when necessary. We held daily meetings to keep tabs on what was being done until that moment.
+## Main Technologies used in this project 🧰
 
+<img
+    alt="Static Badge"
+    src="https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white" 
+    style="margin-bottom: 4px;" 
+    height="30px" 
+/>
+<img
+    alt="Static Badge"
+    src="https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB" 
+    style="margin-bottom: 4px;" 
+    height="30px"
+/>
+<br>
+<img
+    alt="Static Badge"
+    src="https://img.shields.io/badge/Styled%20Components-black?style=for-the-badge&logo=styledcomponents&logoColor=%23DB7093"
+    style="margin-bottom: 4px;"
+    height="30px"
+/>
+<img 
+    alt="Static Badge" 
+    src="https://img.shields.io/badge/Redux-%23764ABC?style=for-the-badge&logo=redux&logoColor=white"
+    style="margin-bottom: 4px;"
+    height="30px"
+/>
+<img 
+    alt="Static Badge" 
+    src="https://img.shields.io/badge/i18next-%2326A69A?style=for-the-badge&logo=i18next&logoColor=white"
+    style="margin-bottom: 4px;"
+    height="30px"
+/>
+<br>
+<img
+    alt="Static Badge"
+    src="https://img.shields.io/badge/Testing%20Library-%23E33332?style=for-the-badge&logo=testinglibrary&logoColor=white" 
+    style="margin-bottom: 4px;" 
+    height="30px"
+/>
+<img
+    alt="Static Badge"
+    src="https://img.shields.io/badge/vitest-%236E9F18?style=for-the-badge&logo=vitest&logoColor=white"
+    style="margin-bottom: 4px;" 
+    height="30px"
+/>
 
-### Group Members 👥
-
-- [Victor Figueiredo Mendes](https://github.com/ImVictorM)
-- [Rafael Lacorte](https://github.com/Rafael-Lacorte)
-- [Kayck Valentim Hirt](https://github.com/kayckhirt)
-- [Fernando Barreto Costa](https://github.com/fernando-costa)
-- [Marcel Albuquerque](https://github.com/marcellsa)
-
-### Acquired Knowledge 📖
-In this project, we were able to:
-
-- Create a Redux store;
-- Create reducers in Redux;
-- Create actions in Redux;
-- Create dispatchers in Redux;
-- Connect Redux to React Components;
-- Create asynchronous actions in React application that uses Redux;
-- Write tests to ensure the application has good test coverage.
-
-## Used Technologies 🧰
-<table>
-    <thead>
-        <tr>
-            <th>HTML5</th>
-            <th>CSS3</th>
-            <th>JavaScript</th>
-            <th>React</th>
-            <th>Jest</th>
-            <th>RTL</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td align="center">
-                <a href="https://www.w3.org/html/" target="_blank" rel="noreferrer"> 
-                    <img 
-                        src="https://raw.githubusercontent.com/devicons/devicon/master/icons/html5/html5-original-wordmark.svg" 
-                        alt="html5" 
-                        width="40" 
-                        height="40"
-                    /> 
-                </a>
-            </td>
-            <td align="center">
-                <a href="https://www.w3schools.com/css/" target="_blank" rel="noreferrer"> 
-                    <img 
-                        src="https://raw.githubusercontent.com/devicons/devicon/master/icons/css3/css3-original-wordmark.svg" 
-                        alt="css3" 
-                        width="40" 
-                        height="40"
-                    />
-                </a>
-            </td>
-            <td align="center">
-                <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank" rel="noreferrer"> 
-                    <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/javascript/javascript-original.svg" 
-                        alt="javascript" 
-                        width="40" 
-                        height="40"
-                    /> 
-                </a>
-            </td>
-            <td align="center">
-                <a href="https://reactjs.org/" target="_blank" rel="noreferrer"> 
-                    <img 
-                        src="https://raw.githubusercontent.com/devicons/devicon/master/icons/react/react-original-wordmark.svg" 
-                        alt="react" 
-                        width="40" 
-                        height="40"
-                    /> 
-                </a>
-            </td>
-            <td align="center">
-                <a href="https://jestjs.io" target="_blank" rel="noreferrer"> 
-                    <img 
-                        src="https://www.vectorlogo.zone/logos/jestjsio/jestjsio-icon.svg" 
-                        alt="jest" 
-                        width="40" 
-                        height="40"
-                     /> 
-                </a>
-            </td>
-            <td align="center">
-                <a href="https://testing-library.com/docs/" target="_blank" rel="noreferrer">
-                    <img 
-                        src="https://testing-library.com/img/octopus-128x128.png"
-                        alt="rtl"
-                        width="40"
-                        height="40"
-                    />
-                </a>
-            </td>
-        </tr>
-    </tbody>
-</table>
+## APIs used in this project 🌐
+- [Open Trivia Database](https://opentdb.com/): The core API used in this project. that's where the questions for the game is coming from!
+- [Gravatar](https://docs.gravatar.com/): Used for getting players' image in an easy way.
+- [Google translate](https://cloud.google.com/translate/docs/reference/rest): Used to translate some dynamic texts.
 
 ## Running the application ⚙️
 
-1. Clone and enter this repository
-```
-git clone git@github.com:ImVictorM/Trivia-Game.git && cd Trivia-Game
-```
-2. Install the dependencies
-```
-npm install 
-```
-3. Start the project
-```
-npm start
-```
+1. Cloning and entering the repository
+    ```sh
+    git clone git@github.com:ImVictorM/Trivia-Game.git && cd Trivia-Game
+    ```
+
+2. Install dependencies
+   ```sh
+   npm install
+   ```
+
+3. Start the application
+  - To start in development mode:
+    ```sh
+    npm run dev
+    ```
+
+  - To start in production mode:
+    ```sh
+    npm run build && npm run preview
+    ```
 
 ## Testing 🛠️
-Running all tests:
-```
-npm test
-```
-Running a specific test:
-```
-npm test {test_file_name}
-```
+- Running all tests:
+    ```sh
+    npm test
+    ```
+- Running a specific test:
+    ```sh
+    npm test -t {test_file_name}
+    ```
+- Running test coverage:
+    ```sh
+    npm run test:coverage
+    ```
+- Running tests in the browser:
+    ```sh
+    npm run test:ui
+    ```
 
