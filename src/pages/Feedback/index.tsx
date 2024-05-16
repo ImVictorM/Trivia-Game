@@ -49,11 +49,12 @@ export default function Feedback() {
   return (
     <StyledFeedback>
       <Confetti
-        numberOfPieces={200}
+        numberOfPieces={showConfetti ? 200 : 0}
         recycle={showConfetti}
         width={width}
         height={height}
       />
+
       <StyledFeedbackContent>
         <img className="logo" src={logo} alt="trivia logo" />
 
